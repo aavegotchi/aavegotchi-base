@@ -138,6 +138,18 @@ async function main() {
   tx = await svgFacet.setSleeves(sleevesInput);
   await tx.wait();
   console.log("Sleeves associated with body wearable svgs");
+
+  //mint wearables to forge diamond
+  //maxQuantites from the
+
+  const quantities = itemTypesToAdd.map((item) => item.maxQuantity);
+  const mintTx = await daoFacet.mintItems(
+    c.forgeDiamond!,
+    itemsIds,
+    quantities
+  );
+  await mintTx.wait();
+  console.log("Wearables minted to forge diamond");
 }
 
 main()
