@@ -5,7 +5,7 @@ import {
   FacetsAndAddSelectors,
 } from "../../tasks/deployUpgrade";
 
-export async function upgradeAddSwapAndBuyERC721(
+export async function upgradeAddSwapAndBuy(
   diamondAddress: string,
   diamondOwner: string
 ) {
@@ -54,7 +54,7 @@ export async function upgradeAddSwapAndBuyERC721(
 
 // For standalone execution
 if (require.main === module) {
-  upgradeAddSwapAndBuyERC721(
+  upgradeAddSwapAndBuy(
     "0xA99c4B08201F2913Db8D28e71d020c4298F29dBF", // Base diamond address
     "0x01F010a5e001fe9d6940758EA5e8c777885E351e" // Test account owner
   ).catch((error) => {

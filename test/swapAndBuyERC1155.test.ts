@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ethers, network } from "hardhat";
-import { upgradeAddSwapAndBuyERC1155 } from "../scripts/upgrades/upgrade-addSwapAndBuyERC1155";
+import { upgradeAddSwapAndBuy } from "../scripts/upgrades/upgrade-addSwapAndBuy";
 
 // Utility function to impersonate accounts on local forks
 async function impersonateAccount(address: string, provider: any, ethers: any) {
@@ -64,7 +64,10 @@ describe("SwapAndBuyERC1155 Integration Test", function () {
     console.log(
       "🔧 Running diamond upgrade to add swapAndBuyERC1155 function..."
     );
-    await upgradeAddSwapAndBuyERC1155();
+    await upgradeAddSwapAndBuy(
+      ADDRESSES.DIAMOND,
+      "0x01F010a5e001fe9d6940758EA5e8c777885E351e"
+    );
     console.log("✅ Diamond upgrade completed successfully!");
 
     // Connect to deployed diamond using ERC1155MarketplaceSwapFacet interface

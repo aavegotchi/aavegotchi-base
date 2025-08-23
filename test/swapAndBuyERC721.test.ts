@@ -3,7 +3,7 @@ import { ethers, network } from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Contract, BigNumber } from "ethers";
 import axios from "axios";
-import { upgradeAddSwapAndBuyERC721 } from "../scripts/upgrades/upgrade-addSwapAndBuy";
+import { upgradeAddSwapAndBuy } from "../scripts/upgrades/upgrade-addSwapAndBuy";
 
 // Base mainnet addresses
 const ADDRESSES = {
@@ -81,7 +81,7 @@ describe("SwapAndBuyERC721 Integration Test", function () {
       "🔧 Running diamond upgrade to add swapAndBuyERC721 function..."
     );
     try {
-      await upgradeAddSwapAndBuyERC721(
+      await upgradeAddSwapAndBuy(
         ADDRESSES.AAVEGOTCHI_DIAMOND,
         "0x01F010a5e001fe9d6940758EA5e8c777885E351e" // Use test account as diamond owner
       );
