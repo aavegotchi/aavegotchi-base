@@ -222,8 +222,9 @@ contract ERC721MarketplaceFacet is Modifiers {
         uint256 _priceInWei,
         uint256 _tokenId,
         address _recipient
-    ) external {
-        handleExecuteERC721Listing(_listingId, _contractAddress, _priceInWei, _tokenId, _recipient);
+    ) external whenNotPaused {
+        address buyer = LibMeta.msgSender();
+        LibERC721Marketplace.executeERC721Listing(_listingId, _contractAddress, _priceInWei, _tokenId, _recipient, buyer);
     }
 
     ///@param listingId The identifier of the listing to execute
@@ -240,105 +241,18 @@ contract ERC721MarketplaceFacet is Modifiers {
     }
 
     ///@notice execute gotchi listings in batch
-    function batchExecuteERC721Listing(ExecuteERC721ListingParams[] calldata listings) external {
+    function batchExecuteERC721Listing(ExecuteERC721ListingParams[] calldata listings) external whenNotPaused {
         require(listings.length <= 10, "ERC721Marketplace: length should be lower than 10");
+        address buyer = LibMeta.msgSender();
         for (uint256 i = 0; i < listings.length; i++) {
-            handleExecuteERC721Listing(
+            LibERC721Marketplace.executeERC721Listing(
                 listings[i].listingId,
                 listings[i].contractAddress,
                 listings[i].priceInWei,
                 listings[i].tokenId,
-                listings[i].recipient
+                listings[i].recipient,
+                buyer
             );
-        }
-    }
-
-    function handleExecuteERC721Listing(
-        uint256 _listingId,
-        address _contractAddress,
-        uint256 _priceInWei,
-        uint256 _tokenId,
-        address _recipient
-    ) internal whenNotPaused {
-        ERC721Listing storage listing = s.erc721Listings[_listingId];
-        require(listing.timePurchased == 0, "ERC721Marketplace: listing already sold");
-        require(listing.cancelled == false, "ERC721Marketplace: listing cancelled");
-        require(listing.timeCreated != 0, "ERC721Marketplace: listing not found");
-        require(listing.erc721TokenId == _tokenId, "ERC721Marketplace: Incorrect tokenID");
-        require(listing.erc721TokenAddress == _contractAddress, "ERC721Marketplace: Incorrect token address");
-        require(listing.priceInWei == _priceInWei, "ERC721Marketplace: Incorrect price");
-        address buyer = LibMeta.msgSender();
-        address seller = listing.seller;
-        require(seller != buyer, "ERC721Marketplace: Buyer can't be seller");
-        if (listing.whitelistId > 0) {
-            require(s.isWhitelisted[listing.whitelistId][buyer] > 0, "ERC721Marketplace: Not whitelisted address");
-        }
-        require(IERC20(s.ghstContract).balanceOf(buyer) >= _priceInWei, "ERC721Marketplace: Not enough GHST");
-
-        listing.timePurchased = block.timestamp;
-        LibERC721Marketplace.removeERC721ListingItem(_listingId, seller);
-
-        address[] memory royalties;
-        uint256[] memory royaltyShares;
-        if (IERC165(_contractAddress).supportsInterface(0x2a55205a)) {
-            // EIP-2981 supported
-            royalties = new address[](1);
-            royaltyShares = new uint256[](1);
-            (royalties[0], royaltyShares[0]) = IERC2981(_contractAddress).royaltyInfo(_tokenId, _priceInWei);
-        } else if (IERC165(_contractAddress).supportsInterface(0x24d34933)) {
-            // Multi Royalty Standard supported
-            (royalties, royaltyShares) = IMultiRoyalty(_contractAddress).multiRoyaltyInfo(_tokenId, _priceInWei);
-        }
-
-        //Handle legacy listings -- if affiliate is not set, use 100-0 split
-        BaazaarSplit memory split = LibSharedMarketplace.getBaazaarSplit(
-            _priceInWei,
-            royaltyShares,
-            listing.affiliate == address(0) ? [10000, 0] : listing.principalSplit
-        );
-
-        LibSharedMarketplace.transferSales(
-            SplitAddresses({
-                ghstContract: s.ghstContract,
-                buyer: buyer,
-                seller: seller,
-                affiliate: listing.affiliate,
-                royalties: royalties,
-                daoTreasury: s.daoTreasury,
-                pixelCraft: s.pixelCraft,
-                rarityFarming: s.rarityFarming
-            }),
-            split
-        );
-
-        if (listing.erc721TokenAddress == address(this)) {
-            s.aavegotchis[listing.erc721TokenId].locked = false;
-            LibAavegotchi.transfer(seller, _recipient, listing.erc721TokenId);
-        } else {
-            // External contracts
-            IERC721(listing.erc721TokenAddress).safeTransferFrom(seller, _recipient, listing.erc721TokenId);
-        }
-
-        //Cancel an existing buy order if it exists for the buyer
-        uint256 buyerBuyOrderId = s.buyerToBuyOrderId[listing.erc721TokenAddress][listing.erc721TokenId][buyer];
-        if (buyerBuyOrderId != 0) {
-            LibBuyOrder.cancelERC721BuyOrder(buyerBuyOrderId);
-        }
-
-        emit ERC721ExecutedListing(
-            _listingId,
-            seller,
-            _recipient,
-            listing.erc721TokenAddress,
-            listing.erc721TokenId,
-            listing.category,
-            listing.priceInWei,
-            block.timestamp
-        );
-
-        //Don't emit the event if the buyer is the same as recipient
-        if (buyer != _recipient) {
-            emit ERC721ExecutedToRecipient(_listingId, buyer, _recipient);
         }
     }
 
