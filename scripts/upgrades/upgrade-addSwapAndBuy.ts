@@ -11,6 +11,10 @@ export async function upgradeAddSwapAndBuyERC721(
 ) {
   console.log("🚀 Deploying swapAndBuyERC721 function to diamond...");
 
+  //Networks deployed
+  //Base Sepolia (but router not deployed there...)
+  //Base Mainnet
+
   const facets: FacetsAndAddSelectors[] = [
     {
       facetName:
