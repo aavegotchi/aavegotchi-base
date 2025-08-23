@@ -11,21 +11,20 @@ export async function upgradeAddSwapAndBuyERC721(
 ) {
   console.log("🚀 Deploying swapAndBuyERC721 function to diamond...");
 
-  // Deploy the facet first to get selectors automatically
-  const SwapFacet = await ethers.getContractFactory(
-    "ERC721MarketplaceSwapFacet"
-  );
-  const swapFacet = await SwapFacet.deploy();
-  await swapFacet.deployed();
-
-  console.log(`📝 Deployed facet at: ${swapFacet.address}`);
-
   const facets: FacetsAndAddSelectors[] = [
     {
       facetName:
         "contracts/Aavegotchi/facets/ERC721MarketplaceSwapFacet.sol:ERC721MarketplaceSwapFacet",
       addSelectors: [
         "function swapAndBuyERC721(address tokenIn,uint256 swapAmount,uint256 minGhstOut,uint256 swapDeadline,uint256 listingId,address contractAddress,uint256 priceInWei,uint256 tokenId,address recipient) external",
+      ],
+      removeSelectors: [],
+    },
+    {
+      facetName:
+        "contracts/Aavegotchi/facets/ERC1155MarketplaceSwapFacet.sol:ERC1155MarketplaceSwapFacet",
+      addSelectors: [
+        "function swapAndBuyERC1155(address tokenIn, uint256 swapAmount,uint256 minGhstOut,uint256 swapDeadline,uint256 listingId,address contractAddress,uint256 itemId,uint256 quantity,uint256 priceInWei,address recipient) external",
       ],
       removeSelectors: [],
     },
@@ -44,7 +43,9 @@ export async function upgradeAddSwapAndBuyERC721(
   };
 
   await run("deployUpgrade", args);
-  console.log("✅ swapAndBuyERC721 function added to diamond!");
+  console.log(
+    "✅ swapAndBuyERC721 and swapAndBuyERC1155 functions added to diamond!"
+  );
 }
 
 // For standalone execution
