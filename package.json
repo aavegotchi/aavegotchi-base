@@ -6,6 +6,7 @@
   "scripts": {
     "test": "npx hardhat test",
     "test:swap": "npx hardhat test test/swapAndBuyERC721.test.ts --network hardhat",
+    "test:swap1155": "npx hardhat test test/swapAndBuyERC1155.test.ts --network hardhat",
     "prettier": "prettier --write contracts/**/*.sol",
     "solhint": "solhint 'contracts/**/*.sol'"
   },
