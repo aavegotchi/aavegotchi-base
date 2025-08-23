@@ -40,7 +40,7 @@ export async function upgradeAddSwapAndBuyERC721(
     diamondOwner: diamondOwner,
     diamondAddress: diamondAddress,
     facetsAndAddSelectors: joined,
-    useMultisig: false,
+    useMultisig: true,
     useLedger: false,
     useRelayer: false,
     freshDeployment: false,

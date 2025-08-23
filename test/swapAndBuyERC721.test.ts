@@ -3,7 +3,7 @@ import { ethers, network } from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Contract, BigNumber } from "ethers";
 import axios from "axios";
-import { upgradeAddSwapAndBuyERC721 } from "../scripts/upgrades/upgrade-addSwapAndBuyERC721";
+import { upgradeAddSwapAndBuyERC721 } from "../scripts/upgrades/upgrade-addSwapAndBuy";
 
 // Base mainnet addresses
 const ADDRESSES = {
