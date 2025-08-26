@@ -180,7 +180,10 @@ class XPDropDeployer {
     return { tx: batchTx };
   }
 
-  async verifyDeployment(entry: XPDropTrackingEntry): Promise<boolean> {
+  async verifyDeployment(
+    entry: XPDropTrackingEntry,
+    maxRetries: number = 5
+  ): Promise<boolean> {
     if (this.isDryRun) {
       console.log(`   ✅ DRY RUN - Skipping verification`);
       return true;
@@ -188,21 +191,29 @@ class XPDropDeployer {
 
     console.log(`   🔍 Verifying deployment...`);
 
-    const sigpropExists = await this.verifyXPDropExists(entry.sigprop_id);
-    const corepropExists = await this.verifyXPDropExists(entry.coreprop_id);
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      const sigpropExists = await this.verifyXPDropExists(entry.sigprop_id);
+      const corepropExists = await this.verifyXPDropExists(entry.coreprop_id);
 
-    console.log(`      Sigprop deployed: ${sigpropExists ? "✅" : "❌"}`);
-    console.log(`      Coreprop deployed: ${corepropExists ? "✅" : "❌"}`);
+      console.log(`      Attempt ${attempt}/${maxRetries}:`);
+      console.log(`      Sigprop deployed: ${sigpropExists ? "✅" : "❌"}`);
+      console.log(`      Coreprop deployed: ${corepropExists ? "✅" : "❌"}`);
 
-    const bothDeployed = sigpropExists && corepropExists;
+      const bothDeployed = sigpropExists && corepropExists;
 
-    if (bothDeployed) {
-      console.log(`   ✅ Verification successful`);
-    } else {
-      console.log(`   ❌ Verification failed`);
+      if (bothDeployed) {
+        console.log(`   ✅ Verification successful on attempt ${attempt}`);
+        return true;
+      }
+
+      if (attempt < maxRetries) {
+        console.log(`   ⏳ Waiting 3 seconds before retry...`);
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+      }
     }
 
-    return bothDeployed;
+    console.log(`   ❌ Verification failed after ${maxRetries} attempts`);
+    return false;
   }
 
   async updateTrackingData(
@@ -270,10 +281,14 @@ class XPDropDeployer {
         if (!this.isDryRun && tx) {
           console.log(`   ⏳ Waiting for batch transaction to be mined...`);
           await tx.wait();
+
+          // Additional wait to ensure contract state is settled
+          console.log(`   ⏳ Waiting for contract state to settle...`);
+          await new Promise((resolve) => setTimeout(resolve, 5000));
         }
 
-        // Verify deployment
-        const isDeployed = await this.verifyDeployment(entry);
+        // Verify deployment with retry logic
+        const isDeployed = await this.verifyDeployment(entry, 5);
 
         if (!isDeployed && !this.isDryRun) {
           throw new Error(

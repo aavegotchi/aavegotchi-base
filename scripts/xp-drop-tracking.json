@@ -2,87 +2,103 @@
   "agip_153": {
     "agip_number": 153,
     "title": "Update Aavegotchi Snapshot with Base Strategies",
-    "status": "pending",
+    "status": "deployed",
     "sigprop_id": "0xf89ed7b4afa8031df5c79bcd58054221074dab8a3606d34b85d78886c3965654",
     "coreprop_id": "0x47233a0e0e533c463c0994dcb70f1584095b324e4072cf79d8b8e3cd8f2b70b1",
     "created_date": "2025-08-26T05:36:54.128Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip153.ts",
-    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip153_coreprop.ts"
+    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip153_coreprop.ts",
+    "deployed_date": "2025-08-26T09:59:42.226Z",
+    "tx_hash": "0x5f839b0a53cce2e5de951947656aa9ad4216fcb54a75b6754ebe6dce2352f1bd"
   },
   "agip_152": {
     "agip_number": 152,
     "title": "Rarity Farming Seasons 11 & 12",
-    "status": "pending",
+    "status": "deployed",
     "sigprop_id": "0xfcf7bb54537fcbf9c3fa181a4dbcd525702c52b1e01d24e72e735d46564b4bb4",
     "coreprop_id": "0x67b64dbacac56cb850c74a3f1b3440d1e1fcbcc0ba3215e83c75c5419ea99d85",
     "created_date": "2025-08-26T05:36:54.128Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip152.ts",
-    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip152_coreprop.ts"
+    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip152_coreprop.ts",
+    "deployed_date": "2025-08-26T09:59:13.451Z",
+    "tx_hash": "0xfb2abd967a892e17aea2d7338a821459132c2123b4c84dbe42ae97a6ebdfce39"
   },
   "agip_151": {
     "agip_number": 151,
     "title": "Aavegotchi DAO Bounty - Secure Legal Counsel for the DAO",
-    "status": "pending",
+    "status": "deployed",
     "sigprop_id": "0xb699df969f0dfca0d5e7435b668368049e3e25ded73c0af6e73bc3906626c3d7",
     "coreprop_id": "0x919a857d0953d9aca2aaba659660f1f098776665d591e934bdf80ee0fce87ca2",
     "created_date": "2025-08-26T05:36:54.129Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip151.ts",
-    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip151_coreprop.ts"
+    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip151_coreprop.ts",
+    "deployed_date": "2025-08-26T09:58:42.301Z",
+    "tx_hash": "0x0f86563b71f1a69276169c461699f9cb12662057e007f6336f5c8ebaa1edaee4"
   },
   "agip_150": {
     "agip_number": 150,
     "title": "Renewal of DAO Facilitator Roles and Term Limit Extension (revised repost)",
-    "status": "pending",
+    "status": "deployed",
     "sigprop_id": "0x5653c17a4a0cb4b9f227c2730e3428853eb9a6304d62865f233f759549aa7930",
     "coreprop_id": "0x3f326aa347728c09fcc1d40dabd4c3248cd11dff9fcb0d26a4483dfc6400498f",
     "created_date": "2025-08-26T05:36:54.128Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip150.ts",
-    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip150_coreprop.ts"
+    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip150_coreprop.ts",
+    "deployed_date": "2025-08-26T09:58:11.175Z",
+    "tx_hash": "0x16111ddaa6945dfece00e62e33d0a3c53d65ccf21049524e58abd780e600c701"
   },
   "agip_149": {
     "agip_number": 149,
     "title": "Core-Prop to Reimburse Pixelcraft Studios",
-    "status": "pending",
+    "status": "deployed",
     "sigprop_id": "0xb9a713cf64939a3539844d7b16a94c900cbee3fd091c7f30087507cdef00e233",
     "coreprop_id": "0x525d47507adfb3285ce767795e72d74123a1b2d727ee9834a421dc364b46ad6f",
     "created_date": "2025-08-26T05:36:54.129Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip149.ts",
-    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip149_coreprop.ts"
+    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip149_coreprop.ts",
+    "deployed_date": "2025-08-26T09:57:39.038Z",
+    "tx_hash": "0x25242bea3abb2bf59c6eb4a730d0882d30edfad8aca2d802efd9b66d2e5184b0"
   },
   "agip_148": {
     "agip_number": 148,
     "title": "Moving liquidity and funds from Polygon to Base",
-    "status": "pending",
+    "status": "deployed",
     "sigprop_id": "0xe8906169a51a7423475ff3a6c327247888bbdbb3db0154a34dcd0c5cc47967b4",
     "coreprop_id": "0x271854264b3f3070977d276b5a5345ab52f24817ee0933925460cdcf41e243bb",
     "created_date": "2025-08-26T05:36:54.129Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip148.ts",
-    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip148_coreprop.ts"
+    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip148_coreprop.ts",
+    "deployed_date": "2025-08-26T09:57:06.595Z",
+    "tx_hash": "0xb857c5a10249fa7dc405434b518b4741ddbb2a6e522f915fbd4468bae0977414"
   },
   "agip_147": {
     "agip_number": 147,
     "title": "DAPP new features added by the DAO",
-    "status": "pending",
+    "status": "deployed",
     "sigprop_id": "0x8208eab9425d5c4c1dd0057d6287ba6d6d80f3758e19304ffbef4f132bbea248",
     "coreprop_id": "0x55d5964f47c7bd7c678561a3fd76ad206e74f6e06a8668e687e194fbc63e853e",
     "created_date": "2025-08-26T05:36:54.129Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip147.ts",
-    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip147_coreprop.ts"
+    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip147_coreprop.ts",
+    "deployed_date": "2025-08-26T09:53:25.692Z",
+    "tx_hash": "0x520408d518bb58789c29f8c376646cc0442be01c155f296d7ba964a5e60c0d16"
   },
   "agip_146": {
     "agip_number": 146,
     "title": "Funding the Future of Gotchi Battler",
-    "status": "pending",
+    "status": "deployed",
     "sigprop_id": "0xfc000e731e1e01380da2ab61cf7420ef83cc7b86b3da32be8a400a6ae8b84e57",
     "coreprop_id": "0x866a74f31e2c2cb29bbcfee043f69080c7c9377dc64d6fe261ae428b022c72ab",
     "created_date": "2025-08-26T05:36:54.129Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip146.ts",
-    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip146_coreprop.ts"
+    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip146_coreprop.ts",
+    "deployed_date": "2025-08-26T09:52:58.882Z",
+    "tx_hash": "0xf3cc02a931308fa361cd272f0230662dd48bddbbae685d6ccc6fb94fe6e07e9a"
   },
   "agip_145": {
     "agip_number": 145,
     "title": "Adjusting Quorum Requirements and Increasing Voter XP",
-    "status": "pending",
+    "status": "deployed",
     "sigprop_id": "0x1901aa0b9476a7a4d8e5e0c8f19bfe79f3939b9e4e09ca490721218ebab27245",
     "coreprop_id": "0xcf7ad9ce9e596b4b326ddd645cf0a6f203b4f042751038a1f82c423dc57c7ac8",
     "created_date": "2025-08-26T05:36:54.130Z",
