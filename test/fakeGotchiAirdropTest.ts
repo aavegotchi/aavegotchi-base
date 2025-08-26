@@ -13,11 +13,12 @@ import { dataArgs as dataArgs3 } from "../data/airdrops/rarityfarming/szn4/rnd3"
 import { dataArgs as dataArgs4 } from "../data/airdrops/rarityfarming/szn4/rnd4";
 
 import { getRfSznTypeRanking } from "../scripts/helperFunctions";
+import { baseGraphUrl } from "../scripts/query/queryAavegotchis";
 
 describe("Fake Gotchi Airdrop", async function () {
   this.timeout(200000000);
-  const maticGraphUrl: string =
-    "https://api.thegraph.com/subgraphs/name/aavegotchi/aavegotchi-core-matic";
+  // Updated to use Base subgraph instead of deprecated Matic subgraph
+
   const cardOwner = "0x8D46fd7160940d89dA026D59B2e819208E714E82";
 
   let fakeGotchis: IFakeGotchi,
@@ -50,7 +51,7 @@ describe("Fake Gotchi Airdrop", async function () {
         }
       }}
       `;
-    return request(maticGraphUrl, query);
+    return request(baseGraphUrl, query);
   }
 
   before(async function () {

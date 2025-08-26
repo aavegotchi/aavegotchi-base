@@ -78,9 +78,41 @@ export function getSelector(func: string, ethers: any) {
   return abiInterface.getSighash(ethers.utils.Fragment.from(func));
 }
 
-export const maticDiamondAddress = "0x86935F11C86623deC8a25696E1C19a8659CbF95d";
-export const maticForgeDiamondAddress =
-  "0x4fDfc1B53Fd1D80d969C984ba7a8CE4c7bAaD442";
+interface ChainAddressMapping {
+  [key: number]: {
+    aavegotchiDiamond: string;
+    forgeDiamond: string;
+    realmDiamond: string;
+    installationDiamond: string;
+    tileDiamond: string;
+    fakeGotchiCards: string;
+    fakeGotchiArt: string;
+    wearableDiamond: string;
+  };
+}
+
+export const chainAddressesMap: ChainAddressMapping = {
+  8453: {
+    aavegotchiDiamond: "0xa99c4b08201f2913db8d28e71d020c4298f29dbf",
+    wearableDiamond: "0x052e6c114a166B0e91C2340370d72D4C33752B4b",
+    forgeDiamond: "0x50aF2d63b839aA32b4166FD1Cb247129b715186C",
+    realmDiamond: "0x4B0040c3646D3c44B8a28Ad7055cfCF536c05372",
+    installationDiamond: "0xebba5b725A2889f7f089a6cAE0246A32cad4E26b",
+    tileDiamond: "0x617fdB8093b309e4699107F48812b407A7c37938",
+    fakeGotchiCards: "0xe46B8902dAD841476d9Fee081F1d62aE317206A9",
+    fakeGotchiArt: "0xAb59CA4A16925b0a4BaC5026C94bEB20A29Df479",
+  },
+  137: {
+    aavegotchiDiamond: "0x86935F11C86623deC8a25696E1C19a8659CbF95d",
+    wearableDiamond: "",
+    forgeDiamond: "0x4fDfc1B53Fd1D80d969C984ba7a8CE4c7bAaD442",
+    realmDiamond: "0x1D0360BaC7299C86Ec8E99d0c1C9A95FEfaF2a11",
+    installationDiamond: "0x19f870bD94A34b3adAa9CaA439d333DA18d6812A",
+    tileDiamond: "0x9216c31d8146bCB3eA5a9162Dc1702e8AEDCa355",
+    fakeGotchiCards: "0x9f6BcC63e86D44c46e85564E9383E650dc0b56D7",
+    fakeGotchiArt: "0xA4E3513c98b30d4D7cc578d2C328Bd550725D1D0",
+  },
+};
 
 export const maticDiamondUpgrader =
   "0x01F010a5e001fe9d6940758EA5e8c777885E351e";
@@ -91,8 +123,7 @@ export const itemManagerAlt = "0x8D46fd7160940d89dA026D59B2e819208E714E82";
 
 export const gameManager = "0xa370f2ADd2A9Fba8759147995d6A0641F8d7C119";
 
-export const maticRealmDiamondAddress =
-  "0x1D0360BaC7299C86Ec8E99d0c1C9A95FEfaF2a11";
+export const maticRealmDiamondAddress = "";
 
 export const maticInstallationDiamondAddress =
   "0x19f870bD94A34b3adAa9CaA439d333DA18d6812A";
@@ -106,21 +137,18 @@ export const maticFakeGotchiArt = "0xA4E3513c98b30d4D7cc578d2C328Bd550725D1D0";
 
 export const maticForgeDiamond = "0x4fDfc1B53Fd1D80d969C984ba7a8CE4c7bAaD442";
 
-export const mumbaiOwner = "0x382038b034fa8Ea64C74C81d680669bDaC4D0636";
-export const mumbiaAavegotchiDiamond =
-  "0x83e73D9CF22dFc3A767EA1cE0611F7f50306622e";
-export const mumbaiWearableDiamond =
-  "0x1b1bcB49A744a09aEd636CDD9893508BdF1431A8";
-export const mumbaiForgeDiamond = "0x2E6cb85DD86141a2A284988E883fF377CA223afE";
-
 export async function diamondOwner(address: string, ethers: any) {
   return await (await ethers.getContractAt("OwnershipFacet", address)).owner();
 }
 
-export async function getFunctionsForFacet(facetAddress: string, ethers: any) {
+export async function getFunctionsForFacet(
+  facetAddress: string,
+  ethers: any,
+  diamondAddress: string
+) {
   const Loupe = (await ethers.getContractAt(
     "DiamondLoupeFacet",
-    maticDiamondAddress
+    diamondAddress
   )) as DiamondLoupeFacet;
   const functions = await Loupe.facetFunctionSelectors(facetAddress);
   return functions;
@@ -129,13 +157,14 @@ export async function getFunctionsForFacet(facetAddress: string, ethers: any) {
 export async function getDiamondSigner(
   hre: HardhatRuntimeEnvironment,
   override?: string,
-  useLedger?: boolean
+  useLedger?: boolean,
+  diamondAddress?: string
 ) {
   //Instantiate the Signer
   const owner = await (
     (await hre.ethers.getContractAt(
       "OwnershipFacet",
-      maticDiamondAddress
+      diamondAddress || chainAddressesMap[8453].aavegotchiDiamond
     )) as OwnershipFacet
   ).owner();
   const testing = ["hardhat", "localhost"].includes(hre.network.name);
@@ -242,13 +271,6 @@ export async function hasDuplicateGotchiIds(_array: string[]) {
   return false;
 }
 
-interface ProposalTitle {
-  proposals: [
-    {
-      title: string;
-    }
-  ];
-}
 export function propType(title: string): "coreprop" | "sigprop" {
   if (title.includes("AGIP")) {
     return "coreprop";

@@ -3,10 +3,9 @@ import * as fs from "fs";
 import * as path from "path";
 import { Signer } from "ethers";
 import {
+  chainAddressesMap,
   getRelayerSigner,
-  maticDiamondAddress,
   xpRelayerAddress,
-  propType,
 } from "./helperFunctions";
 import { generateMerkleTree } from "./query/getAavegotchisXPData";
 import { MerkleDropFacet } from "../typechain";
@@ -42,15 +41,12 @@ class XPDropDeployer {
 
     // Set diamond address based on network
     if (hre.network.name === "base") {
-      // TODO: Add baseDiamondAddress to helperFunctions.ts
-      throw new Error(
-        "Base diamond address not yet configured. Please add baseDiamondAddress to helperFunctions.ts"
-      );
+      this.diamondAddress = chainAddressesMap[8453].aavegotchiDiamond;
     } else if (hre.network.name === "matic") {
-      this.diamondAddress = maticDiamondAddress;
+      this.diamondAddress = chainAddressesMap[137].aavegotchiDiamond;
     } else {
-      // Default to matic for testing
-      this.diamondAddress = maticDiamondAddress;
+      // Default to Base for testing
+      this.diamondAddress = chainAddressesMap[8453].aavegotchiDiamond;
     }
   }
 
@@ -141,8 +137,7 @@ class XPDropDeployer {
   }
 
   async deployXPDropPair(entry: XPDropTrackingEntry): Promise<{
-    sigpropTx?: ContractTransaction;
-    corepropTx?: ContractTransaction;
+    tx?: ContractTransaction;
   }> {
     console.log(`\n🚀 Deploying AGIP ${entry.agip_number}: ${entry.title}`);
 
@@ -164,28 +159,19 @@ class XPDropDeployer {
       console.log(`      Sigprop: ${sigprop.title} (${entry.sigprop_id})`);
       console.log(`      Coreprop: ${coreprop.title} (${entry.coreprop_id})`);
       console.log(`      Sigprop XP: 10, Coreprop XP: 20`);
-      return {};
+      return { tx: undefined };
     }
 
-    // Deploy sigprop
-    console.log(`   📤 Deploying sigprop: ${sigprop.title}`);
-    const sigpropTx = await this.merkleDropContract!.createXPDrop(
-      entry.sigprop_id,
-      sigpropRoot,
-      10 // sigprop XP amount
+    // Deploy both using batch function for atomic operation
+    console.log(`   📤 Batch deploying sigprop + coreprop: ${entry.title}`);
+    const batchTx = await this.merkleDropContract!.batchCreateXPDrop(
+      [entry.sigprop_id, entry.coreprop_id],
+      [sigpropRoot, corepropRoot],
+      [10, 20] // sigprop: 10 XP, coreprop: 20 XP
     );
-    console.log(`      Tx Hash: ${sigpropTx.hash}`);
+    console.log(`      Batch Tx Hash: ${batchTx.hash}`);
 
-    // Deploy coreprop
-    console.log(`   📤 Deploying coreprop: ${coreprop.title}`);
-    const corepropTx = await this.merkleDropContract!.createXPDrop(
-      entry.coreprop_id,
-      corepropRoot,
-      20 // coreprop XP amount
-    );
-    console.log(`      Tx Hash: ${corepropTx.hash}`);
-
-    return { sigpropTx, corepropTx };
+    return { tx: batchTx };
   }
 
   async verifyDeployment(entry: XPDropTrackingEntry): Promise<boolean> {
@@ -272,13 +258,12 @@ class XPDropDeployer {
 
       try {
         // Deploy the XP drop pair
-        const { sigpropTx, corepropTx } = await this.deployXPDropPair(entry);
+        const { tx } = await this.deployXPDropPair(entry);
 
-        // Wait for transactions to be mined (if not dry run)
-        if (!this.isDryRun && sigpropTx && corepropTx) {
-          console.log(`   ⏳ Waiting for transactions to be mined...`);
-          await sigpropTx.wait();
-          await corepropTx.wait();
+        // Wait for batch transaction to be mined (if not dry run)
+        if (!this.isDryRun && tx) {
+          console.log(`   ⏳ Waiting for batch transaction to be mined...`);
+          await tx.wait();
         }
 
         // Verify deployment
@@ -291,9 +276,7 @@ class XPDropDeployer {
         }
 
         // Update tracking data
-        const txHashes = [sigpropTx?.hash, corepropTx?.hash].filter(
-          Boolean
-        ) as string[];
+        const txHashes = tx ? [tx.hash] : [];
         await this.updateTrackingData(tracking, agipKey, txHashes);
 
         deployed++;

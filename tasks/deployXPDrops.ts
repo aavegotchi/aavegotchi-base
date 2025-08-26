@@ -3,9 +3,9 @@ import { task } from "hardhat/config";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import {
   getRelayerSigner,
-  maticDiamondAddress,
   xpRelayerAddress,
   propType,
+  chainAddressesMap,
 } from "../scripts/helperFunctions";
 import { generateMerkleTree } from "../scripts/query/getAavegotchisXPData";
 import { MerkleDropFacet } from "../typechain";
@@ -28,7 +28,7 @@ task("deployXPDrops", "Deploys onchain XP airdrops for a list of proposals")
       //get root and do file writes
       const { root, prop } = await generateMerkleTree(propId, hre);
 
-      const diamondAddress = maticDiamondAddress;
+      const diamondAddress = chainAddressesMap[8453].aavegotchiDiamond;
       const gameManager = xpRelayerAddress;
       let signer: Signer;
       const testing = ["hardhat", "localhost"].includes(hre.network.name);
