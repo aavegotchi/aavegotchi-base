@@ -1,0 +1,364 @@
+import { HardhatRuntimeEnvironment } from "hardhat/types";
+import * as fs from "fs";
+import * as path from "path";
+import { Signer } from "ethers";
+import {
+  getRelayerSigner,
+  maticDiamondAddress,
+  xpRelayerAddress,
+  propType,
+} from "./helperFunctions";
+import { generateMerkleTree } from "./query/getAavegotchisXPData";
+import { MerkleDropFacet } from "../typechain";
+import { ContractTransaction } from "@ethersproject/contracts";
+
+interface XPDropTrackingEntry {
+  agip_number: number;
+  title: string;
+  status: "not_created" | "pending" | "deployed";
+  sigprop_script?: string;
+  coreprop_script?: string;
+  sigprop_id: string;
+  coreprop_id: string;
+  created_date?: string;
+  deployed_date?: string;
+  tx_hash?: string;
+}
+
+interface XPDropTracking {
+  [key: string]: XPDropTrackingEntry; // key format: "agip_XXX"
+}
+
+class XPDropDeployer {
+  private hre: HardhatRuntimeEnvironment;
+  private isDryRun: boolean;
+  private signer: Signer | null = null;
+  private merkleDropContract: MerkleDropFacet | null = null;
+  private diamondAddress: string;
+
+  constructor(hre: HardhatRuntimeEnvironment, isDryRun: boolean = false) {
+    this.hre = hre;
+    this.isDryRun = isDryRun;
+
+    // Set diamond address based on network
+    if (hre.network.name === "base") {
+      // TODO: Add baseDiamondAddress to helperFunctions.ts
+      throw new Error(
+        "Base diamond address not yet configured. Please add baseDiamondAddress to helperFunctions.ts"
+      );
+    } else if (hre.network.name === "matic") {
+      this.diamondAddress = maticDiamondAddress;
+    } else {
+      // Default to matic for testing
+      this.diamondAddress = maticDiamondAddress;
+    }
+  }
+
+  async initialize(): Promise<void> {
+    console.log(`🔧 Initializing XP Drop Deployer...`);
+    console.log(`   Network: ${this.hre.network.name}`);
+    console.log(`   Diamond: ${this.diamondAddress}`);
+    console.log(`   Dry Run: ${this.isDryRun ? "✅" : "❌"}`);
+
+    // Setup signer
+    const testing = ["hardhat", "localhost"].includes(this.hre.network.name);
+
+    if (testing || this.isDryRun) {
+      const gameManager = xpRelayerAddress;
+      await this.hre.network.provider.request({
+        method: "hardhat_impersonateAccount",
+        params: [gameManager],
+      });
+
+      // Fund the impersonated account for gas
+      await this.hre.network.provider.send("hardhat_setBalance", [
+        gameManager,
+        "0x1000000000000000000", // 1 ETH
+      ]);
+
+      this.signer = await this.hre.ethers.provider.getSigner(gameManager);
+      console.log(`   Signer: Impersonated game manager (${gameManager})`);
+    } else if (this.hre.network.name === "base") {
+      this.signer = await getRelayerSigner(this.hre);
+      console.log(`   Signer: OpenZeppelin Relayer`);
+    } else {
+      throw new Error(
+        `Network ${this.hre.network.name} not supported for production deployment`
+      );
+    }
+
+    // Setup contract
+    this.merkleDropContract = (
+      await this.hre.ethers.getContractAt(
+        "MerkleDropFacet",
+        this.diamondAddress
+      )
+    ).connect(this.signer) as MerkleDropFacet;
+
+    console.log(`✅ Initialization complete\n`);
+  }
+
+  async loadTrackingData(): Promise<XPDropTracking> {
+    const trackingPath = path.join(__dirname, "xp-drop-tracking.json");
+
+    if (!fs.existsSync(trackingPath)) {
+      throw new Error(`Tracking file not found: ${trackingPath}`);
+    }
+
+    const trackingData: XPDropTracking = JSON.parse(
+      fs.readFileSync(trackingPath, "utf8")
+    );
+
+    console.log(
+      `📊 Loaded tracking data: ${Object.keys(trackingData).length} AGIPs`
+    );
+    return trackingData;
+  }
+
+  async getPendingAGIPs(
+    tracking: XPDropTracking
+  ): Promise<XPDropTrackingEntry[]> {
+    const pending = Object.values(tracking)
+      .filter((entry) => entry.status === "pending")
+      .sort((a, b) => a.agip_number - b.agip_number); // Sort from lowest to highest
+
+    console.log(`🔍 Found ${pending.length} pending AGIPs:`);
+    pending.forEach((entry) => {
+      console.log(`   AGIP ${entry.agip_number}: ${entry.title}`);
+    });
+
+    return pending;
+  }
+
+  async verifyXPDropExists(proposalId: string): Promise<boolean> {
+    try {
+      const xpDrop = await this.merkleDropContract!.viewXPDrop(proposalId);
+      // Check if xpAmount > 0 (indicates drop exists)
+      return xpDrop.xpAmount.gt(0);
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async deployXPDropPair(entry: XPDropTrackingEntry): Promise<{
+    sigpropTx?: ContractTransaction;
+    corepropTx?: ContractTransaction;
+  }> {
+    console.log(`\n🚀 Deploying AGIP ${entry.agip_number}: ${entry.title}`);
+
+    // Generate merkle trees for both proposals
+    console.log(`   📝 Generating merkle tree for sigprop...`);
+    const { root: sigpropRoot, prop: sigprop } = await generateMerkleTree(
+      entry.sigprop_id,
+      this.hre
+    );
+
+    console.log(`   📝 Generating merkle tree for coreprop...`);
+    const { root: corepropRoot, prop: coreprop } = await generateMerkleTree(
+      entry.coreprop_id,
+      this.hre
+    );
+
+    if (this.isDryRun) {
+      console.log(`   🔍 DRY RUN - Would deploy:`);
+      console.log(`      Sigprop: ${sigprop.title} (${entry.sigprop_id})`);
+      console.log(`      Coreprop: ${coreprop.title} (${entry.coreprop_id})`);
+      console.log(`      Sigprop XP: 10, Coreprop XP: 20`);
+      return {};
+    }
+
+    // Deploy sigprop
+    console.log(`   📤 Deploying sigprop: ${sigprop.title}`);
+    const sigpropTx = await this.merkleDropContract!.createXPDrop(
+      entry.sigprop_id,
+      sigpropRoot,
+      10 // sigprop XP amount
+    );
+    console.log(`      Tx Hash: ${sigpropTx.hash}`);
+
+    // Deploy coreprop
+    console.log(`   📤 Deploying coreprop: ${coreprop.title}`);
+    const corepropTx = await this.merkleDropContract!.createXPDrop(
+      entry.coreprop_id,
+      corepropRoot,
+      20 // coreprop XP amount
+    );
+    console.log(`      Tx Hash: ${corepropTx.hash}`);
+
+    return { sigpropTx, corepropTx };
+  }
+
+  async verifyDeployment(entry: XPDropTrackingEntry): Promise<boolean> {
+    if (this.isDryRun) {
+      console.log(`   ✅ DRY RUN - Skipping verification`);
+      return true;
+    }
+
+    console.log(`   🔍 Verifying deployment...`);
+
+    const sigpropExists = await this.verifyXPDropExists(entry.sigprop_id);
+    const corepropExists = await this.verifyXPDropExists(entry.coreprop_id);
+
+    console.log(`      Sigprop deployed: ${sigpropExists ? "✅" : "❌"}`);
+    console.log(`      Coreprop deployed: ${corepropExists ? "✅" : "❌"}`);
+
+    const bothDeployed = sigpropExists && corepropExists;
+
+    if (bothDeployed) {
+      console.log(`   ✅ Verification successful`);
+    } else {
+      console.log(`   ❌ Verification failed`);
+    }
+
+    return bothDeployed;
+  }
+
+  async updateTrackingData(
+    tracking: XPDropTracking,
+    agipKey: string,
+    txHashes?: string[]
+  ): Promise<void> {
+    if (this.isDryRun) {
+      console.log(`   📝 DRY RUN - Would update tracking for ${agipKey}`);
+      return;
+    }
+
+    tracking[agipKey].status = "deployed";
+    tracking[agipKey].deployed_date = new Date().toISOString();
+
+    if (txHashes && txHashes.length > 0) {
+      tracking[agipKey].tx_hash = txHashes.join(",");
+    }
+
+    // Save updated tracking data
+    const trackingPath = path.join(__dirname, "xp-drop-tracking.json");
+
+    // Sort tracking data by AGIP number (highest to lowest) before saving
+    const sortedTracking: XPDropTracking = {};
+    const sortedKeys = Object.keys(tracking).sort((a, b) => {
+      const agipA = tracking[a].agip_number;
+      const agipB = tracking[b].agip_number;
+      return agipB - agipA; // Sort descending (highest first)
+    });
+
+    for (const key of sortedKeys) {
+      sortedTracking[key] = tracking[key];
+    }
+
+    fs.writeFileSync(trackingPath, JSON.stringify(sortedTracking, null, 2));
+    console.log(`   📝 Updated tracking data`);
+  }
+
+  async deployPendingXPDrops(): Promise<void> {
+    await this.initialize();
+
+    const tracking = await this.loadTrackingData();
+    const pendingAGIPs = await this.getPendingAGIPs(tracking);
+
+    if (pendingAGIPs.length === 0) {
+      console.log(`\n🎉 No pending XP drops to deploy!`);
+      return;
+    }
+
+    console.log(
+      `\n🚀 Starting deployment of ${pendingAGIPs.length} AGIP pairs...\n`
+    );
+
+    let deployed = 0;
+    let failed = 0;
+
+    for (const entry of pendingAGIPs) {
+      const agipKey = `agip_${entry.agip_number}`;
+
+      try {
+        // Deploy the XP drop pair
+        const { sigpropTx, corepropTx } = await this.deployXPDropPair(entry);
+
+        // Wait for transactions to be mined (if not dry run)
+        if (!this.isDryRun && sigpropTx && corepropTx) {
+          console.log(`   ⏳ Waiting for transactions to be mined...`);
+          await sigpropTx.wait();
+          await corepropTx.wait();
+        }
+
+        // Verify deployment
+        const isDeployed = await this.verifyDeployment(entry);
+
+        if (!isDeployed && !this.isDryRun) {
+          throw new Error(
+            `Deployment verification failed for AGIP ${entry.agip_number}`
+          );
+        }
+
+        // Update tracking data
+        const txHashes = [sigpropTx?.hash, corepropTx?.hash].filter(
+          Boolean
+        ) as string[];
+        await this.updateTrackingData(tracking, agipKey, txHashes);
+
+        deployed++;
+        console.log(`✅ AGIP ${entry.agip_number} deployment complete\n`);
+      } catch (error) {
+        failed++;
+        console.error(`❌ Failed to deploy AGIP ${entry.agip_number}:`, error);
+
+        if (!this.isDryRun) {
+          throw error; // Stop on first failure in production
+        }
+      }
+    }
+
+    console.log(`\n📊 Deployment Summary:`);
+    console.log(`   ✅ Successful: ${deployed}`);
+    console.log(`   ❌ Failed: ${failed}`);
+
+    if (this.isDryRun) {
+      console.log(`\n🔍 This was a dry run. No actual deployments were made.`);
+      console.log(`Remove --dry-run flag to perform actual deployments.`);
+    }
+  }
+}
+
+// CLI interface
+async function main() {
+  const hre = require("hardhat");
+  const isDryRun =
+    process.argv.includes("--dry-run") || process.env.DRY_RUN === "true";
+
+  if (!isDryRun && hre.network.name === "base") {
+    console.log(`⚠️  WARNING: About to deploy to BASE network!`);
+    console.log(`Please confirm this is intended before proceeding.`);
+    console.log(`Add --dry-run flag to test safely on hardhat.`);
+
+    // Add a confirmation prompt in production
+    const readline = require("readline");
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    const answer = await new Promise<string>((resolve) => {
+      rl.question("Type 'CONFIRM' to proceed with BASE deployment: ", resolve);
+    });
+    rl.close();
+
+    if (answer !== "CONFIRM") {
+      console.log("❌ Deployment cancelled");
+      process.exit(0);
+    }
+  }
+
+  const deployer = new XPDropDeployer(hre, isDryRun);
+  await deployer.deployPendingXPDrops();
+}
+
+if (require.main === module) {
+  main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+      console.error("❌ Deployment failed:", error);
+      process.exit(1);
+    });
+}
+
+export { XPDropDeployer };

@@ -363,7 +363,7 @@ async function generateXPDropScripts(
     // AGIPs 142+ are pending (checked via xpDrops folders)
     let isDeployed = false;
     let isPending = false;
-    
+
     if (agipNumber <= 141) {
       // AGIPs 1-141 are considered deployed (data in another repo)
       isDeployed = bothScriptsExist;
@@ -385,7 +385,7 @@ async function generateXPDropScripts(
       const sigpropDeployed = fs.existsSync(sigpropXpDropPath);
       const corepropDeployed = fs.existsSync(corepropXpDropPath);
       const bothDeployed = sigpropDeployed && corepropDeployed;
-      
+
       isDeployed = bothDeployed;
       isPending = bothScriptsExist && !isDeployed;
     }
