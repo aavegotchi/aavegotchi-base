@@ -8,8 +8,8 @@
     "created_date": "2025-08-26T05:36:54.128Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip153.ts",
     "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip153_coreprop.ts",
-    "deployed_date": "2025-08-26T09:59:42.226Z",
-    "tx_hash": "0x5f839b0a53cce2e5de951947656aa9ad4216fcb54a75b6754ebe6dce2352f1bd"
+    "tx_hash": "0x5f839b0a53cce2e5de951947656aa9ad4216fcb54a75b6754ebe6dce2352f1bd",
+    "deployed_date": "2025-08-26T10:17:42.627Z"
   },
   "agip_152": {
     "agip_number": 152,
@@ -20,8 +20,8 @@
     "created_date": "2025-08-26T05:36:54.128Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip152.ts",
     "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip152_coreprop.ts",
-    "deployed_date": "2025-08-26T09:59:13.451Z",
-    "tx_hash": "0xfb2abd967a892e17aea2d7338a821459132c2123b4c84dbe42ae97a6ebdfce39"
+    "tx_hash": "0xfb2abd967a892e17aea2d7338a821459132c2123b4c84dbe42ae97a6ebdfce39",
+    "deployed_date": "2025-08-26T10:17:42.627Z"
   },
   "agip_151": {
     "agip_number": 151,
@@ -32,8 +32,8 @@
     "created_date": "2025-08-26T05:36:54.129Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip151.ts",
     "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip151_coreprop.ts",
-    "deployed_date": "2025-08-26T09:58:42.301Z",
-    "tx_hash": "0x0f86563b71f1a69276169c461699f9cb12662057e007f6336f5c8ebaa1edaee4"
+    "tx_hash": "0x0f86563b71f1a69276169c461699f9cb12662057e007f6336f5c8ebaa1edaee4",
+    "deployed_date": "2025-08-26T10:17:42.627Z"
   },
   "agip_150": {
     "agip_number": 150,
@@ -44,8 +44,8 @@
     "created_date": "2025-08-26T05:36:54.128Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip150.ts",
     "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip150_coreprop.ts",
-    "deployed_date": "2025-08-26T09:58:11.175Z",
-    "tx_hash": "0x16111ddaa6945dfece00e62e33d0a3c53d65ccf21049524e58abd780e600c701"
+    "tx_hash": "0x16111ddaa6945dfece00e62e33d0a3c53d65ccf21049524e58abd780e600c701",
+    "deployed_date": "2025-08-26T10:17:42.627Z"
   },
   "agip_149": {
     "agip_number": 149,
@@ -56,8 +56,8 @@
     "created_date": "2025-08-26T05:36:54.129Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip149.ts",
     "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip149_coreprop.ts",
-    "deployed_date": "2025-08-26T09:57:39.038Z",
-    "tx_hash": "0x25242bea3abb2bf59c6eb4a730d0882d30edfad8aca2d802efd9b66d2e5184b0"
+    "tx_hash": "0x25242bea3abb2bf59c6eb4a730d0882d30edfad8aca2d802efd9b66d2e5184b0",
+    "deployed_date": "2025-08-26T10:17:42.627Z"
   },
   "agip_148": {
     "agip_number": 148,
@@ -68,8 +68,8 @@
     "created_date": "2025-08-26T05:36:54.129Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip148.ts",
     "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip148_coreprop.ts",
-    "deployed_date": "2025-08-26T09:57:06.595Z",
-    "tx_hash": "0xb857c5a10249fa7dc405434b518b4741ddbb2a6e522f915fbd4468bae0977414"
+    "tx_hash": "0xb857c5a10249fa7dc405434b518b4741ddbb2a6e522f915fbd4468bae0977414",
+    "deployed_date": "2025-08-26T10:17:42.627Z"
   },
   "agip_147": {
     "agip_number": 147,
@@ -80,8 +80,8 @@
     "created_date": "2025-08-26T05:36:54.129Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip147.ts",
     "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip147_coreprop.ts",
-    "deployed_date": "2025-08-26T09:53:25.692Z",
-    "tx_hash": "0x520408d518bb58789c29f8c376646cc0442be01c155f296d7ba964a5e60c0d16"
+    "tx_hash": "0x520408d518bb58789c29f8c376646cc0442be01c155f296d7ba964a5e60c0d16",
+    "deployed_date": "2025-08-26T10:17:42.627Z"
   },
   "agip_146": {
     "agip_number": 146,
@@ -92,8 +92,8 @@
     "created_date": "2025-08-26T05:36:54.129Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip146.ts",
     "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip146_coreprop.ts",
-    "deployed_date": "2025-08-26T09:52:58.882Z",
-    "tx_hash": "0xf3cc02a931308fa361cd272f0230662dd48bddbbae685d6ccc6fb94fe6e07e9a"
+    "tx_hash": "0xf3cc02a931308fa361cd272f0230662dd48bddbbae685d6ccc6fb94fe6e07e9a",
+    "deployed_date": "2025-08-26T10:17:42.627Z"
   },
   "agip_145": {
     "agip_number": 145,
@@ -103,7 +103,8 @@
     "coreprop_id": "0xcf7ad9ce9e596b4b326ddd645cf0a6f203b4f042751038a1f82c423dc57c7ac8",
     "created_date": "2025-08-26T05:36:54.130Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip145.ts",
-    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip145_coreprop.ts"
+    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip145_coreprop.ts",
+    "deployed_date": "2025-08-26T10:17:42.627Z"
   },
   "agip_144": {
     "agip_number": 144,
@@ -114,8 +115,8 @@
     "created_date": "2025-08-26T05:36:54.130Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip144.ts",
     "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip144_coreprop.ts",
-    "deployed_date": "2025-08-26T09:43:25.612Z",
-    "tx_hash": "0xfd92dea695d8cf445604c3b659d95fc05d6e1f660e0ea013067aadc512df7ad3"
+    "tx_hash": "0xfd92dea695d8cf445604c3b659d95fc05d6e1f660e0ea013067aadc512df7ad3",
+    "deployed_date": "2025-08-26T10:17:42.627Z"
   },
   "agip_143": {
     "agip_number": 143,
@@ -126,8 +127,8 @@
     "created_date": "2025-08-26T05:36:54.130Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip143.ts",
     "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip143_coreprop.ts",
-    "deployed_date": "2025-08-26T09:42:39.946Z",
-    "tx_hash": "0x9486d1ff323372503c977fdd960f5481e63383570a12eb02f5e2fd7d6c2be0a7"
+    "tx_hash": "0x9486d1ff323372503c977fdd960f5481e63383570a12eb02f5e2fd7d6c2be0a7",
+    "deployed_date": "2025-08-26T10:17:42.627Z"
   },
   "agip_142": {
     "agip_number": 142,

@@ -370,22 +370,60 @@ async function generateXPDropScripts(
       isPending = false;
     } else {
       // AGIPs 142+ check actual deployment via xpDrops folders
-      const sigpropXpDropPath = path.join(
-        __dirname,
-        "airdrops",
-        "xpDrops",
-        pair.sigprop.id
-      );
-      const corepropXpDropPath = path.join(
-        __dirname,
-        "airdrops",
-        "xpDrops",
-        pair.coreprop.id
-      );
-      const sigpropDeployed = fs.existsSync(sigpropXpDropPath);
-      const corepropDeployed = fs.existsSync(corepropXpDropPath);
-      const bothDeployed = sigpropDeployed && corepropDeployed;
+      // Check multiple networks where deployments might exist
+      const networks = ["base", "hardhat", "polygon"]; // Common networks used
+      let sigpropDeployed = false;
+      let corepropDeployed = false;
 
+      // Check if either proposal exists in any network directory
+      for (const network of networks) {
+        const sigpropXpDropPath = path.join(
+          __dirname,
+          "airdrops",
+          "xpDrops",
+          network,
+          pair.sigprop.id
+        );
+        const corepropXpDropPath = path.join(
+          __dirname,
+          "airdrops",
+          "xpDrops",
+          network,
+          pair.coreprop.id
+        );
+
+        if (fs.existsSync(sigpropXpDropPath)) {
+          sigpropDeployed = true;
+        }
+        if (fs.existsSync(corepropXpDropPath)) {
+          corepropDeployed = true;
+        }
+
+        // Break early if both are found
+        if (sigpropDeployed && corepropDeployed) break;
+      }
+
+      // Also check direct proposal ID folders (legacy structure)
+      if (!sigpropDeployed) {
+        const legacySigpropPath = path.join(
+          __dirname,
+          "airdrops",
+          "xpDrops",
+          pair.sigprop.id
+        );
+        sigpropDeployed = fs.existsSync(legacySigpropPath);
+      }
+      if (!corepropDeployed) {
+        const legacyCorepropPath = path.join(
+          __dirname,
+          "airdrops",
+          "xpDrops",
+          pair.coreprop.id
+        );
+        corepropDeployed = fs.existsSync(legacyCorepropPath);
+      }
+
+      const bothDeployed = sigpropDeployed && corepropDeployed;
       isDeployed = bothDeployed;
       isPending = bothScriptsExist && !isDeployed;
     }
@@ -426,25 +464,36 @@ async function generateXPDropScripts(
       tracking[agipKey].coreprop_id = pair.coreprop.id;
 
       // Update status based on deployment rules
-      if (isDeployed && tracking[agipKey].status !== "deployed") {
+      // IMPORTANT: Never change a "deployed" status back to pending or not_created
+      if (tracking[agipKey].status === "deployed") {
+        // Keep deployed status, but update metadata if needed
+        if (bothScriptsExist) {
+          tracking[agipKey].sigprop_script = sigpropScriptPath;
+          tracking[agipKey].coreprop_script = corepropScriptPath;
+        }
+        // Keep existing deployed_date
+      } else if (isDeployed && tracking[agipKey].status !== "deployed") {
         tracking[agipKey].status = "deployed";
         if (bothScriptsExist) {
           tracking[agipKey].sigprop_script = sigpropScriptPath;
           tracking[agipKey].coreprop_script = corepropScriptPath;
         }
         tracking[agipKey].deployed_date = new Date().toISOString();
-      } else if (isPending && tracking[agipKey].status !== "pending") {
+      } else if (isPending && tracking[agipKey].status === "not_created") {
+        // Only upgrade from not_created to pending, never downgrade from deployed
         tracking[agipKey].status = "pending";
         tracking[agipKey].sigprop_script = sigpropScriptPath;
         tracking[agipKey].coreprop_script = corepropScriptPath;
-        // Remove deployed_date if it was previously set incorrectly
-        delete tracking[agipKey].deployed_date;
-      } else if (!isDeployed && !isPending && bothScriptsExist) {
-        // Scripts exist but not deployed, should be pending
+      } else if (
+        !isDeployed &&
+        !isPending &&
+        bothScriptsExist &&
+        tracking[agipKey].status === "not_created"
+      ) {
+        // Scripts exist but not deployed, should be pending (only if currently not_created)
         tracking[agipKey].status = "pending";
         tracking[agipKey].sigprop_script = sigpropScriptPath;
         tracking[agipKey].coreprop_script = corepropScriptPath;
-        delete tracking[agipKey].deployed_date;
       }
 
       existingEntriesUpdated++;

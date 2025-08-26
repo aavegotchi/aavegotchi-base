@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prettier": "prettier --write contracts/**/*.sol",
-    "solhint": "solhint 'contracts/**/*.sol'"
+    "solhint": "solhint 'contracts/**/*.sol'",
+    "check-props": "npx hardhat run scripts/analyze-snapshot-proposals.ts",
+    "deploy-props": "npx hardhat scripts/deploy-pending-xp-drops.ts"
   },
   "repository": {
     "type": "git",
