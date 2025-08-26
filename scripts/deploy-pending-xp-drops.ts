@@ -10,6 +10,7 @@ import {
 import { generateMerkleTree } from "./query/getAavegotchisXPData";
 import { MerkleDropFacet } from "../typechain";
 import { ContractTransaction } from "@ethersproject/contracts";
+import { LedgerSigner } from "@anders-t/ethers-ledger";
 
 interface XPDropTrackingEntry {
   agip_number: number;
@@ -75,8 +76,13 @@ class XPDropDeployer {
       this.signer = await this.hre.ethers.provider.getSigner(gameManager);
       console.log(`   Signer: Impersonated game manager (${gameManager})`);
     } else if (this.hre.network.name === "base") {
-      this.signer = await getRelayerSigner(this.hre);
-      console.log(`   Signer: OpenZeppelin Relayer`);
+      this.signer = new LedgerSigner(
+        this.hre.ethers.provider,
+        "44'/60'/1'/0/0"
+      );
+
+      //await getRelayerSigner(this.hre);
+      console.log(`   Signer: Ledger`);
     } else {
       throw new Error(
         `Network ${this.hre.network.name} not supported for production deployment`

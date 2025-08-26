@@ -92,32 +92,38 @@
   "agip_144": {
     "agip_number": 144,
     "title": "Proposal: Allocate 400K GHST from Gotchiverse player rewards wallet for GOTCHI Points SZN 1",
-    "status": "pending",
+    "status": "deployed",
     "sigprop_id": "0x05c54d61873358d9007a605fee806c5383bc8e4649ae12a3bd2ab82c312d5a8d",
     "coreprop_id": "0x9ea2ee26c83699b8c9e773d6d693a0051a4c42b36bd67bb6c5a3aa8d8fe9a759",
     "created_date": "2025-08-26T05:36:54.130Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip144.ts",
-    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip144_coreprop.ts"
+    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip144_coreprop.ts",
+    "deployed_date": "2025-08-26T09:43:25.612Z",
+    "tx_hash": "0xfd92dea695d8cf445604c3b659d95fc05d6e1f660e0ea013067aadc512df7ad3"
   },
   "agip_143": {
     "agip_number": 143,
     "title": "Proposal: Make Aavegotchi Based Again",
-    "status": "pending",
+    "status": "deployed",
     "sigprop_id": "0xc01b7199f950af55a3c4ccd1ae4eeef74e0bea3b09f0f643dce7ba9b67f125e7",
     "coreprop_id": "0x1e880963be83c2a417edf4fad7e9d05f5c37396b5d16810003a481d8d91746c7",
     "created_date": "2025-08-26T05:36:54.130Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip143.ts",
-    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip143_coreprop.ts"
+    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip143_coreprop.ts",
+    "deployed_date": "2025-08-26T09:42:39.946Z",
+    "tx_hash": "0x9486d1ff323372503c977fdd960f5481e63383570a12eb02f5e2fd7d6c2be0a7"
   },
   "agip_142": {
     "agip_number": 142,
     "title": "Buy 2 million dollars worth of GHST",
-    "status": "pending",
+    "status": "deployed",
     "sigprop_id": "0x520b143c30f00b46476316670dae39ff8f2dff0f83f5234c14246a50c862f34e",
     "coreprop_id": "0x0137aeee8ac0eb079d47a9ce21c389762dfcab36231d4539661bcf8cc88ec128",
     "created_date": "2025-08-26T06:10:00.000Z",
     "sigprop_script": "scripts/airdrops/sigprops/merkle/grantXP_agip142.ts",
-    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip142_coreprop.ts"
+    "coreprop_script": "scripts/airdrops/coreprops/merkle/grantXP_agip142_coreprop.ts",
+    "deployed_date": "2025-08-26T09:41:52.549Z",
+    "tx_hash": "0x423d929b99fdd4a31b86c47d8f15a3691015d9e6c6074282437a21dffa37f32a"
   },
   "agip_141": {
     "agip_number": 141,

@@ -10,6 +10,7 @@ import {
 import { generateMerkleTree } from "../scripts/query/getAavegotchisXPData";
 import { MerkleDropFacet } from "../typechain";
 import { ContractTransaction } from "@ethersproject/contracts";
+import { LedgerSigner } from "@anders-t/ethers-ledger";
 
 export interface XpDropArgs {
   proposalIds: string;
@@ -44,6 +45,9 @@ task("deployXPDrops", "Deploys onchain XP airdrops for a list of proposals")
         signer = accounts[0];
 
         //await getRelayerSigner(hre);
+      } else if (hre.network.name === "base") {
+        //todo: update to relayer after a few runs
+        signer = new LedgerSigner(hre.ethers.provider, "44'/60'/1'/0/0");
       } else {
         throw Error("Incorrect network selected");
       }
