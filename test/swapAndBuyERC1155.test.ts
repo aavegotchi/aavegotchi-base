@@ -13,8 +13,8 @@ const ADDRESSES = {
   USDC_TOKEN: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   DIAMOND: "0xA99c4B08201F2913Db8D28e71d020c4298F29dBF",
   Z_ROUTER: "0x0000000000404FECAf36E6184475eE1254835",
-  WHALE_USDC: "0xCc72039A141c6e34a779eF93AEF5eB4C82A893c7", // Base whale with USDC
-  WHALE_ETH: "0x40A2aCCbd92BCA938b02010E17A5b8929b49130D", // Base whale with ETH
+  WHALE_USDC: "0x1985EA6E9c68E1C272d8209f3B478AC2Fdb25c87", // Coinbase 35 - has significant USDC
+  WHALE_ETH: "0x1985EA6E9c68E1C272d8209f3B478AC2Fdb25c87", // Same address - has 78+ ETH
 } as const;
 
 interface ERC1155Listing {
@@ -95,7 +95,7 @@ describe("SwapAndBuyERC1155 Integration Test", function () {
         category: "0",
         erc1155TokenAddress: ADDRESSES.DIAMOND,
         erc1155TypeId: "1",
-        priceInWei: ethers.utils.parseEther("0.001").toString(), // 0.001 GHST is reasonable
+        priceInWei: ethers.utils.parseEther("1").toString(), // 1 GHST is reasonable
         quantity: "10",
         seller: "0x123",
       };
@@ -191,7 +191,11 @@ describe("SwapAndBuyERC1155 Integration Test", function () {
       const totalCost = listingPrice.mul(quantity);
 
       // Calculate USDC needed (add 10% buffer for slippage)
-      const usdcAmount = totalCost.mul(110).div(100);
+      // Assuming 1 GHST ≈ 0.46 USDC (approximate current price)
+      // Convert GHST amount to USDC: totalCost (18 decimals) -> USDC (6 decimals)
+      const ghstToUsdcRate = ethers.utils.parseUnits("0.46", 6); // 0.46 USDC per GHST with 6 decimals
+      const usdcNeeded = totalCost.mul(ghstToUsdcRate).div(ethers.utils.parseEther("1"));
+      const usdcAmount = usdcNeeded.mul(110).div(100); // Add 10% slippage buffer
 
       console.log(
         `💵 USDC amount needed: ${ethers.utils.formatUnits(usdcAmount, 6)} USDC`
@@ -210,9 +214,27 @@ describe("SwapAndBuyERC1155 Integration Test", function () {
         ADDRESSES.GHST_TOKEN
       );
 
-      // Transfer USDC to deployer
-      await usdcToken.connect(usdcWhale).transfer(deployer.address, usdcAmount);
-      await usdcToken.connect(deployer).approve(ADDRESSES.DIAMOND, usdcAmount);
+      // Check whale's USDC balance first
+      const whaleUsdcBalance = await usdcToken.balanceOf(ADDRESSES.WHALE_USDC);
+      console.log(
+        `🐋 Whale USDC balance: ${ethers.utils.formatUnits(whaleUsdcBalance, 6)} USDC`
+      );
+      
+      if (whaleUsdcBalance.lt(usdcAmount)) {
+        console.log("⚠️  Whale doesn't have enough USDC, using available amount");
+        // Use what's available or a reasonable amount
+        const safeAmount = whaleUsdcBalance.gt(ethers.utils.parseUnits("10", 6)) 
+          ? ethers.utils.parseUnits("10", 6) 
+          : whaleUsdcBalance.div(2);
+        
+        // Transfer USDC to deployer
+        await usdcToken.connect(usdcWhale).transfer(deployer.address, safeAmount);
+        await usdcToken.connect(deployer).approve(ADDRESSES.DIAMOND, safeAmount);
+      } else {
+        // Transfer USDC to deployer
+        await usdcToken.connect(usdcWhale).transfer(deployer.address, usdcAmount);
+        await usdcToken.connect(deployer).approve(ADDRESSES.DIAMOND, usdcAmount);
+      }
 
       const initialGhstBalance = await ghstToken.balanceOf(deployer.address);
       const initialUsdcBalance = await usdcToken.balanceOf(deployer.address);
@@ -302,7 +324,11 @@ describe("SwapAndBuyERC1155 Integration Test", function () {
       const totalCost = listingPrice.mul(quantity);
 
       // Calculate ETH needed (add 20% buffer for slippage due to volatility)
-      const ethAmount = totalCost.mul(120).div(100);
+      // Assuming 1 GHST ≈ 0.0001 ETH (approximate current price)
+      // Convert GHST amount to ETH: both have 18 decimals
+      const ghstToEthRate = ethers.utils.parseEther("0.0001"); // 0.0001 ETH per GHST
+      const ethNeeded = totalCost.mul(ghstToEthRate).div(ethers.utils.parseEther("1"));
+      const ethAmount = ethNeeded.mul(120).div(100); // Add 20% slippage buffer
 
       console.log(
         `🔷 ETH amount needed: ${ethers.utils.formatEther(ethAmount)} ETH`
@@ -317,11 +343,32 @@ describe("SwapAndBuyERC1155 Integration Test", function () {
         ADDRESSES.GHST_TOKEN
       );
 
-      // Transfer ETH to deployer
-      await ethWhale.sendTransaction({
-        to: deployer.address,
-        value: ethAmount,
-      });
+      // Check whale's ETH balance first
+      const whaleEthBalance = await ethers.provider.getBalance(ADDRESSES.WHALE_ETH);
+      console.log(
+        `🐋 Whale ETH balance: ${ethers.utils.formatEther(whaleEthBalance)} ETH`
+      );
+      
+      if (whaleEthBalance.lt(ethAmount.add(ethers.utils.parseEther("0.01")))) { // Account for gas
+        console.log("⚠️  Whale doesn't have enough ETH, using available amount");
+        // Use what's available minus gas reserve
+        const gasReserve = ethers.utils.parseEther("0.01");
+        const safeAmount = whaleEthBalance.gt(gasReserve.mul(2)) 
+          ? whaleEthBalance.sub(gasReserve) 
+          : ethers.utils.parseEther("0.001"); // Minimum test amount
+        
+        // Transfer ETH to deployer
+        await ethWhale.sendTransaction({
+          to: deployer.address,
+          value: safeAmount,
+        });
+      } else {
+        // Transfer ETH to deployer
+        await ethWhale.sendTransaction({
+          to: deployer.address,
+          value: ethAmount,
+        });
+      }
 
       const initialGhstBalance = await ghstToken.balanceOf(deployer.address);
       const initialEthBalance = await ethers.provider.getBalance(
