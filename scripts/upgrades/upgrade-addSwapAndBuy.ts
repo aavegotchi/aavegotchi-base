@@ -9,7 +9,7 @@ export async function upgradeAddSwapAndBuy(
   diamondAddress: string,
   diamondOwner: string
 ) {
-  console.log("🚀 Deploying swapAndBuyERC721 function to diamond...");
+  console.log("🚀 Deploying swap and buy functions to diamond...");
 
   //Networks deployed
   //Base Sepolia (but router not deployed there...)
@@ -32,6 +32,14 @@ export async function upgradeAddSwapAndBuy(
       ],
       removeSelectors: [],
     },
+    {
+      facetName:
+        "contracts/Aavegotchi/facets/MarketplaceGetterFacet.sol:MarketplaceGetterFacet",
+      addSelectors: [
+        "function getGHSTAmountOut(address tokenIn,uint256 amountIn) external view returns (uint256)",
+      ],
+      removeSelectors: [],
+    },
   ];
 
   const joined = convertFacetAndSelectorsToString(facets);
@@ -48,7 +56,7 @@ export async function upgradeAddSwapAndBuy(
 
   await run("deployUpgrade", args);
   console.log(
-    "✅ swapAndBuyERC721 and swapAndBuyERC1155 functions added to diamond!"
+    "✅ swapAndBuyERC721, swapAndBuyERC1155, and getGHSTAmountOut functions added to diamond!"
   );
 }
 

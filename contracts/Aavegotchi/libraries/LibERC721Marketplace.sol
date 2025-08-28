@@ -132,9 +132,10 @@ library LibERC721Marketplace {
         address seller = listing.seller;
         require(seller != _buyer, "ERC721Marketplace: Buyer can't be seller");
 
-        // Check GHST balance for regular purchases (swap facet handles this differently)
+        // Check GHST balance and allowance for regular purchases (swap facet handles this differently)
         if (_buyer != address(this)) {
             require(IERC20(s.ghstContract).balanceOf(_buyer) >= _priceInWei, "ERC721Marketplace: Not enough GHST");
+            require(IERC20(s.ghstContract).allowance(_buyer, address(this)) >= _priceInWei, "ERC721Marketplace: Not enough GHST allowance");
         }
 
         if (listing.whitelistId > 0) {

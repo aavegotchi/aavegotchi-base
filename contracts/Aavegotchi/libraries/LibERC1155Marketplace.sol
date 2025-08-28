@@ -149,9 +149,10 @@ library LibERC1155Marketplace {
             // Payment handling in separate scope to reduce stack depth
             uint256 cost = _quantity * _priceInWei;
 
-            // Check GHST balance for regular purchases (swap facet handles this differently)
+            // Check GHST balance and allowance for regular purchases (swap facet handles this differently)
             if (_buyer != address(this)) {
                 require(IERC20(s.ghstContract).balanceOf(_buyer) >= cost, "ERC1155Marketplace: not enough GHST");
+                require(IERC20(s.ghstContract).allowance(_buyer, address(this)) >= cost, "ERC1155Marketplace: not enough GHST allowance");
             }
 
             // Handle payment distribution
