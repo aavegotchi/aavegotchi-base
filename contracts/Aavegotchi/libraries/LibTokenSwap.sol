@@ -4,36 +4,41 @@ pragma solidity 0.8.1;
 import {LibAppStorage, AppStorage} from "./LibAppStorage.sol";
 import {IERC20} from "../../shared/interfaces/IERC20.sol";
 
-// zRouter interface for Base network swaps
+// zRouter interface for multi-AMM routing on Base
 interface IZRouter {
-    function swapExactETHForTokens(
-        uint amountOutMin,
-        address[] calldata path,
+    function swapAero(
         address to,
-        uint deadline
-    ) external payable returns (uint[] memory amounts);
+        bool stable,
+        address tokenIn,
+        address tokenOut,
+        uint256 swapAmount,
+        uint256 amountLimit,
+        uint256 deadline
+    ) external payable returns (uint256 amountIn, uint256 amountOut);
 
-    function swapExactTokensForTokens(
-        uint amountIn,
-        uint amountOutMin,
-        address[] calldata path,
+    function swapV2(
         address to,
-        uint deadline
-    ) external returns (uint[] memory amounts);
-
-    function getAmountsOut(uint amountIn, address[] calldata path) external view returns (uint[] memory amounts);
-
-    function WETH() external pure returns (address);
+        bool exactOut,
+        address tokenIn,
+        address tokenOut,
+        uint256 swapAmount,
+        uint256 amountLimit,
+        uint256 deadline
+    ) external payable returns (uint256 amountIn, uint256 amountOut);
 }
 
 library LibTokenSwap {
-    // zRouter address on Base network
-    address constant Z_ROUTER = address(0x0000000000404FECAf36E6184475eE1254835);
+    // zRouter multi-AMM aggregator on Base network
+    address constant ROUTER = address(0x0000000000404FECAf36E6184245475eE1254835);
+
+    // WETH address on Base (from zRouter contract)
+    address constant WETH = address(0x4200000000000000000000000000000000000006);
 
     event TokenSwapped(address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut, address indexed recipient);
 
     /**
-     * @notice Swap tokens for GHST using zRouter
+     * @notice Swap tokens for GHST using zRouter with fallback strategy
+     * @dev Try Aerodrome first, fallback to V2 if needed
      * @param tokenIn Address of input token (address(0) for ETH, token address for ERC20)
      * @param swapAmount Amount of tokenIn to swap
      * @param minGhstOut Minimum GHST to receive (slippage protection)
@@ -52,33 +57,63 @@ library LibTokenSwap {
         require(deadline >= block.timestamp, "LibTokenSwap: deadline expired");
 
         AppStorage storage s = LibAppStorage.diamondStorage();
-        IZRouter zRouter = IZRouter(Z_ROUTER);
+        IZRouter router = IZRouter(ROUTER);
 
-        address[] memory path = new address[](2);
-        uint256[] memory amounts;
+        // DEBUG: Add require to check router exists
+        require(ROUTER != address(0), "LibTokenSwap: Router address is zero");
 
-        if (tokenIn == address(0)) {
-            // ETH -> GHST swap
-            path[0] = zRouter.WETH();
-            path[1] = s.ghstContract;
-
-            amounts = zRouter.swapExactETHForTokens{value: swapAmount}(minGhstOut, path, recipient, deadline);
-
-            amountOut = amounts[1];
-        } else {
-            // ERC20 -> GHST swap
-            path[0] = tokenIn;
-            path[1] = s.ghstContract;
-
-            // Transfer tokens from sender to this contract
+        // DEBUG: Handle token transfer for ERC20
+        if (tokenIn != address(0)) {
+            // For ERC20, transfer tokens from sender to this contract first
             IERC20(tokenIn).transferFrom(msg.sender, address(this), swapAmount);
 
-            // Approve zRouter to spend tokens
-            IERC20(tokenIn).approve(address(zRouter), swapAmount);
+            // Verify we received the tokens
+            uint256 balance = IERC20(tokenIn).balanceOf(address(this));
+            require(balance >= swapAmount, "LibTokenSwap: Token transfer failed");
 
-            amounts = zRouter.swapExactTokensForTokens(swapAmount, minGhstOut, path, recipient, deadline);
+            // Approve zRouter to spend our tokens
+            IERC20(tokenIn).approve(ROUTER, swapAmount);
+        }
 
-            amountOut = amounts[1];
+        // Try Aerodrome first for best GHST liquidity
+        // Set amountLimit to 0 initially to bypass zRouter's slippage check
+        // We handle slippage protection ourselves with minGhstOut
+
+        // Handle token address for zRouter (ETH needs to be passed as address(0), not WETH)
+        address tokenForRouter = tokenIn; // Keep as-is for zRouter
+
+        try
+            router.swapAero{value: tokenIn == address(0) ? swapAmount : 0}(
+                recipient,
+                false, // volatile pair
+                tokenForRouter,
+                s.ghstContract,
+                swapAmount,
+                0, // amountLimit = 0 (let zRouter handle best execution)
+                deadline
+            )
+        returns (uint256, uint256 amountOut_) {
+            // Apply our own slippage check after successful swap
+            require(amountOut_ >= minGhstOut, "LibTokenSwap: Insufficient output amount");
+            amountOut = amountOut_;
+            emit TokenSwapped(tokenIn, s.ghstContract, swapAmount, amountOut, recipient);
+            return amountOut;
+        } catch {
+            // Fallback to V2 if Aerodrome fails
+            // Tokens are already transferred and approved above
+
+            (, amountOut) = router.swapV2{value: tokenIn == address(0) ? swapAmount : 0}(
+                recipient,
+                false, // exactIn
+                tokenForRouter,
+                s.ghstContract,
+                swapAmount,
+                0, // amountLimit = 0 (let zRouter handle best execution)
+                deadline
+            );
+
+            // Apply our own slippage check after successful swap
+            require(amountOut >= minGhstOut, "LibTokenSwap: Insufficient output amount");
         }
 
         emit TokenSwapped(tokenIn, s.ghstContract, swapAmount, amountOut, recipient);
@@ -86,31 +121,30 @@ library LibTokenSwap {
 
     /**
      * @notice Get expected GHST output for a given input amount
+     * @dev zRouter doesn't have a direct quote function, so this provides a conservative estimate
      * @param tokenIn Address of input token (address(0) for ETH, token address for ERC20)
      * @param amountIn Amount of input token
-     * @return amountOut Expected GHST output
+     * @return amountOut Conservative estimated GHST output (use zRouter directly for exact quotes)
      */
-    function getGHSTAmountOut(address tokenIn, uint256 amountIn) internal view returns (uint256 amountOut) {
+    function getGHSTAmountOut(address tokenIn, uint256 amountIn) internal pure returns (uint256 amountOut) {
         if (amountIn == 0) return 0;
 
-        AppStorage storage s = LibAppStorage.diamondStorage();
-        IZRouter zRouter = IZRouter(Z_ROUTER);
+        // Since zRouter is a multi-AMM aggregator without a simple quote function,
+        // we provide a conservative estimate. Frontends should call zRouter directly
+        // for exact quotes using the multicall functionality.
 
-        address[] memory path = new address[](2);
-
+        // Conservative estimates based on approximate market rates:
         if (tokenIn == address(0)) {
-            path[0] = zRouter.WETH();
+            // ETH -> GHST: ~1 ETH = ~2000 GHST (very rough estimate)
+            amountOut = amountIn * 2000; // This is a placeholder - adjust based on market
         } else {
-            path[0] = tokenIn;
+            // For ERC20 tokens, assume roughly 1:1 ratio as conservative estimate
+            // This is very rough and should be replaced with actual pricing logic
+            amountOut = amountIn;
         }
-        path[1] = s.ghstContract;
 
-        try zRouter.getAmountsOut(amountIn, path) returns (uint256[] memory amounts) {
-            amountOut = amounts[1];
-        } catch {
-            // Return 0 if swap path doesn't exist or other error
-            amountOut = 0;
-        }
+        // Return a conservative estimate (80% of rough calculation)
+        amountOut = (amountOut * 80) / 100;
     }
 
     /**

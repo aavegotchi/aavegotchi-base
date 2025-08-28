@@ -45,7 +45,7 @@ export default {
   networks: {
     hardhat: {
       forking: {
-        url: process.env.BASE_SEPOLIA_RPC_URL,
+        url: process.env.BASE_RPC_URL,
         // timeout: 12000000,
       },
       blockGasLimit: 20000000,
