@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx hardhat test",
+    "test:swap": "npx hardhat test test/swapAndBuyERC721.test.ts --network hardhat",
+    "test:swap1155": "npx hardhat test test/swapAndBuyERC1155.test.ts --network hardhat",
     "prettier": "prettier --write contracts/**/*.sol",
     "solhint": "solhint 'contracts/**/*.sol'",
     "check-props": "npx hardhat run scripts/analyze-snapshot-proposals.ts",

@@ -9,6 +9,7 @@ import {Modifiers, ListingListItem} from "../libraries/LibAppStorage.sol";
 import {LibERC1155Marketplace, ERC1155Listing} from "../libraries/LibERC1155Marketplace.sol";
 import {IERC1155} from "../../shared/interfaces/IERC1155.sol";
 import {LibERC1155} from "../../shared/libraries/LibERC1155.sol";
+import {LibTokenSwap} from "../libraries/LibTokenSwap.sol";
 
 contract MarketplaceGetterFacet is Modifiers {
     ///@notice Get an aavegotchi listing details through an identifier
@@ -75,5 +76,13 @@ contract MarketplaceGetterFacet is Modifiers {
     ) external view returns (ERC1155Listing memory listing_) {
         uint256 listingId = s.erc1155TokenToListingId[_erc1155TokenAddress][_erc1155TypeId][_owner];
         listing_ = s.erc1155Listings[listingId];
+    }
+
+    ///@notice Get expected GHST output for a given input amount (for UI quote display)
+    ///@param tokenIn Address of input token (address(0) for ETH, token address for ERC20)
+    ///@param amountIn Amount of input token
+    ///@return amountOut Expected GHST output (0 if no valid swap path exists)
+    function getGHSTAmountOut(address tokenIn, uint256 amountIn) external view returns (uint256 amountOut) {
+        return LibTokenSwap.getGHSTAmountOut(tokenIn, amountIn);
     }
 }

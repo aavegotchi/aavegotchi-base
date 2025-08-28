@@ -180,9 +180,18 @@ contract ERC1155MarketplaceFacet is Modifiers {
     ///@param _listingId The identifier of the listing to execute
     ///@param _quantity The amount of ERC1155 NFTs execute/buy
     ///@param _priceInWei the cost price of the ERC1155 NFTs individually
-    function executeERC1155Listing(uint256 _listingId, uint256 _quantity, uint256 _priceInWei) external {
+    function executeERC1155Listing(uint256 _listingId, uint256 _quantity, uint256 _priceInWei) external whenNotPaused {
         ERC1155Listing storage listing = s.erc1155Listings[_listingId];
-        handleExecuteERC1155Listing(_listingId, listing.erc1155TokenAddress, listing.erc1155TypeId, _quantity, _priceInWei, LibMeta.msgSender());
+        address buyer = LibMeta.msgSender();
+        LibERC1155Marketplace.executeERC1155Listing(
+            _listingId,
+            listing.erc1155TokenAddress,
+            listing.erc1155TypeId,
+            _quantity,
+            _priceInWei,
+            buyer,
+            buyer
+        );
     }
 
     ///@notice Allow a buyer to execcute an open listing i.e buy the NFT on behalf of the recipient. Also checks to ensure the item details match the listing.
@@ -200,8 +209,9 @@ contract ERC1155MarketplaceFacet is Modifiers {
         uint256 _quantity,
         uint256 _priceInWei,
         address _recipient
-    ) external {
-        handleExecuteERC1155Listing(_listingId, _contractAddress, _itemId, _quantity, _priceInWei, _recipient);
+    ) external whenNotPaused {
+        address buyer = LibMeta.msgSender();
+        LibERC1155Marketplace.executeERC1155Listing(_listingId, _contractAddress, _itemId, _quantity, _priceInWei, _recipient, buyer);
     }
 
     ///@param listingId The identifier of the listing to execute
@@ -220,117 +230,19 @@ contract ERC1155MarketplaceFacet is Modifiers {
     }
 
     ///@notice execute ERC1155 listings in batch
-    function batchExecuteERC1155Listing(ExecuteERC1155ListingParams[] calldata listings) external {
+    function batchExecuteERC1155Listing(ExecuteERC1155ListingParams[] calldata listings) external whenNotPaused {
         require(listings.length <= 10, "ERC1155Marketplace: length should be lower than 10");
+        address buyer = LibMeta.msgSender();
         for (uint256 i = 0; i < listings.length; i++) {
-            handleExecuteERC1155Listing(
+            LibERC1155Marketplace.executeERC1155Listing(
                 listings[i].listingId,
                 listings[i].contractAddress,
                 listings[i].itemId,
                 listings[i].quantity,
                 listings[i].priceInWei,
-                listings[i].recipient
+                listings[i].recipient,
+                buyer
             );
-        }
-    }
-
-    function handleExecuteERC1155Listing(
-        uint256 _listingId,
-        address _contractAddress,
-        uint256 _itemId,
-        uint256 _quantity,
-        uint256 _priceInWei,
-        address _recipient
-    ) internal whenNotPaused {
-        ERC1155Listing storage listing = s.erc1155Listings[_listingId];
-        require(listing.timeCreated != 0, "ERC1155Marketplace: listing not found");
-        require(listing.sold == false, "ERC1155Marketplace: listing is sold out");
-        require(listing.cancelled == false, "ERC1155Marketplace: listing is cancelled");
-        require(_priceInWei == listing.priceInWei, "ERC1155Marketplace: wrong price or price changed");
-        require(listing.erc1155TokenAddress == _contractAddress, "ERC1155Marketplace: Incorrect token address");
-        require(listing.erc1155TypeId == _itemId, "ERC1155Marketplace: Incorrect token id");
-        address buyer = LibMeta.msgSender();
-        address seller = listing.seller;
-        require(seller != buyer, "ERC1155Marketplace: buyer can't be seller");
-        if (listing.whitelistId > 0) {
-            require(s.isWhitelisted[listing.whitelistId][buyer] > 0, "ERC1155Marketplace: Not whitelisted address");
-        }
-        require(_quantity > 0, "ERC1155Marketplace: _quantity can't be zero");
-        require(_quantity <= listing.quantity, "ERC1155Marketplace: quantity is greater than listing");
-        listing.quantity -= _quantity;
-        uint256 cost = _quantity * _priceInWei;
-        require(IERC20(s.ghstContract).balanceOf(buyer) >= cost, "ERC1155Marketplace: not enough GHST");
-        {
-            BaazaarSplit memory split = LibSharedMarketplace.getBaazaarSplit(
-                cost,
-                new uint256[](0),
-                listing.affiliate == address(0) ? [10000, 0] : listing.principalSplit
-            );
-
-            LibSharedMarketplace.transferSales(
-                SplitAddresses({
-                    ghstContract: s.ghstContract,
-                    buyer: buyer,
-                    seller: seller,
-                    affiliate: listing.affiliate,
-                    royalties: new address[](0),
-                    daoTreasury: s.daoTreasury,
-                    pixelCraft: s.pixelCraft,
-                    rarityFarming: s.rarityFarming
-                }),
-                split
-            );
-
-            listing.timeLastPurchased = block.timestamp;
-            s.nextERC1155ListingId++;
-            uint256 purchaseListingId = s.nextERC1155ListingId;
-            s.erc1155Listings[purchaseListingId] = ERC1155Listing({
-                listingId: purchaseListingId,
-                seller: seller,
-                erc1155TokenAddress: listing.erc1155TokenAddress,
-                erc1155TypeId: listing.erc1155TypeId,
-                category: listing.category,
-                quantity: _quantity,
-                priceInWei: _priceInWei,
-                timeCreated: block.timestamp,
-                timeLastPurchased: block.timestamp,
-                sourceListingId: _listingId,
-                sold: true,
-                cancelled: false,
-                principalSplit: listing.principalSplit,
-                affiliate: listing.affiliate,
-                whitelistId: listing.whitelistId
-            });
-            if (listing.quantity == 0) {
-                listing.sold = true;
-                LibERC1155Marketplace.removeERC1155ListingItem(_listingId, seller);
-            }
-        }
-        // Have to call it like this because LibMeta.msgSender() gets in the way
-        if (listing.erc1155TokenAddress == address(this)) {
-            LibItems.removeFromOwner(seller, listing.erc1155TypeId, _quantity);
-            LibItems.addToOwner(_recipient, listing.erc1155TypeId, _quantity);
-            IEventHandlerFacet(s.wearableDiamond).emitTransferSingleEvent(address(this), seller, _recipient, listing.erc1155TypeId, _quantity);
-            LibERC1155.onERC1155Received(address(this), seller, _recipient, listing.erc1155TypeId, _quantity, "");
-        } else {
-            // GHSTStakingDiamond
-            IERC1155(listing.erc1155TokenAddress).safeTransferFrom(seller, _recipient, listing.erc1155TypeId, _quantity, new bytes(0));
-        }
-        emit ERC1155ExecutedListing(
-            _listingId,
-            seller,
-            _recipient,
-            listing.erc1155TokenAddress,
-            listing.erc1155TypeId,
-            listing.category,
-            _quantity,
-            listing.priceInWei,
-            block.timestamp
-        );
-
-        //Only emit if buyer is not recipient
-        if (buyer != _recipient) {
-            emit ERC1155ExecutedToRecipient(_listingId, buyer, _recipient);
         }
     }
 
