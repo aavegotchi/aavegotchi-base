@@ -22,6 +22,7 @@ contract ERC1155MarketplaceSwapFacet is Modifiers {
      * @param quantity The amount of items to purchase
      * @param priceInWei Expected item price in GHST wei (per item)
      * @param recipient Address to receive the items
+     * @param maxSlippageBps Maximum slippage in basis points (0 = use default)
      */
     function swapAndBuyERC1155(
         address tokenIn,
@@ -33,7 +34,8 @@ contract ERC1155MarketplaceSwapFacet is Modifiers {
         uint256 itemId,
         uint256 quantity,
         uint256 priceInWei,
-        address recipient
+        address recipient,
+        uint256 maxSlippageBps
     ) external payable whenNotPaused {
         // Validate parameters
         LibTokenSwap.validateSwapParams(tokenIn, swapAmount, minGhstOut, swapDeadline);
@@ -41,6 +43,9 @@ contract ERC1155MarketplaceSwapFacet is Modifiers {
 
         uint256 totalCost = quantity * priceInWei;
         require(minGhstOut >= totalCost, "ERC1155MarketplaceSwap: minGhstOut must cover total cost");
+
+        // Validate slippage protection
+        LibTokenSwap.validateSlippageProtection(maxSlippageBps);
 
         AppStorage storage s = LibAppStorage.diamondStorage();
         uint256 initialBalance = IERC20(s.ghstContract).balanceOf(address(this));

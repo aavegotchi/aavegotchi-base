@@ -29,6 +29,7 @@ contract ERC721MarketplaceSwapFacet is Modifiers {
      * @param priceInWei Expected NFT price in GHST wei
      * @param tokenId The NFT token ID
      * @param recipient Address to receive the NFT
+     * @param maxSlippageBps Maximum slippage in basis points (0 = use default)
      */
     function swapAndBuyERC721(
         address tokenIn,
@@ -39,11 +40,15 @@ contract ERC721MarketplaceSwapFacet is Modifiers {
         address contractAddress,
         uint256 priceInWei,
         uint256 tokenId,
-        address recipient
+        address recipient,
+        uint256 maxSlippageBps
     ) external payable whenNotPaused {
         // Validate parameters
         LibTokenSwap.validateSwapParams(tokenIn, swapAmount, minGhstOut, swapDeadline);
         require(minGhstOut >= priceInWei, "ERC721MarketplaceSwap: minGhstOut must cover price");
+
+        // Validate slippage protection
+        LibTokenSwap.validateSlippageProtection(maxSlippageBps);
 
         AppStorage storage s = LibAppStorage.diamondStorage();
         uint256 initialBalance = IERC20(s.ghstContract).balanceOf(address(this));

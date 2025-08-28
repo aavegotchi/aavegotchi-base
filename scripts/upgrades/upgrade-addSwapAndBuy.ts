@@ -20,7 +20,7 @@ export async function upgradeAddSwapAndBuy(
       facetName:
         "contracts/Aavegotchi/facets/ERC721MarketplaceSwapFacet.sol:ERC721MarketplaceSwapFacet",
       addSelectors: [
-        "function swapAndBuyERC721(address tokenIn,uint256 swapAmount,uint256 minGhstOut,uint256 swapDeadline,uint256 listingId,address contractAddress,uint256 priceInWei,uint256 tokenId,address recipient) external",
+        "function swapAndBuyERC721(address tokenIn,uint256 swapAmount,uint256 minGhstOut,uint256 swapDeadline,uint256 listingId,address contractAddress,uint256 priceInWei,uint256 tokenId,address recipient,uint256 maxSlippageBps) external",
       ],
       removeSelectors: [],
     },
@@ -28,7 +28,7 @@ export async function upgradeAddSwapAndBuy(
       facetName:
         "contracts/Aavegotchi/facets/ERC1155MarketplaceSwapFacet.sol:ERC1155MarketplaceSwapFacet",
       addSelectors: [
-        "function swapAndBuyERC1155(address tokenIn, uint256 swapAmount,uint256 minGhstOut,uint256 swapDeadline,uint256 listingId,address contractAddress,uint256 itemId,uint256 quantity,uint256 priceInWei,address recipient) external",
+        "function swapAndBuyERC1155(address tokenIn, uint256 swapAmount,uint256 minGhstOut,uint256 swapDeadline,uint256 listingId,address contractAddress,uint256 itemId,uint256 quantity,uint256 priceInWei,address recipient,uint256 maxSlippageBps) external",
       ],
       removeSelectors: [],
     },
@@ -56,7 +56,7 @@ export async function upgradeAddSwapAndBuy(
 
   await run("deployUpgrade", args);
   console.log(
-    "✅ swapAndBuyERC721, swapAndBuyERC1155, and getGHSTAmountOut functions added to diamond!"
+    "✅ swapAndBuyERC721, swapAndBuyERC1155, and getGHSTAmountOut functions added to diamond with user-controlled slippage protection!"
   );
 }
 

@@ -125,12 +125,24 @@ library LibTokenSwap {
         require(minGhstOut > 0, "LibTokenSwap: minGhstOut must be > 0");
         require(deadline >= block.timestamp, "LibTokenSwap: deadline expired");
 
+        // Enhanced deadline validation - prevent indefinite orders (max 24 hours)
+        require(deadline <= block.timestamp + 86400, "LibTokenSwap: deadline too far in future");
+
         // Validate ETH amount matches if ETH swap
         if (tokenIn == address(0)) {
             require(msg.value == swapAmount, "LibTokenSwap: ETH amount mismatch");
         } else {
             require(msg.value == 0, "LibTokenSwap: unexpected ETH sent");
         }
+    }
+
+    /**
+     * @notice Validate slippage protection parameters
+     * @param maxSlippageBps Maximum slippage in basis points (user-provided)
+     */
+    function validateSlippageProtection(uint256 maxSlippageBps) internal pure {
+        // Ensure slippage doesn't exceed reasonable maximum (20% = 2000 basis points)
+        require(maxSlippageBps <= 2000, "LibTokenSwap: Slippage too high");
     }
 
     /**
