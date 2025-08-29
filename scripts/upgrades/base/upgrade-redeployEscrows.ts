@@ -19,6 +19,16 @@ export async function upgradeForgeDiamondForPet() {
       ],
       removeSelectors: [],
     },
+    {
+      facetName: "AavegotchiGameFacet",
+      addSelectors: [],
+      removeSelectors: [],
+    },
+    {
+      facetName: "AavegotchiFacet",
+      addSelectors: [],
+      removeSelectors: [],
+    },
   ];
 
   const joined1 = convertFacetAndSelectorsToString(facets);
