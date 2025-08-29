@@ -1,35 +1,66 @@
-# Welcome to the Aavegotchi Contracts!
+## Foundry
 
-## Note: These contracts are only for the Aavegotchi Diamond deployed on Geist. For the original Polygon Diamond contracts, please visit [Aavegotchi Contracts](https://github.com/aavegotchi/aavegotchi-contracts).
+**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
 
-Aavegotchis are fully onchain NFTs, powered by the ERC721, ERC1155, and ERC998 standards. The contracts also implement the EIP-2535 Diamonds standard, which allows for modular upgradeability. 
+Foundry consists of:
 
-Aavegotchis are one of the world's first playable NFTs, with onchain attributes that can be increased by interacting with the NFT and the community. 
+- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
+- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
+- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
+- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
 
-We also have one of the frenliest communities in crypto, so don't hesitate to hop in!
+## Documentation
 
-* Aavegotchi Discord: https://discord.gg/aavegotchi
-* Aavegotchi Aarchitects (Developers) Discord: https://discord.gg/dS3VnhzMbB
+https://book.getfoundry.sh/
 
-## Deployed Contract Addresses
+## Usage
 
-Aavegotchis were born on the Polygon sidechain, and have since been bridged back to Ethereum. Below are the deployed Diamond addresses:
+### Build
 
-**As of 11/24/2022, the ERC1155 NFTs previously located in AavegotchiDiamond (0x869) have been migrated to a separate WearableDiamond.**
+```shell
+$ forge build
+```
 
-* Polygon AavegotchiDiamond Address (ERC721 and storage): 0x86935F11C86623deC8a25696E1C19a8659CbF95d <a href="https://polygonscan.com/address/0x86935F11C86623deC8a25696E1C19a8659CbF95d">View on Polygonscan </a>
+### Test
 
-* Polygon WearableDiamond Address (ERC1155 Items): 0x58de9AaBCaeEC0f69883C94318810ad79Cc6a44f <a href="https://polygonscan.com/address/0x58de9AaBCaeEC0f69883C94318810ad79Cc6a44f">View on Polygonscan </a>
+```shell
+$ forge test
+```
 
-* Ethereum Diamond Address: 0x1906fd9c4AC440561F7197Da0A4BD2E88DF5fA70 <a href="https://etherscan.io/address/0x1906fd9c4AC440561F7197Da0A4BD2E88DF5fA70">View on Etherscan </a>
+### Format
 
-## Resources
+```shell
+$ forge fmt
+```
 
-* Official docs: https://docs.aavegotchi.com
+### Gas Snapshots
 
-* Louper Dev Diamond Explorer: https://louper.dev/?address=0x86935F11C86623deC8a25696E1C19a8659CbF95d&network=polygon
+```shell
+$ forge snapshot
+```
 
-* Official Subgraph: https://thegraph.com/legacy-explorer/subgraph/aavegotchi/aavegotchi-core-matic?version=current
+### Anvil
 
-* EIP2535 Primer: https://eips.ethereum.org/EIPS/eip-2535
+```shell
+$ anvil
+```
 
+### Deploy
+
+```shell
+$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```
+
+### Cast
+
+```shell
+$ cast <subcommand>
+```
+
+### Help
+
+```shell
+$ forge --help
+$ anvil --help
+$ cast --help
+```

@@ -167,6 +167,7 @@ contract AavegotchiFacet is Modifiers {
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external {
         address sender = LibMeta.msgSender();
         internalTransferFrom(sender, _from, _to, _tokenId);
+        CollateralEscrow(payable(s.aavegotchis[_tokenId].escrow)).transferOwnership(_to);
         LibERC721.checkOnERC721Received(sender, _from, _to, _tokenId, _data);
     }
 
@@ -188,6 +189,7 @@ contract AavegotchiFacet is Modifiers {
         for (uint256 index = 0; index < _tokenIds.length; index++) {
             uint256 _tokenId = _tokenIds[index];
             internalTransferFrom(sender, _from, _to, _tokenId);
+            CollateralEscrow(payable(s.aavegotchis[_tokenId].escrow)).transferOwnership(_to);
             LibERC721.checkOnERC721Received(sender, _from, _to, _tokenId, _data);
         }
     }
@@ -201,6 +203,7 @@ contract AavegotchiFacet is Modifiers {
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external {
         address sender = LibMeta.msgSender();
         internalTransferFrom(sender, _from, _to, _tokenId);
+        CollateralEscrow(payable(s.aavegotchis[_tokenId].escrow)).transferOwnership(_to);
         LibERC721.checkOnERC721Received(sender, _from, _to, _tokenId, "");
     }
 
@@ -216,6 +219,7 @@ contract AavegotchiFacet is Modifiers {
     /// @param _tokenId The NFT to transfer
     function transferFrom(address _from, address _to, uint256 _tokenId) external {
         internalTransferFrom(LibMeta.msgSender(), _from, _to, _tokenId);
+        CollateralEscrow(payable(s.aavegotchis[_tokenId].escrow)).transferOwnership(_to);
     }
 
     // This function is used by transfer functions
