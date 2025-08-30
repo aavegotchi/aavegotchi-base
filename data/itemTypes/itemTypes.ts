@@ -211,6 +211,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 1,
+      wearableId: 8,
+    },
   },
   {
     svgId: 9,
@@ -274,6 +278,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 2,
+      wearableId: 11,
+    },
   },
   {
     svgId: 12,
@@ -358,6 +366,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 3,
+      wearableId: 15,
+    },
   },
   {
     svgId: 16,
@@ -379,6 +391,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 4,
+      wearableId: 16,
+    },
   },
   {
     svgId: 17,
@@ -442,6 +458,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 5,
+      wearableId: 19,
+    },
   },
   {
     svgId: 20,
@@ -514,6 +534,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 6,
+      wearableId: 22,
+    },
   },
   {
     svgId: 23,
@@ -586,6 +610,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 7,
+      wearableId: 25,
+    },
   },
   {
     svgId: 26,
@@ -658,6 +686,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 8,
+      wearableId: 28,
+    },
   },
   {
     svgId: 29,
@@ -730,6 +762,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 9,
+      wearableId: 31,
+    },
   },
   {
     svgId: 32,
@@ -874,6 +910,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 10,
+      wearableId: 37,
+    },
   },
   {
     svgId: 38,
@@ -1018,6 +1058,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 11,
+      wearableId: 43,
+    },
   },
   {
     svgId: 44,
@@ -1090,6 +1134,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 12,
+      wearableId: 46,
+    },
   },
   {
     svgId: 47,
@@ -1186,6 +1234,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 13,
+      wearableId: 50,
+    },
   },
   {
     svgId: 51,
@@ -1282,6 +1334,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 14,
+      wearableId: 54,
+    },
   },
   {
     svgId: 55,
@@ -1330,6 +1386,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 15,
+      wearableId: 56,
+    },
   },
   {
     svgId: 57,
@@ -1762,6 +1822,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 16,
+      wearableId: 74,
+    },
   },
   {
     svgId: 75,
@@ -2026,6 +2090,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 17,
+      wearableId: 85,
+    },
   },
   {
     svgId: 86,
@@ -2170,6 +2238,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 18,
+      wearableId: 91,
+    },
   },
   {
     svgId: 92,
@@ -2434,6 +2506,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 19,
+      wearableId: 102,
+    },
   },
   {
     svgId: 103,
@@ -2506,6 +2582,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 20,
+      wearableId: 105,
+    },
   },
   {
     svgId: 106,
@@ -2602,6 +2682,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 21,
+      wearableId: 109,
+    },
   },
   {
     svgId: 110,
@@ -2674,6 +2758,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 22,
+      wearableId: 112,
+    },
   },
   {
     svgId: 113,
@@ -2722,6 +2810,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 23,
+      wearableId: 114,
+    },
   },
   {
     svgId: 115,
@@ -2746,6 +2838,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 24,
+      wearableId: 115,
+    },
   },
   {
     svgId: 116,
@@ -2968,6 +3064,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 25,
+      wearableId: 125,
+    },
   },
   {
     svgId: 126,
@@ -3178,6 +3278,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 26,
+      wearableId: 135,
+    },
   },
   {
     svgId: 136,
@@ -3238,6 +3342,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 27,
+      wearableId: 138,
+    },
   },
   {
     svgId: 139,
@@ -3478,6 +3586,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 28,
+      wearableId: 150,
+    },
   },
   {
     svgId: 151,
@@ -3678,6 +3790,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 29,
+      wearableId: 160,
+    },
   },
   {
     svgId: 161,
@@ -3718,6 +3834,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 30,
+      wearableId: 162,
+    },
   },
 
   //badges
@@ -4704,6 +4824,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 31,
+      wearableId: 203,
+    },
   },
   {
     svgId: 204,
@@ -4906,6 +5030,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 32,
+      wearableId: 213,
+    },
   },
   {
     svgId: 214,
@@ -5046,6 +5174,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 33,
+      wearableId: 220,
+    },
   },
   {
     svgId: 221,
@@ -5086,6 +5218,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 34,
+      wearableId: 222,
+    },
   },
   {
     svgId: 223,
@@ -5266,6 +5402,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 35,
+      wearableId: 231,
+    },
   },
   {
     svgId: 232,
@@ -5326,6 +5466,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 36,
+      wearableId: 234,
+    },
   },
   {
     svgId: 235,
@@ -5466,6 +5610,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 37,
+      wearableId: 241,
+    },
   },
   {
     svgId: 242,
@@ -5526,6 +5674,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 38,
+      wearableId: 244,
+    },
   },
   {
     svgId: 245,
@@ -5606,6 +5758,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 39,
+      wearableId: 248,
+    },
   },
   {
     svgId: 249,
@@ -5646,6 +5802,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 40,
+      wearableId: 250,
+    },
   },
   {
     svgId: 251,
@@ -5706,6 +5866,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 41,
+      wearableId: 253,
+    },
   },
   {
     svgId: 254,
@@ -5766,6 +5930,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 42,
+      wearableId: 256,
+    },
   },
   {
     svgId: 257,
@@ -5806,6 +5974,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 43,
+      wearableId: 258,
+    },
   },
   {
     svgId: 259,
@@ -6565,6 +6737,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 44,
+      wearableId: 293,
+    },
   },
   {
     svgId: 294,
@@ -6645,6 +6821,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 45,
+      wearableId: 297,
+    },
   },
   {
     svgId: 298,
@@ -6765,6 +6945,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 46,
+      wearableId: 303,
+    },
   },
   {
     svgId: 304,
@@ -6845,6 +7029,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 47,
+      wearableId: 307,
+    },
   },
   {
     svgId: 308,
@@ -6905,6 +7093,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 48,
+      wearableId: 310,
+    },
   },
   {
     svgId: 311,
@@ -6985,6 +7177,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 49,
+      wearableId: 314,
+    },
   },
   {
     svgId: 315,
@@ -7742,6 +7938,10 @@ export const itemTypes: ItemTypeInput[] = [
     experienceBonus: 0,
     kinshipBonus: 0,
     maxQuantity: 1000,
+    sleeves: {
+      sleeveId: 50,
+      wearableId: 350,
+    },
   },
   {
     svgId: 351,
@@ -7982,6 +8182,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 51,
+      wearableId: 362,
+    },
   },
   {
     svgId: 363,
@@ -8062,6 +8266,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 52,
+      wearableId: 366,
+    },
   },
   {
     svgId: 367,
@@ -8182,6 +8390,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 53,
+      wearableId: 372,
+    },
   },
   {
     svgId: 373,
@@ -8202,6 +8414,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 54,
+      wearableId: 373,
+    },
   },
   {
     svgId: 374,
@@ -8402,6 +8618,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 55,
+      wearableId: 383,
+    },
   },
   {
     svgId: 384,
@@ -9118,6 +9338,10 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
+    sleeves: {
+      sleeveId: 56,
+      wearableId: 418,
+    },
   },
   {
     svgId: 419,

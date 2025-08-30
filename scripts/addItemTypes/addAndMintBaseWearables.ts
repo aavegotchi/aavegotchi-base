@@ -1,4 +1,4 @@
-import { ethers, network, run } from "hardhat";
+import { ethers, run } from "hardhat";
 
 import { uploadOrUpdateSvg } from "../../scripts/svgHelperFunctions";
 import { getRelayerSigner } from "../helperFunctions";
@@ -17,6 +17,19 @@ import {
   wearablesLeftSleeveSvgs,
   wearablesRightSleeveSvgs,
 } from "../../svgs/wearables-sides";
+
+function assertWearableGroupsExist(
+  itemIds: number[],
+  groups: Record<string, unknown[]>
+) {
+  for (let index = 0; index < itemIds.length; index++) {
+    const itemId = itemIds[index];
+    for (const [groupName, groupArr] of Object.entries(groups)) {
+      if (!groupArr[index])
+        throw new Error(`Wearable ${itemId} not found in ${groupName}`);
+    }
+  }
+}
 
 async function main() {
   const c = await varsForNetwork(ethers);
@@ -37,13 +50,20 @@ async function main() {
     signer
   );
 
-  const itemTypesToAdd = [itemTypes[418], itemTypes[419], itemTypes[420]];
+  const itemIds = [418, 419, 420];
+
+  const itemTypesToAdd = itemIds.map((id) => itemTypes[id]);
   const itemTypesToAdd2 = itemTypesToAdd.map((item) =>
     toItemTypeInputNew(item)
   );
   const finalItemTypes = getItemTypes(itemTypesToAdd2, ethers);
-  const sleeveToUpload = [sleeves[sleeves.length - 1]];
-  //console.log(finalItemTypes);
+
+  const sleeveIds = itemTypesToAdd
+    .map((item) => item.sleeves)
+    .filter((s) => s !== undefined);
+
+  const sleeveSvgs = sleeveIds.map((s) => sleeves[Number(s.sleeveId)]);
+
   let tx;
   tx = await daoFacet.addItemTypes(finalItemTypes);
   await tx.wait();
@@ -55,42 +75,43 @@ async function main() {
     convertSideDimensionsToTaskFormat(sideViewDimensions, c.aavegotchiDiamond!)
   );
 
-  //upload svgs
-  const sleeveSvgs: string[] = sleeveToUpload.map((s) => s.svg);
-
   //wearables
-  const svgGroups = {
-    //last 3 wearables
-    wearables: [wearables[418], wearables[419], wearables[420]],
-    "wearables-left": [
-      wearablesLeftSvgs[418],
-      wearablesLeftSvgs[419],
-      wearablesLeftSvgs[420],
-    ],
-    "wearables-right": [
-      wearablesRightSvgs[418],
-      wearablesRightSvgs[419],
-      wearablesRightSvgs[420],
-    ],
-    "wearables-back": [
-      wearablesBackSvgs[418],
-      wearablesBackSvgs[419],
-      wearablesBackSvgs[420],
-    ],
+
+  const wearableGroups = {
+    wearables: itemIds.map((id) => wearables[id]),
+    "wearables-left": itemIds.map((id) => wearablesLeftSvgs[id]),
+    "wearables-right": itemIds.map((id) => wearablesRightSvgs[id]),
+    "wearables-back": itemIds.map((id) => wearablesBackSvgs[id]),
   };
 
-  const svgGroups2 = {
-    sleeves: sleeveSvgs,
-    "sleeves-left": [
-      wearablesLeftSleeveSvgs[wearablesLeftSleeveSvgs.length - 1],
-    ],
-    "sleeves-right": [
-      wearablesRightSleeveSvgs[wearablesRightSleeveSvgs.length - 1],
-    ],
-    "sleeves-back": [
-      wearablesBackSleeveSvgs[wearablesBackSleeveSvgs.length - 1],
-    ],
+  assertWearableGroupsExist(itemIds, wearableGroups);
+
+  const sleeveGroups = {
+    sleeves: sleeveSvgs.map((s) => s.svg),
+    "sleeves-left": sleeveIds.map(
+      (sleeveId) => wearablesLeftSleeveSvgs[Number(sleeveId.sleeveId)]
+    ),
+    "sleeves-right": sleeveIds.map(
+      (sleeveId) => wearablesRightSleeveSvgs[Number(sleeveId.sleeveId)]
+    ),
+    "sleeves-back": sleeveIds.map(
+      (sleeveId) => wearablesBackSleeveSvgs[Number(sleeveId.sleeveId)]
+    ),
   };
+
+  //add in errors if sleeves are not found in sleeveGroups
+  for (let index = 0; index < sleeveIds.length; index++) {
+    const sleeveId = sleeveIds[index];
+    if (!sleeveGroups["sleeves-left"][index]) {
+      throw new Error(`Sleeve ${sleeveId.sleeveId} not found in sleeves-left`);
+    }
+    if (!sleeveGroups["sleeves-right"][index]) {
+      throw new Error(`Sleeve ${sleeveId.sleeveId} not found in sleeves-right`);
+    }
+    if (!sleeveGroups["sleeves-back"][index]) {
+      throw new Error(`Sleeve ${sleeveId.sleeveId} not found in sleeves-back`);
+    }
+  }
 
   const svgFacet = await ethers.getContractAt(
     "SvgFacet",
@@ -98,37 +119,27 @@ async function main() {
     signer
   );
 
-  const itemsIds = [418, 419, 420];
-  const sleeveid = [sleeves.length - 1];
-
-  for (const svgGroup of Object.entries(svgGroups)) {
+  for (const svgGroup of Object.entries(wearableGroups)) {
     const svgData = svgGroup[1];
     const svgType = svgGroup[0];
-    await uploadOrUpdateSvg(svgData, svgType, itemsIds, svgFacet, ethers);
+    await uploadOrUpdateSvg(svgData, svgType, itemIds, svgFacet, ethers);
   }
 
-  for (const svgGroup of Object.entries(svgGroups2)) {
+  for (const svgGroup of Object.entries(sleeveGroups)) {
     const svgData = svgGroup[1];
     const svgType = svgGroup[0];
-    await uploadOrUpdateSvg(svgData, svgType, sleeveid, svgFacet, ethers);
-  }
-
-  interface SleeveInput {
-    sleeveId: BigNumberish;
-    wearableId: BigNumberish;
-  }
-
-  const sleevesInput: SleeveInput[] = [];
-  for (const sleeve of sleeveToUpload) {
-    sleevesInput.push({
-      sleeveId: [sleeves.length - 1],
-      wearableId: sleeve.id,
-    });
+    await uploadOrUpdateSvg(
+      svgData,
+      svgType,
+      sleeveIds.map((s) => Number(s.sleeveId)),
+      svgFacet,
+      ethers
+    );
   }
 
   // console.log(sleevesInput);
   // //associate sleeves with body wearable svgs
-  tx = await svgFacet.setSleeves(sleevesInput);
+  tx = await svgFacet.setSleeves(sleeveIds);
   await tx.wait();
   console.log("Sleeves associated with body wearable svgs");
 
@@ -137,11 +148,7 @@ async function main() {
 
   const quantities = itemTypesToAdd.map((item) => item.maxQuantity);
   console.log("quantities:", quantities);
-  const mintTx = await daoFacet.mintItems(
-    c.forgeDiamond!,
-    itemsIds,
-    quantities
-  );
+  const mintTx = await daoFacet.mintItems(c.forgeDiamond!, itemIds, quantities);
   await mintTx.wait();
   console.log("Wearables minted to forge diamond");
 }
