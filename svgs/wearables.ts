@@ -435,6 +435,8 @@ export const wearablesSvgs = [
   wearable("415_WildFungi"),
   wearable("416_KawaiiMouth"),
   wearable("417_BabyLicky"),
+
+  //base wearables
   bodyWearable("418_BasedShirt"),
   wearable("419_BaseApp"),
   wearable("420_JessePollakHair"),

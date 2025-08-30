@@ -272,35 +272,33 @@ export const xpRelayerAddressBase =
 
 export async function getRelayerSigner(hre: HardhatRuntimeEnvironment) {
   const testing = ["hardhat", "localhost"].includes(hre.network.name);
-  let xpRelayer;
+  let relayerAddress;
   if (
     hre.network.config.chainId === 137 ||
     hre.network.config.chainId === 8453
   ) {
-    xpRelayer = xpRelayerAddress;
+    relayerAddress = xpRelayerAddress;
   } else if (hre.network.config.chainId === 84532) {
-    xpRelayer = xpRelayerAddressBaseSepolia;
+    relayerAddress = xpRelayerAddressBaseSepolia;
   } else if (hre.network.config.chainId === 8453) {
-    xpRelayer = xpRelayerAddressBase;
+    relayerAddress = xpRelayerAddressBase;
   }
 
   if (testing) {
-    xpRelayer = xpRelayerAddress;
-    if (hre.network.config.chainId !== 31337) {
-      console.log("Using Hardhat");
+    relayerAddress = xpRelayerAddressBase;
 
-      await hre.network.provider.request({
-        method: "hardhat_impersonateAccount",
-        params: [xpRelayer],
-      });
-      await hre.network.provider.request({
-        method: "hardhat_setBalance",
-        params: [xpRelayerAddress, "0x100000000000000000000000"],
-      });
-      return await hre.ethers.provider.getSigner(xpRelayerAddress);
-    } else {
-      return (await hre.ethers.getSigners())[0];
-    }
+    console.log("Using Hardhat");
+
+    await hre.network.provider.request({
+      method: "hardhat_impersonateAccount",
+      params: [relayerAddress],
+    });
+    await hre.network.provider.request({
+      method: "hardhat_setBalance",
+      params: [relayerAddress, "0x100000000000000000000000"],
+    });
+    return await hre.ethers.provider.getSigner(relayerAddress);
+
     //we assume same defender for base mainnet
   } else if (hre.network.name === "matic" || hre.network.name === "base") {
     console.log(`USING ${hre.network.name}`);

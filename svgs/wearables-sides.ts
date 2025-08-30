@@ -1,5 +1,3 @@
-import { bodyWearableBack } from "../scripts/svgHelperFunctions";
-
 const fs = require("fs");
 
 export const wearablesRightSvgs = [

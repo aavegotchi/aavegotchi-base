@@ -50,6 +50,7 @@ export default {
     hardhat: {
       forking: {
         url: process.env.BASE_RPC_URL,
+        blockNumber: 34874127,
         // timeout: 12000000,
       },
       blockGasLimit: 20000000,

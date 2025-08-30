@@ -1,11 +1,7 @@
 import { ethers, network, run } from "hardhat";
-import { Signer } from "@ethersproject/abstract-signer";
-import {
-  updateSvgTaskForSvgType,
-  uploadOrUpdateSvg,
-  uploadSvgs,
-} from "../../scripts/svgHelperFunctions";
-import { gasPrice, getRelayerSigner } from "../helperFunctions";
+
+import { uploadOrUpdateSvg } from "../../scripts/svgHelperFunctions";
+import { getRelayerSigner } from "../helperFunctions";
 import { varsForNetwork } from "../../helpers/constants";
 import { itemTypes } from "../../data/itemTypes/itemTypes";
 import { getItemTypes, toItemTypeInputNew } from "../itemTypeHelpers";
@@ -27,6 +23,9 @@ async function main() {
   //@ts-ignore
   const signer = await getRelayerSigner(hre);
 
+  const address = await signer.getAddress();
+  console.log("address:", address);
+
   //first assert that wearables and sleeves are valid
   const { sleeves, wearables } = getWearables();
 
@@ -34,12 +33,6 @@ async function main() {
 
   const daoFacet = await ethers.getContractAt(
     "DAOFacet",
-    c.aavegotchiDiamond!,
-    signer
-  );
-
-  const itemsFacet = await ethers.getContractAt(
-    "ItemsFacet",
     c.aavegotchiDiamond!,
     signer
   );
@@ -143,6 +136,7 @@ async function main() {
   //maxQuantites from the
 
   const quantities = itemTypesToAdd.map((item) => item.maxQuantity);
+  console.log("quantities:", quantities);
   const mintTx = await daoFacet.mintItems(
     c.forgeDiamond!,
     itemsIds,

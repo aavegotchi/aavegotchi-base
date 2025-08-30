@@ -163,15 +163,6 @@ export const networkAddresses: Record<number, NetworkAddresses> = {
     tileDiamond: "0x96B19Fa954d961fAD4b665e3259C72466ca4C1dA",
   },
 
-  631571: {
-    ghst: "0x443650Be09A02Be6fa79Ba19169A853A33581660",
-  },
-
-  63157: {
-    ghst: "0x74e2051A9Cd994F83f2d789448dCa4a3e879964c",
-    aavegotchiDiamond: "0x6Acc828BbbC6874de40Ca20bfeA7Cd2a2DA8DA8c",
-  },
-
   84532: {
     ghst: "0xe97f36a00058aa7dfc4e85d23532c3f70453a7ae",
     vrfSystem: "0x8aFDcAA4573A36061aC087F9Ba872A7C7F482CFC",
@@ -237,7 +228,13 @@ export interface VRFVars {
 }
 
 export async function varsForNetwork(ethers: HardhatEthersHelpers) {
-  return varsByChainId((await ethers.provider.getNetwork()).chainId);
+  const network = await ethers.provider.getNetwork();
+  console.log("network:", network.name);
+
+  if (["hardhat", "localhost", "unknown"].includes(network.name))
+    return networkAddresses[8453];
+
+  return varsByChainId(network.chainId);
 }
 
 export function varsByChainId(chainId: number) {

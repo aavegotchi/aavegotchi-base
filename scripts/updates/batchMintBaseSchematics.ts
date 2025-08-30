@@ -1,23 +1,16 @@
 import { ethers, network } from "hardhat";
-import {
-  gasPrice,
-  getLedgerSigner,
-  impersonate,
-  itemManagerAlt,
-  maticForgeDiamond,
-} from "../helperFunctions";
-import {
-  ForgeDAOFacet,
-  ForgeFacet,
-  ForgeTokenFacet,
-  ItemsFacet,
-} from "../../typechain";
-import { LedgerSigner } from "@anders-t/ethers-ledger";
+import { gasPrice, getLedgerSigner, impersonate } from "../helperFunctions";
+import { ForgeDAOFacet, ForgeFacet, ItemsFacet } from "../../typechain";
+
 import { varsForNetwork } from "../../helpers/constants";
 import { PC_WALLET } from "../geistBridge/paths";
+import { mine } from "@nomicfoundation/hardhat-network-helpers";
 
 export async function batchMintBaseWearables() {
   const c = await varsForNetwork(ethers);
+
+  console.log("network:", network.name);
+  console.log("forgeDiamond:", c.forgeDiamond);
 
   const testing = ["hardhat", "localhost"].includes(network.name);
   let forgeFacet = (await ethers.getContractAt(
@@ -26,7 +19,7 @@ export async function batchMintBaseWearables() {
   )) as ForgeFacet;
 
   let forgeDaoFacet = (await ethers.getContractAt(
-    "contracts/Aavegotchi/ForgeDiamond/facets/ForgeDaoFacet.sol:ForgeDaoFacet",
+    "contracts/Aavegotchi/ForgeDiamond/facets/ForgeDAOFacet.sol:ForgeDAOFacet",
     c.forgeDiamond!
   )) as ForgeDAOFacet;
 
@@ -35,6 +28,9 @@ export async function batchMintBaseWearables() {
       "OwnershipFacet",
       c.forgeDiamond!
     );
+
+    await mine();
+
     const owner = await ownershipFacet.owner();
 
     console.log("current owner:", owner);
@@ -94,6 +90,8 @@ export async function batchMintBaseWearables() {
       toForge = transferIds;
     }
   }
+
+  console.log("aavegotchiDiamond:", c.aavegotchiDiamond);
 
   const itemsFacet = (await ethers.getContractAt(
     "contracts/Aavegotchi/facets/ItemsFacet.sol:ItemsFacet",
