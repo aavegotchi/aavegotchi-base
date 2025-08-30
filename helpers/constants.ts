@@ -163,26 +163,17 @@ export const networkAddresses: Record<number, NetworkAddresses> = {
     tileDiamond: "0x96B19Fa954d961fAD4b665e3259C72466ca4C1dA",
   },
 
-  631571: {
-    ghst: "0x443650Be09A02Be6fa79Ba19169A853A33581660",
-  },
-
-  63157: {
-    ghst: "0x74e2051A9Cd994F83f2d789448dCa4a3e879964c",
-    aavegotchiDiamond: "0x6Acc828BbbC6874de40Ca20bfeA7Cd2a2DA8DA8c",
-  },
-
   84532: {
     ghst: "0xe97f36a00058aa7dfc4e85d23532c3f70453a7ae",
     vrfSystem: "0x8aFDcAA4573A36061aC087F9Ba872A7C7F482CFC",
     // vrfVars: vrfVars[84532],
     safeProxyFactory: "0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2",
-    aavegotchiDiamond: "0x0C7d237250BF64e178253c111dc2352D05BA98aE",
-    forgeDiamond: "0x23b77A4EAb125cC8a1fc820f5A6dC0076c52e50d",
-    wearableDiamond: "0xF992E09Df18E2300813489661c6A838248ce52C0",
-    realmDiamond: "0x37D140074B2f771bEa7ef23288EB87064e45bF8D",
-    installationDiamond: "0x5Aefdc5283B24EEa7b50FFBBf7FB8A2bD4537609",
-    tileDiamond: "0x96B19Fa954d961fAD4b665e3259C72466ca4C1dA",
+    aavegotchiDiamond: "0x03A74B3e2DD81F5E8FFA1Fb96bb81B35cF3ed5d2",
+    forgeDiamond: "0x40742c1D9dd604889aD45D2f85bE9C9A7609C4cB",
+    wearableDiamond: "0x7e1Df5ad57C011E3bFA029041935aece51f35ccC",
+    realmDiamond: "0xF5Bc2D611C89C8C331F5969Abcc55E0C440EF43D",
+    installationDiamond: "0xBf1a271e3Fc33b6978BD3f356a9f8424C7Eda473",
+    tileDiamond: "0xAf5B09c81a7D709d7fbC0E6d0a8a413bA671537d",
     fakeGotchiCardDiamond: "0xE4E508dab5D7d98f4c06aB6D24bB225588036C9D",
     fakeGotchiArtDiamond: "0xD0dCC1d1E22D490e5270631787E1866E773b16C7",
     ghstStakingDiamond: "0xD0dCC1d1E22D490e5270631787E1866E773b16C7",
@@ -237,7 +228,13 @@ export interface VRFVars {
 }
 
 export async function varsForNetwork(ethers: HardhatEthersHelpers) {
-  return varsByChainId((await ethers.provider.getNetwork()).chainId);
+  const network = await ethers.provider.getNetwork();
+  console.log("network:", network.name);
+
+  if (["hardhat", "localhost", "unknown"].includes(network.name))
+    return networkAddresses[8453];
+
+  return varsByChainId(network.chainId);
 }
 
 export function varsByChainId(chainId: number) {
