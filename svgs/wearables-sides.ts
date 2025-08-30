@@ -7,14 +7,44 @@ function outputBadge(svgId: string) {
   return `${svgId}_badge`;
 }
 
-export const wearablesRightSvgs = () => {
-  const output = [];
-  const side = "Right";
+type WearableSide = "Right" | "Back" | "Left";
 
-  //no right side
-  const exceptions = [
-    55, 75, 86, 157, 233, 236, 237, 261, 356, 406, 410, 413, 415, 417,
-  ];
+export function wearableSvgs(side: WearableSide) {
+  const output = [];
+
+  const sideMap: Record<
+    WearableSide,
+    {
+      exceptions: number[];
+      validationArray: string[];
+      bodyWearableFunction: (name: string) => string;
+    }
+  > = {
+    Right: {
+      exceptions: [
+        55, 75, 86, 157, 233, 236, 237, 261, 356, 406, 410, 413, 415, 417,
+      ],
+      validationArray: wearablesRightSvgsOld,
+      bodyWearableFunction: bodyWearableRight,
+    },
+    Back: {
+      exceptions: [
+        14, 53, 86, 146, 157, 209, 214, 219, 249, 259, 260, 262, 356, 367, 368,
+        378, 381, 382, 384, 385, 405, 409, 412, 416,
+      ],
+      validationArray: wearablesBackSvgsOld,
+      bodyWearableFunction: bodyWearable,
+    },
+    Left: {
+      exceptions: [29, 157],
+      validationArray: wearablesLeftSvgsOld,
+      bodyWearableFunction: bodyWearableLeft,
+    },
+  };
+
+  const exceptions = sideMap[side].exceptions;
+  const validationArray = sideMap[side].validationArray;
+  const bodyWearableFunction = sideMap[side].bodyWearableFunction;
 
   for (let index = 0; index < itemTypes.length; index++) {
     const itemType = itemTypes[index];
@@ -36,11 +66,7 @@ export const wearablesRightSvgs = () => {
 
     const camelCaseName = name
       .replace(/(?:^|_)(\w)/g, (_, letter) => letter.toUpperCase())
-      .replace(" ", "")
-      .replace(" ", "")
-      .replace(" ", "")
-      .replace(" ", "")
-      .replace("'", "");
+      .replace(/[ ']/g, "");
 
     //potions
     if (itemType.category === 2) {
@@ -54,8 +80,8 @@ export const wearablesRightSvgs = () => {
     }
 
     if (itemType.slotPositions === "body" && itemType.sleeves) {
-      console.log("bodyWearableRight", name);
-      output.push(bodyWearableRight(`${itemType.svgId}_${camelCaseName}`));
+      console.log(`bodyWearable${side}`, name);
+      output.push(bodyWearableFunction(`${itemType.svgId}_${camelCaseName}`));
     } else output.push(wearable(`${itemType.svgId}_${camelCaseName}${side}`));
   }
 
@@ -64,156 +90,22 @@ export const wearablesRightSvgs = () => {
   for (let index = 0; index < output.length; index++) {
     const element = output[index];
 
-    const oldWearableElement = wearablesRightSvgsOld[index];
+    const oldWearableElement = validationArray[index];
 
     if (element !== oldWearableElement) {
       throw new Error(
-        `Wearable mismatch at index ${index}: ${element} old element: ${oldWearableElement}`
+        `${side} wearable mismatch at index ${index}: ${element} old element: ${oldWearableElement}`
       );
     }
   }
 
   return output;
-};
+}
 
-export const wearablesBackSvgs = () => {
-  const output = [];
-  const side = "Back";
-
-  //no right side
-  //should 25 really be an exxeption?
-  const exceptions = [
-    14, 53, 86, 146, 157, 209, 214, 219, 249, 259, 260, 262, 356, 367, 368, 378,
-    381, 382, 384, 385, 405, 409, 412, 416,
-  ];
-
-  for (let index = 0; index < itemTypes.length; index++) {
-    const itemType = itemTypes[index];
-
-    if (itemType.name === "The Void") {
-      output.push(wearable(`0_Void${side}`));
-      continue;
-    }
-
-    //badges
-    if (itemType.category === 1) {
-      output.push(outputBadge(itemType.svgId.toString()));
-      continue;
-    }
-
-    let name = itemType.name;
-    if (svgMapping[Number(itemType.svgId)])
-      name = svgMapping[Number(itemType.svgId)];
-
-    const camelCaseName = name
-      .replace(/(?:^|_)(\w)/g, (_, letter) => letter.toUpperCase())
-      .replace(" ", "")
-      .replace(" ", "")
-      .replace(" ", "")
-      .replace(" ", "")
-      .replace("'", "");
-
-    //potions
-    if (itemType.category === 2) {
-      output.push(wearable(`${itemType.svgId}_${camelCaseName}`));
-      continue;
-    }
-
-    if (exceptions.includes(Number(itemType.svgId))) {
-      output.push(`${itemType.svgId}_${camelCaseName}${side}`);
-      continue;
-    }
-
-    if (itemType.slotPositions === "body" && itemType.sleeves) {
-      console.log("bodyWearableBack", name);
-      output.push(bodyWearable(`${itemType.svgId}_${camelCaseName}`));
-    } else output.push(wearable(`${itemType.svgId}_${camelCaseName}${side}`));
-  }
-
-  console.log(output.length);
-
-  for (let index = 0; index < output.length; index++) {
-    const element = output[index];
-
-    const oldWearableElement = wearablesBackSvgsOld[index];
-
-    if (element !== oldWearableElement) {
-      throw new Error(
-        `Back wearable mismatch at index ${index}: ${element} old element: ${oldWearableElement}`
-      );
-    }
-  }
-
-  return output;
-};
-
-export const wearablesLeftSvgs = () => {
-  const output = [];
-
-  const side = "Left";
-
-  //no right side
-  const exceptions = [29, 157];
-
-  for (let index = 0; index < itemTypes.length; index++) {
-    const itemType = itemTypes[index];
-
-    if (itemType.name === "The Void") {
-      output.push(wearable(`0_Void${side}`));
-      continue;
-    }
-
-    //badges
-    if (itemType.category === 1) {
-      output.push(outputBadge(itemType.svgId.toString()));
-      continue;
-    }
-
-    let name = itemType.name;
-    if (svgMapping[Number(itemType.svgId)])
-      name = svgMapping[Number(itemType.svgId)];
-
-    const camelCaseName = name
-      .replace(/(?:^|_)(\w)/g, (_, letter) => letter.toUpperCase())
-      .replace(" ", "")
-      .replace(" ", "")
-      .replace(" ", "")
-      .replace(" ", "")
-      .replace("'", "");
-
-    //potions
-    if (itemType.category === 2) {
-      output.push(wearable(`${itemType.svgId}_${camelCaseName}`));
-      continue;
-    }
-
-    if (exceptions.includes(Number(itemType.svgId))) {
-      output.push(`${itemType.svgId}_${camelCaseName}${side}`);
-      continue;
-    }
-
-    if (itemType.slotPositions === "body" && itemType.sleeves) {
-      console.log("bodyWearableLeft", name);
-      output.push(bodyWearableLeft(`${itemType.svgId}_${camelCaseName}`));
-    } else output.push(wearable(`${itemType.svgId}_${camelCaseName}${side}`));
-  }
-
-  console.log(output.length);
-
-  for (let index = 0; index < output.length; index++) {
-    const element = output[index];
-
-    const oldWearableElement = wearablesLeftSvgsOld[index];
-
-    if (element !== oldWearableElement) {
-      throw new Error(
-        `Left wearable mismatch at index ${index}: ${element} old element: ${oldWearableElement}`
-      );
-    }
-  }
-
-  return output;
-};
+// Backward compatibility exports
+export const wearablesRightSvgs = () => wearableSvgs("Right");
+export const wearablesBackSvgs = () => wearableSvgs("Back");
+export const wearablesLeftSvgs = () => wearableSvgs("Left");
 
 export const wearablesRightSvgsOld = [
   wearable("0_VoidRight"),
