@@ -424,7 +424,7 @@ export async function updateSvgTaskForSvgType(
     return taskArgs;
   } else if ("left" === _side) {
     for (let i = 0; i < _itemIds.length; i++) {
-      leftSvg.push(`***${left[_itemIds[i]]}`);
+      leftSvg.push(`***${left()[_itemIds[i]]}`);
     }
 
     taskArgs = {
@@ -436,7 +436,7 @@ export async function updateSvgTaskForSvgType(
     return taskArgs;
   } else if ("right" === _side) {
     for (let i = 0; i < _itemIds.length; i++) {
-      rightSvg.push(`***${right[_itemIds[i]]}`);
+      rightSvg.push(`***${right()[_itemIds[i]]}`);
     }
 
     taskArgs = {
@@ -448,7 +448,7 @@ export async function updateSvgTaskForSvgType(
     return taskArgs;
   } else if ("back" === _side) {
     for (let i = 0; i < _itemIds.length; i++) {
-      backSvg.push(`***${back[_itemIds[i]]}`);
+      backSvg.push(`***${back()[_itemIds[i]]}`);
     }
 
     taskArgs = {
@@ -574,7 +574,7 @@ export async function updateSvgTaskForSideViews(_itemIds: number[]) {
 
   for (let index = 0; index < _itemIds.length; index++) {
     const itemId = _itemIds[index];
-    const sideArrays = [left[itemId], right[itemId], back[itemId]];
+    const sideArrays = [left()[itemId], right()[itemId], back()[itemId]];
 
     for (let index = 0; index < sideViews.length; index++) {
       const side = sideViews[index];

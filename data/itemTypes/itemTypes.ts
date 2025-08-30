@@ -610,10 +610,11 @@ export const itemTypes: ItemTypeInput[] = [
     totalQuantity: 0,
     experienceBonus: 0,
     kinshipBonus: 0,
-    sleeves: {
-      sleeveId: 7,
-      wearableId: 25,
-    },
+    //thaave suit does not actually have sleeves but it's registered onchain as having them
+    // sleeves: {
+    //   sleeveId: 7,
+    //   wearableId: 25,
+    // },
   },
   {
     svgId: 26,

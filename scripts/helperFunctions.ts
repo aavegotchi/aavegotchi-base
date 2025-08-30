@@ -451,9 +451,9 @@ export function generateWearableGroups(
 
   const sides = {
     wearables: wearables,
-    "wearables-left": wearablesLeftSvgs,
-    "wearables-right": wearablesRightSvgs,
-    "wearables-back": wearablesBackSvgs,
+    "wearables-left": wearablesLeftSvgs(),
+    "wearables-right": wearablesRightSvgs(),
+    "wearables-back": wearablesBackSvgs(),
   };
 
   const wearableGroups: Record<string, unknown[]> = {};
