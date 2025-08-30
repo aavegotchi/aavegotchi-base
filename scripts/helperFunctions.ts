@@ -11,6 +11,17 @@ import {
 import { fundSigner } from "../helpers/helpers";
 import { LedgerSigner } from "@anders-t/ethers-ledger";
 import { Provider } from "@ethersproject/abstract-provider";
+import {
+  wearablesBackSvgs,
+  wearablesLeftSvgs,
+  wearablesRightSvgs,
+} from "../svgs/wearables-sides";
+import {
+  wearablesBackSleeveSvgs,
+  wearablesLeftSleeveSvgs,
+  wearablesRightSleeveSvgs,
+} from "../svgs/wearables-sides";
+import { SleeveObject } from "./itemTypeHelpers";
 
 export const gasPrice = 570000000000;
 
@@ -419,4 +430,76 @@ export async function verifyContract(
       );
     }
   }
+}
+
+export function generateWearableGroups(
+  itemIds: number[],
+  wearables: Record<number, string>
+) {
+  function assertWearableGroupsExist(
+    itemIds: number[],
+    groups: Record<string, unknown[]>
+  ) {
+    for (let index = 0; index < itemIds.length; index++) {
+      const itemId = itemIds[index];
+      for (const [groupName, groupArr] of Object.entries(groups)) {
+        if (!groupArr[index])
+          throw new Error(`Wearable ${itemId} not found in ${groupName}`);
+      }
+    }
+  }
+
+  const sides = {
+    wearables: wearables,
+    "wearables-left": wearablesLeftSvgs,
+    "wearables-right": wearablesRightSvgs,
+    "wearables-back": wearablesBackSvgs,
+  };
+
+  const wearableGroups: Record<string, unknown[]> = {};
+
+  Object.keys(sides).forEach((side) => {
+    wearableGroups[side] = itemIds.map(
+      (id) => sides[side as keyof typeof sides][id]
+    );
+  });
+
+  assertWearableGroupsExist(itemIds, wearableGroups);
+
+  return wearableGroups;
+}
+
+export function generateSleeveGroups(
+  sleeveIds: number[],
+  sleeveSvgs: SleeveObject[]
+) {
+  function assertSleeveGroupsExist(
+    sleeveIds: number[],
+    groups: Record<string, unknown[]>
+  ) {
+    for (let index = 0; index < sleeveIds.length; index++) {
+      const sleeveId = sleeveIds[index];
+      for (const [groupName, groupArr] of Object.entries(groups)) {
+        if (!groupArr[index])
+          throw new Error(`Sleeve ${sleeveId} not found in ${groupName}`);
+      }
+    }
+  }
+
+  const sleeveGroups = {
+    sleeves: sleeveSvgs.map((s) => s.svg),
+    "sleeves-left": sleeveIds.map(
+      (sleeveId) => wearablesLeftSleeveSvgs[Number(sleeveId)]
+    ),
+    "sleeves-right": sleeveIds.map(
+      (sleeveId) => wearablesRightSleeveSvgs[Number(sleeveId)]
+    ),
+    "sleeves-back": sleeveIds.map(
+      (sleeveId) => wearablesBackSleeveSvgs[Number(sleeveId)]
+    ),
+  };
+
+  assertSleeveGroupsExist(sleeveIds, sleeveGroups);
+
+  return sleeveGroups;
 }
