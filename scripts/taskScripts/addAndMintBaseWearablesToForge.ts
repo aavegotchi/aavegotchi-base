@@ -1,5 +1,5 @@
 import { run } from "hardhat";
-import { AddAndMintWearablesToForgeTaskArgs } from "../../tasks/addAndMintWearablesToForge";
+import { AddAndMintWearablesToForgeTaskArgs } from "../../tasks/addAndMintWearables";
 import { varsForNetwork } from "../../helpers/constants";
 import { ethers } from "hardhat";
 

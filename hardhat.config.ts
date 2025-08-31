@@ -27,7 +27,7 @@ require("./tasks/grantXP_snapshot");
 require("./tasks/grantXP_minigame");
 require("./tasks/grantXP");
 require("./tasks/addItemTypes");
-require("./tasks/addAndMintWearablesToForge");
+require("./tasks/addAndMintWearables");
 require("./tasks/addWearableSets");
 require("./tasks/grantXP_customValues");
 require("./tasks/generateDiamondABI");
