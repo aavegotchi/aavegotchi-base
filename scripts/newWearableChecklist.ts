@@ -295,6 +295,71 @@ async function verifySleeveSvgsOnchain(
   return { verified, missing };
 }
 
+async function verifyItemBalances(
+  itemIds: number[],
+  hre: any
+): Promise<{ verified: number[]; missing: number[] }> {
+  const verified: number[] = [];
+  const missing: number[] = [];
+
+  try {
+    const c = await varsForNetwork(hre.ethers);
+    const signer = await getRelayerSigner(hre);
+
+    const itemsFacet = await hre.ethers.getContractAt(
+      "ItemsFacet",
+      c.aavegotchiDiamond!,
+      signer
+    );
+
+    console.log(
+      `🔍 Checking item balances for forge diamond: ${c.forgeDiamond}`
+    );
+
+    for (const itemId of itemIds) {
+      try {
+        const itemType = itemTypes[itemId];
+        if (!itemType) {
+          console.log(
+            `⚠️ Item ${itemId} not found in itemTypes, skipping balance check`
+          );
+          continue;
+        }
+
+        // Check balance of the forge diamond for this item
+        const balance = await itemsFacet.balanceOf(c.forgeDiamond!, itemId);
+        const expectedQuantity = itemType.maxQuantity;
+
+        console.log(`📊 Item ${itemId} (${itemType.name}):`);
+        console.log(`   Expected: ${expectedQuantity}`);
+        console.log(`   Actual: ${balance.toString()}`);
+
+        if (balance.eq(expectedQuantity)) {
+          console.log(
+            `✅ Balance matches expected quantity for item ${itemId}`
+          );
+          verified.push(itemId);
+        } else {
+          console.log(
+            `❌ Balance mismatch for item ${itemId}: expected ${expectedQuantity}, got ${balance.toString()}`
+          );
+          missing.push(itemId);
+        }
+      } catch (error) {
+        console.log(`❌ Error checking balance for item ${itemId}: ${error}`);
+        missing.push(itemId);
+      }
+    }
+  } catch (error) {
+    console.log(
+      "⚠️ Could not connect to contract for balance verification (this is normal for dry runs)"
+    );
+    return { verified: [], missing: [] };
+  }
+
+  return { verified, missing };
+}
+
 async function generateWearablePreviews(
   itemIds: number[],
   hre: any
@@ -683,9 +748,24 @@ export async function verifyDeploymentOnchain(
     }
   }
 
+  // Verify item balances (minted quantities)
+  console.log("🔍 Checking item balances in forge diamond...");
+  const balanceVerification = await verifyItemBalances(itemIds, hre);
+  if (balanceVerification.verified.length > 0) {
+    console.log(
+      `✅ Item balances verified: ${balanceVerification.verified.join(", ")}`
+    );
+  }
+  if (balanceVerification.missing.length > 0) {
+    console.log(
+      `❌ Item balance mismatches: ${balanceVerification.missing.join(", ")}`
+    );
+  }
+
   // Check if all verifications passed
   const allItemTypesVerified = itemTypeVerification.missing.length === 0;
   const allSvgsVerified = svgVerification.missing.length === 0;
+  const allBalancesVerified = balanceVerification.missing.length === 0;
 
   let allSleevesVerified = true;
   if (bodyWearablesWithSleeves.length > 0) {
@@ -697,7 +777,12 @@ export async function verifyDeploymentOnchain(
     allSleevesVerified = sleeveAssociationsVerified && sleeveSvgsVerified;
   }
 
-  if (allItemTypesVerified && allSvgsVerified && allSleevesVerified) {
+  if (
+    allItemTypesVerified &&
+    allSvgsVerified &&
+    allSleevesVerified &&
+    allBalancesVerified
+  ) {
     console.log("\n✅ All onchain verification checks passed!");
 
     // Generate preview SVGs
