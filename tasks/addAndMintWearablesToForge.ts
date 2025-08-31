@@ -11,6 +11,10 @@ import { itemTypes } from "../data/itemTypes/itemTypes";
 import { getItemTypes, toItemTypeInputNew } from "../scripts/itemTypeHelpers";
 import { sideViewDimensions } from "../data/itemTypes/baseWearableSideWearables";
 import { convertSideDimensionsToTaskFormat } from "./updateItemSideDimensions";
+import {
+  confirmChecklist,
+  verifyDeploymentOnchain,
+} from "../scripts/newWearableChecklist";
 
 export interface AddAndMintWearablesToForgeTaskArgs {
   itemIds: string;
@@ -29,6 +33,19 @@ task(
       taskArgs: AddAndMintWearablesToForgeTaskArgs,
       hre: HardhatRuntimeEnvironment
     ) => {
+      // Parse item IDs from input parameter
+      const itemIds = taskArgs.itemIds
+        .split(",")
+        .map((id) => parseInt(id.trim()));
+      console.log(`Processing item IDs: ${itemIds.join(", ")}`);
+
+      // Pre-deployment validation
+      const shouldProceed = await confirmChecklist(itemIds);
+      if (!shouldProceed) {
+        console.log("❌ Operation cancelled by user.");
+        return;
+      }
+
       const c = await varsForNetwork(hre.ethers);
       const signer = await getRelayerSigner(hre);
 
@@ -44,12 +61,6 @@ task(
         c.aavegotchiDiamond!,
         signer
       );
-
-      // Parse item IDs from input parameter
-      const itemIds = taskArgs.itemIds
-        .split(",")
-        .map((id) => parseInt(id.trim()));
-      console.log(`Processing item IDs: ${itemIds.join(", ")}`);
 
       const itemTypesToAdd = itemIds.map((id) => {
         if (!itemTypes[id]) {
@@ -141,5 +152,11 @@ task(
       console.log("Wearables minted to forge diamond");
 
       console.log("✅ All operations completed successfully!");
+
+      // Post-deployment verification
+      await verifyDeploymentOnchain(itemIds, hre);
+
+      //Export SVG of Aavegotchi wearing the new wearables
+      console.log("Exporting SVG of Aavegotchi wearing the new wearables...");
     }
   );
