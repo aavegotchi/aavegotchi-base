@@ -3,7 +3,7 @@ import { AddAndMintWearablesToForgeTaskArgs } from "../../tasks/addAndMintWearab
 import { confirmChecklist } from "../newWearableChecklist";
 
 async function addAndMintBaseWearablesToForge() {
-  const itemIdsArray = [418, 419, 420, 421];
+  const itemIdsArray = [418, 419, 420];
   const itemIds = itemIdsArray.join(",");
 
   console.log(`\n📋 Item IDs to process: ${itemIds}`);
