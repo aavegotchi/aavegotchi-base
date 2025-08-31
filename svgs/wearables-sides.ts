@@ -51,57 +51,51 @@ export function wearableSideSvgs(side: WearableSide) {
     },
   };
 
-  const exceptions = sideMap[side].exceptions;
-  const bodyWearableFunction = sideMap[side].bodyWearableFunction;
-
   for (let index = 0; index < itemTypes.length; index++) {
-    const itemType = itemTypes[index];
+    const { category, svgId, slotPositions, sleeves } = itemTypes[index];
+    const name = svgMapping[Number(svgId)] || itemTypes[index].name;
 
-    if (itemType.name === "The Void") {
+    if (svgId === 0) {
       output.push(wearable(`0_Void${side}`));
       continue;
     }
 
     //badges don't have side views
-    if (side !== "" && itemType.category === 1) {
-      output.push(outputBadge(itemType.svgId.toString()));
+    if (side !== "" && category === 1) {
+      output.push(outputBadge(svgId.toString()));
       continue;
     }
 
-    if (itemType.category === 1) {
-      output.push(badge(Number(itemType.svgId)));
+    if (category === 1) {
+      output.push(badge(Number(svgId)));
       continue;
     }
 
-    let name = itemType.name;
-    if (svgMapping[Number(itemType.svgId)])
-      name = svgMapping[Number(itemType.svgId)];
-
-    //potions
-    if (itemType.category === 2) {
-      output.push(wearable(`${itemType.svgId}_${toCamelCase(name)}`));
+    //items
+    if (category === 2) {
+      output.push(wearable(`${svgId}_${toCamelCase(name)}`));
       continue;
     }
 
-    if (exceptions.includes(Number(itemType.svgId))) {
-      output.push(`${itemType.svgId}_${toCamelCase(name)}${side}`);
+    if (sideMap[side].exceptions.includes(Number(svgId))) {
+      output.push(`${svgId}_${toCamelCase(name)}${side}`);
       continue;
     }
 
-    if (itemType.slotPositions === "body" && itemType.sleeves) {
+    if (slotPositions === "body" && sleeves) {
       //add weird exception for thaave suit until we configure the sleeves properly
-      if (itemType.name === "Thaave Suit") {
+      if (name === "Thaave Suit") {
         output.push(wearable(`25_ThaaveSuit${side}`));
         continue;
       }
 
       output.push(
-        bodyWearableFunction(`${itemType.svgId}_${toCamelCase(name)}`)
+        sideMap[side].bodyWearableFunction(`${svgId}_${toCamelCase(name)}`)
       );
-    } else
-      output.push(wearable(`${itemType.svgId}_${toCamelCase(name)}${side}`));
+    } else output.push(wearable(`${svgId}_${toCamelCase(name)}${side}`));
   }
 
+  //Validate against old data source
   for (let index = 0; index < output.length; index++) {
     const element = output[index];
 
@@ -144,31 +138,25 @@ export function wearableSideSleeveSvgs(side: WearableSide) {
 
   // Only process items that have sleeves - this creates a 57-item array
   for (let index = 0; index < itemTypes.length; index++) {
-    const itemType = itemTypes[index];
+    const { svgId, slotPositions, sleeves } = itemTypes[index];
+
+    const name = svgMapping[Number(svgId)] || itemTypes[index].name;
 
     // Handle void element (always first)
-    if (itemType.name === "The Void") {
+    if (svgId === 0) {
       output.push(voidElement);
       continue;
     }
 
-    // Only include items that have sleeves (body items with sleeves property)
-    if (itemType.slotPositions === "body" && itemType.sleeves) {
-      console.log(`itemType`, itemType.svgId);
-
+    // Only iterate over items that have sleeves (body items with sleeves property)
+    if (slotPositions === "body" && sleeves) {
       // Handle hardcoded exceptions
-      if (hardcodedExceptions.includes(Number(itemType.svgId))) {
-        console.log("skip thaavesuit");
-
-        output.push(`${itemType.svgId}_ThaaveSuit`);
+      if (hardcodedExceptions.includes(Number(svgId))) {
+        output.push(`${svgId}_ThaaveSuit`);
         continue;
       }
 
-      let name = itemType.name;
-      if (svgMapping[Number(itemType.svgId)])
-        name = svgMapping[Number(itemType.svgId)];
-
-      output.push(sleeveFunction(`${itemType.svgId}_${toCamelCase(name)}`));
+      output.push(sleeveFunction(`${svgId}_${toCamelCase(name)}`));
     }
     // Skip all other items (badges, potions, non-sleeve body items, etc.)
   }

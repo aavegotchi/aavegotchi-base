@@ -13,8 +13,6 @@ import {
   wearablesFrontSleeveSvgs,
   wearablesLeftSvgs,
   wearablesRightSvgs,
-} from "../svgs/wearables-sides";
-import {
   wearablesFrontSvgs,
   wearablesBackSleeveSvgs,
   wearablesLeftSleeveSvgs,
