@@ -41,7 +41,7 @@ task(
       console.log(`Processing item IDs: ${itemIds.join(", ")}`);
 
       // Pre-deployment validation
-      const shouldProceed = await confirmChecklist(itemIds);
+      const shouldProceed = await confirmChecklist(itemIds, hre);
       if (!shouldProceed) {
         console.log("❌ Operation cancelled by user.");
         return;

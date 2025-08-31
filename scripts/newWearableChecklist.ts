@@ -523,7 +523,7 @@ function getSlotPosition(slotPositions: string): number {
 
 export async function confirmChecklist(
   itemIds: number[],
-  hre?: any
+  hre: any
 ): Promise<boolean> {
   console.log("\n🔍 Pre-flight Checklist:");
   console.log(
@@ -544,7 +544,7 @@ export async function confirmChecklist(
     return false;
   }
 
-  // Step 2: Validate that item types actually exist
+  // Step 2: Validate that item types actually exist locally
   console.log("🔍 Validating item types exist in itemTypes.ts...");
   const missingItemTypes: number[] = [];
   const bodyWearablesWithSleeves: number[] = [];
@@ -569,6 +569,60 @@ export async function confirmChecklist(
     return false;
   }
   console.log("✅ All item types found in itemTypes.ts");
+
+  // Step 2.5: Check if item types are already deployed onchain (to avoid conflicts)
+  if (hre) {
+    console.log("🔍 Checking if item types are already deployed onchain...");
+    const alreadyDeployedItems: number[] = [];
+
+    try {
+      const c = await varsForNetwork(hre.ethers);
+      const signer = await getRelayerSigner(hre);
+
+      const itemsFacet = await hre.ethers.getContractAt(
+        "ItemsFacet",
+        c.aavegotchiDiamond!,
+        signer
+      );
+
+      for (const itemId of itemIds) {
+        try {
+          const itemType = await itemsFacet.getItemType(itemId);
+
+          if (itemType && itemType.name) {
+            alreadyDeployedItems.push(itemId);
+          }
+        } catch (error) {
+          // Item doesn't exist onchain, which is what we want
+          console.log("itemType not found onchain", itemId);
+        }
+      }
+
+      if (alreadyDeployedItems.length > 0) {
+        console.log(
+          `⚠️ Item types already exist onchain: ${alreadyDeployedItems.join(
+            ", "
+          )}`
+        );
+        const shouldContinue = await askQuestion(
+          "These item types are already deployed. Continue anyway? (y/n): "
+        );
+        if (
+          shouldContinue.toLowerCase() !== "y" &&
+          shouldContinue.toLowerCase() !== "yes"
+        ) {
+          console.log("❌ Deployment cancelled to avoid conflicts.");
+          return false;
+        }
+      } else {
+        console.log("✅ No item type conflicts found - all items are new");
+      }
+    } catch (error) {
+      console.log(
+        "⚠️ Could not check onchain item types (this is normal for dry runs)"
+      );
+    }
+  }
 
   // Step 3: Ask about SVGs and validate
   const svgsAnswer = await askQuestion(
