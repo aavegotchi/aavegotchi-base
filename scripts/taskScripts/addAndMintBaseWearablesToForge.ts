@@ -1,8 +1,18 @@
 import { run } from "hardhat";
 import { AddAndMintWearablesToForgeTaskArgs } from "../../tasks/addAndMintWearablesToForge";
+import { confirmChecklist } from "../newWearableChecklist";
 
 async function addAndMintBaseWearablesToForge() {
-  const itemIds = [418, 419, 420].join(",");
+  const itemIdsArray = [418, 419, 420, 421];
+  const itemIds = itemIdsArray.join(",");
+
+  console.log(`\n📋 Item IDs to process: ${itemIds}`);
+
+  const shouldProceed = await confirmChecklist(itemIdsArray);
+  if (!shouldProceed) {
+    console.log("❌ Deployment cancelled by user.");
+    process.exit(0);
+  }
 
   const args: AddAndMintWearablesToForgeTaskArgs = {
     itemIds: itemIds,

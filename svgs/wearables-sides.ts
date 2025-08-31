@@ -1,4 +1,4 @@
-import { itemTypes } from "../data/itemTypes/itemTypes";
+import { ItemTypeInput, itemTypes } from "../data/itemTypes/itemTypes";
 import { badge } from "./allBadges";
 import { svgMapping } from "./allWearables";
 
@@ -11,49 +11,205 @@ export function outputBadge(svgId: string) {
   return `${svgId}_badge`;
 }
 
+// Helper function to get the expected filename for a wearable item
+function getWearableFilename(
+  itemType: ItemTypeInput,
+  side: WearableSide,
+  sideMap: any
+): string | null {
+  const { category, svgId, slotPositions, sleeves } = itemType;
+  const name = svgMapping[Number(svgId)] || itemType.name;
+  const camelCaseName = toCamelCase(name);
+
+  // Skip badges side views and items side views
+  if (side !== "" && category === 1) return null;
+  if (category === 2 && side !== "") return null;
+
+  // Handle void case
+  if (svgId === 0) {
+    return side === "" ? "0_Void" : `0_Void${side}`;
+  }
+
+  // Check for exceptions
+  const isException = sideMap[side].exceptions.includes(Number(svgId));
+
+  if (isException) {
+    return `${svgId}_${camelCaseName}${side}`;
+  }
+
+  // Handle body wearables with sleeves
+  if (slotPositions === "body" && sleeves) {
+    if (name === "Thaave Suit") {
+      return `25_ThaaveSuit${side}`;
+    }
+
+    if (side === "") {
+      return `${svgId}_${camelCaseName}`;
+    } else {
+      return `${svgId}_${camelCaseName}${side}`;
+    }
+  } else {
+    // Regular wearables
+    return side === ""
+      ? `${svgId}_${camelCaseName}`
+      : `${svgId}_${camelCaseName}${side}`;
+  }
+}
+
+// Validation function to extract expected filenames without generating SVG content
+export function getExpectedWearableFilenames(itemIds: number[]): string[] {
+  const filenames: string[] = [];
+  const sides: WearableSide[] = ["", "Right", "Back", "Left"];
+
+  for (const itemId of itemIds) {
+    const itemType = itemTypes[itemId];
+    if (!itemType) continue;
+
+    for (const side of sides) {
+      const filename = getWearableFilename(itemType, side, SIDE_CONFIG);
+      if (filename) {
+        filenames.push(filename);
+      }
+    }
+  }
+
+  return filenames;
+}
+
+// Helper function to get expected sleeve filenames for a specific side
+function getSleeveFilenamesForSide(
+  itemIds: number[],
+  side: WearableSide
+): string[] {
+  const filenames: string[] = [];
+
+  // Define void element mapping (Back side has inconsistent naming)
+  const voidElementMap = {
+    "": "0_Void",
+    Right: "0_VoidRight",
+    Back: "0_VoidRight", // Back uses Right void element
+    Left: "0_VoidLeft",
+  };
+
+  // Hardcoded exceptions that don't use sleeve functions
+  const hardcodedExceptions = [25]; // ThaaveSuit
+
+  const voidElement = voidElementMap[side];
+  filenames.push(voidElement);
+
+  for (const itemId of itemIds) {
+    const itemType = itemTypes.find((item) => item.svgId === itemId);
+    if (!itemType || itemType.slotPositions !== "body" || !itemType.sleeves) {
+      continue;
+    }
+
+    const { svgId } = itemType;
+    const name = svgMapping[Number(svgId)] || itemType.name;
+    const camelCaseName = toCamelCase(name);
+
+    // Handle hardcoded exceptions
+    if (hardcodedExceptions.includes(Number(svgId))) {
+      filenames.push(`${svgId}_ThaaveSuit`);
+      continue;
+    }
+
+    // Generate sleeve filenames based on side
+    if (side === "") {
+      // Front sleeves: LeftUp, Left, RightUp, Right
+      filenames.push(
+        `${svgId}_${camelCaseName}LeftUp`,
+        `${svgId}_${camelCaseName}Left`,
+        `${svgId}_${camelCaseName}RightUp`,
+        `${svgId}_${camelCaseName}Right`
+      );
+    } else if (side === "Left") {
+      // Left side sleeves: SideLeftUp, SideLeftDown
+      filenames.push(
+        `${svgId}_${camelCaseName}SideLeftUp`,
+        `${svgId}_${camelCaseName}SideLeftDown`
+      );
+    } else if (side === "Right") {
+      // Right side sleeves: SideRightUp, SideRightDown
+      filenames.push(
+        `${svgId}_${camelCaseName}SideRightUp`,
+        `${svgId}_${camelCaseName}SideRightDown`
+      );
+    } else if (side === "Back") {
+      // Back sleeves: BackLeftUp, BackLeft, BackRightUp, BackRight, plus main Back file
+      filenames.push(
+        `${svgId}_${camelCaseName}Back`,
+        `${svgId}_${camelCaseName}BackLeftUp`,
+        `${svgId}_${camelCaseName}BackLeft`,
+        `${svgId}_${camelCaseName}BackRightUp`,
+        `${svgId}_${camelCaseName}BackRight`
+      );
+    }
+  }
+
+  return filenames;
+}
+
+export function getExpectedSleeveFilenames(itemIds: number[]): string[] {
+  const allFilenames: string[] = [];
+  const sides: WearableSide[] = ["", "Right", "Back", "Left"];
+
+  for (const side of sides) {
+    const sideFilenames = getSleeveFilenamesForSide(itemIds, side);
+    allFilenames.push(...sideFilenames);
+  }
+
+  // Remove duplicates and void elements (we only want the actual sleeve files)
+  const uniqueFilenames = [...new Set(allFilenames)].filter(
+    (filename) => !filename.includes("Void") && !filename.includes("badge")
+  );
+
+  return uniqueFilenames;
+}
+
 export function toCamelCase(name: string) {
   return name
     .replace(/(?:^|_)(\w)/g, (_, letter) => letter.toUpperCase())
     .replace(/[ ']/g, "");
 }
 
+// Shared configuration for wearable sides
+const SIDE_CONFIG: Record<
+  WearableSide,
+  {
+    exceptions: number[];
+    bodyWearableFunction: (name: string) => string;
+  }
+> = {
+  "": {
+    exceptions: [],
+    bodyWearableFunction: wearablesWithSleevesFront,
+  },
+  Right: {
+    exceptions: [
+      55, 75, 86, 157, 233, 236, 237, 261, 356, 406, 410, 413, 415, 417,
+    ],
+    bodyWearableFunction: wearableWithSleevesRight,
+  },
+  Back: {
+    exceptions: [
+      14, 53, 86, 146, 157, 209, 214, 219, 249, 259, 260, 262, 356, 367, 368,
+      378, 381, 382, 384, 385, 405, 409, 412, 416,
+    ],
+    bodyWearableFunction: wearableWithSleevesBack,
+  },
+  Left: {
+    exceptions: [29, 157],
+    bodyWearableFunction: wearableWithSleevesLeft,
+  },
+};
+
 export function wearableSideSvgs(side: WearableSide) {
   const output = [];
 
-  const sideMap: Record<
-    WearableSide,
-    {
-      exceptions: number[];
-
-      bodyWearableFunction: (name: string) => string;
-    }
-  > = {
-    "": {
-      exceptions: [],
-      bodyWearableFunction: wearablesWithSleevesFront,
-    },
-    Right: {
-      exceptions: [
-        55, 75, 86, 157, 233, 236, 237, 261, 356, 406, 410, 413, 415, 417,
-      ],
-      bodyWearableFunction: wearableWithSleevesRight,
-    },
-    Back: {
-      exceptions: [
-        14, 53, 86, 146, 157, 209, 214, 219, 249, 259, 260, 262, 356, 367, 368,
-        378, 381, 382, 384, 385, 405, 409, 412, 416,
-      ],
-      bodyWearableFunction: wearableWithSleevesBack,
-    },
-    Left: {
-      exceptions: [29, 157],
-      bodyWearableFunction: wearableWithSleevesLeft,
-    },
-  };
-
   for (let index = 0; index < itemTypes.length; index++) {
-    const { category, svgId, slotPositions, sleeves } = itemTypes[index];
-    const name = svgMapping[Number(svgId)] || itemTypes[index].name;
+    const itemType = itemTypes[index];
+    const { category, svgId, slotPositions, sleeves } = itemType;
+    const name = svgMapping[Number(svgId)] || itemType.name;
 
     if (svgId === 0) {
       output.push(wearable(`0_Void${side}`));
@@ -77,7 +233,7 @@ export function wearableSideSvgs(side: WearableSide) {
       continue;
     }
 
-    if (sideMap[side].exceptions.includes(Number(svgId))) {
+    if (SIDE_CONFIG[side].exceptions.includes(Number(svgId))) {
       output.push(`${svgId}_${toCamelCase(name)}${side}`);
       continue;
     }
@@ -90,7 +246,7 @@ export function wearableSideSvgs(side: WearableSide) {
       }
 
       output.push(
-        sideMap[side].bodyWearableFunction(`${svgId}_${toCamelCase(name)}`)
+        SIDE_CONFIG[side].bodyWearableFunction(`${svgId}_${toCamelCase(name)}`)
       );
     } else output.push(wearable(`${svgId}_${toCamelCase(name)}${side}`));
   }
