@@ -2,7 +2,7 @@ import { LeaderboardAavegotchi, LeaderboardType, FoundSet } from "../types";
 import request from "graphql-request";
 
 import { wearableSetArrays } from "./wearableSets";
-import { maticGraphUrl } from "./query/queryAavegotchis";
+import { baseGraphUrl } from "./query/queryAavegotchis";
 
 export function calculateRarityScore(traitArray: number[]) {
   const energy: number = returnRarity(traitArray[0]);
@@ -87,7 +87,7 @@ export async function fetchSacrificedGotchis(): Promise<SacrificedGotchi[]> {
   `;
 
   const response: Record<string, SacrificedGotchi[]> = await request(
-    maticGraphUrl,
+    baseGraphUrl,
     query
   );
   return Object.values(response).flat();
@@ -233,7 +233,7 @@ export async function fetchAndSortLeaderboard(
   const query = leaderboardQuery(blockNumber);
 
   const queryResponse: LeaderboardAavegotchi[] = await request(
-    maticGraphUrl,
+    baseGraphUrl,
     query
   );
 

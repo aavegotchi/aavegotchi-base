@@ -33,6 +33,7 @@ require("./tasks/grantXP_customValues");
 require("./tasks/generateDiamondABI");
 require("./tasks/updateWearableExceptions");
 require("./tasks/deployXPDrop");
+require("./tasks/deployXPDrops");
 require("./tasks/verifyContracts");
 
 // You have to export an object to set up your config
@@ -41,11 +42,7 @@ require("./tasks/verifyContracts");
 // Go to https://buidler.dev/config/ to learn more
 export default {
   etherscan: {
-    apiKey: {
-      // matic: process.env.POLYGON_API_KEY,
-      baseSepolia: process.env.BASE_API_KEY,
-      base: process.env.BASE_API_KEY,
-    },
+    apiKey: process.env.ETHERSCAN,
   },
   networks: {
     hardhat: {
