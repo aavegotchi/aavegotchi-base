@@ -1,5 +1,7 @@
 import { run } from "hardhat";
 import { AddAndMintWearablesToForgeTaskArgs } from "../../tasks/addAndMintWearablesToForge";
+import { varsForNetwork } from "../../helpers/constants";
+import { ethers } from "hardhat";
 
 async function addAndMintBaseWearablesToForge() {
   const itemIdsArray = [418, 419, 420];
@@ -7,14 +9,17 @@ async function addAndMintBaseWearablesToForge() {
 
   console.log(`\n📋 Item IDs to process: ${itemIds}`);
 
+  const c = await varsForNetwork(ethers);
+
   const args: AddAndMintWearablesToForgeTaskArgs = {
     itemIds: itemIds,
+    recipient: c.forgeDiamond!,
   };
 
   console.log(`\n🚀 Running deployment task with item IDs: ${itemIds}`);
 
   // Run the main deployment task (which includes validation)
-  await run("addAndMintBaseWearablesToForge", args);
+  await run("addAndMintBaseWearables", args);
 }
 
 addAndMintBaseWearablesToForge()

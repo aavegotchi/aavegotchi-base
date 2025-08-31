@@ -19,16 +19,18 @@ import { gasPrice } from "../scripts/helperFunctions";
 
 export interface AddAndMintWearablesToForgeTaskArgs {
   itemIds: string;
+  recipient: string;
 }
 
 task(
-  "addAndMintBaseWearablesToForge",
+  "addAndMintBaseWearables",
   "Adds item types and mints base wearables to forge diamond"
 )
   .addParam(
     "itemIds",
     "Comma-separated list of item IDs to add and mint (e.g., '418,419,420')"
   )
+  .addParam("recipient", "Address to mint wearables to")
   .setAction(
     async (
       taskArgs: AddAndMintWearablesToForgeTaskArgs,
@@ -38,6 +40,7 @@ task(
       const itemIds = taskArgs.itemIds
         .split(",")
         .map((id) => parseInt(id.trim()));
+      const recipient = taskArgs.recipient;
       console.log(`Processing item IDs: ${itemIds.join(", ")}`);
 
       // Pre-deployment validation
@@ -153,7 +156,7 @@ task(
       console.log("Minting wearables to forge diamond...");
       const quantities = itemTypesToAdd.map((item) => item.maxQuantity);
       const mintTx = await daoFacet.mintItems(
-        c.forgeDiamond!,
+        recipient,
         itemIds,
         quantities,
         gasConfig
