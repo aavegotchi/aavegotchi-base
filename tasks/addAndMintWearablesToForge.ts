@@ -38,6 +38,13 @@ task(
         signer
       );
 
+      // Upload svgs
+      const svgFacet = await hre.ethers.getContractAt(
+        "SvgFacet",
+        c.aavegotchiDiamond!,
+        signer
+      );
+
       // Parse item IDs from input parameter
       const itemIds = taskArgs.itemIds
         .split(",")
@@ -59,34 +66,6 @@ task(
         hre.ethers
       );
 
-      // Get sleeve ids
-      const sleeveIds = itemTypesToAdd
-        .map((item) => item.sleeves)
-        .filter((s) => s !== undefined);
-
-      // Add item types
-      console.log(`Adding ${finalItemTypes.length} item types...`);
-      const tx = await daoFacet.addItemTypes(finalItemTypes);
-      await tx.wait();
-      console.log("Item types added");
-
-      // Upload dimensions
-      console.log("Updating item side dimensions...");
-      await hre.run(
-        "updateItemSideDimensions",
-        convertSideDimensionsToTaskFormat(
-          sideViewDimensions,
-          c.aavegotchiDiamond!
-        )
-      );
-
-      // Upload svgs
-      const svgFacet = await hre.ethers.getContractAt(
-        "SvgFacet",
-        c.aavegotchiDiamond!,
-        signer
-      );
-
       // Upload wearable svgs
       console.log("Uploading wearable SVGs...");
       const wearableGroups = generateWearableGroups(itemIds);
@@ -101,6 +80,11 @@ task(
           hre.ethers
         );
       }
+
+      // Get sleeve ids
+      const sleeveIds = itemTypesToAdd
+        .map((item) => item.sleeves)
+        .filter((s) => s !== undefined);
 
       // Upload sleeve svgs
       if (sleeveIds.length > 0) {
@@ -119,6 +103,22 @@ task(
             hre.ethers
           );
         }
+
+        // Add item types
+        console.log(`Adding ${finalItemTypes.length} item types...`);
+        const tx = await daoFacet.addItemTypes(finalItemTypes);
+        await tx.wait();
+        console.log("Item types added");
+
+        // Upload dimensions
+        console.log("Updating item side dimensions...");
+        await hre.run(
+          "updateItemSideDimensions",
+          convertSideDimensionsToTaskFormat(
+            sideViewDimensions,
+            c.aavegotchiDiamond!
+          )
+        );
 
         // Associate sleeves with body wearable svgs
         console.log("Associating sleeves with body wearable SVGs...");

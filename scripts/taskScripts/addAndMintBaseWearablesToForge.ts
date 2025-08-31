@@ -2,7 +2,7 @@ import { run } from "hardhat";
 import { AddAndMintWearablesToForgeTaskArgs } from "../../tasks/addAndMintWearablesToForge";
 
 async function addAndMintBaseWearablesToForge() {
-  const itemIds = "418,419,420";
+  const itemIds = [418, 419, 420].join(",");
 
   const args: AddAndMintWearablesToForgeTaskArgs = {
     itemIds: itemIds,
