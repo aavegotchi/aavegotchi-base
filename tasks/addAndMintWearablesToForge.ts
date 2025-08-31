@@ -15,6 +15,7 @@ import {
   confirmChecklist,
   verifyDeploymentOnchain,
 } from "../scripts/newWearableChecklist";
+import { gasPrice } from "../scripts/helperFunctions";
 
 export interface AddAndMintWearablesToForgeTaskArgs {
   itemIds: string;
@@ -48,6 +49,10 @@ task(
 
       const c = await varsForNetwork(hre.ethers);
       const signer = await getRelayerSigner(hre);
+
+      // Configure gas settings based on network
+      const testing = ["hardhat", "localhost"].includes(hre.network.name);
+      const gasConfig = testing ? { gasPrice: gasPrice } : {};
 
       const daoFacet = await hre.ethers.getContractAt(
         "DAOFacet",
@@ -88,7 +93,9 @@ task(
           svgType,
           itemIds,
           svgFacet,
-          hre.ethers
+          hre.ethers,
+          undefined,
+          gasConfig
         );
       }
 
@@ -111,13 +118,15 @@ task(
             svgType,
             sleeveIds.map((s) => Number(s.sleeveId)),
             svgFacet,
-            hre.ethers
+            hre.ethers,
+            undefined,
+            gasConfig
           );
         }
 
         // Add item types
         console.log(`Adding ${finalItemTypes.length} item types...`);
-        const tx = await daoFacet.addItemTypes(finalItemTypes);
+        const tx = await daoFacet.addItemTypes(finalItemTypes, gasConfig);
         await tx.wait();
         console.log("Item types added");
 
@@ -133,7 +142,7 @@ task(
 
         // Associate sleeves with body wearable svgs
         console.log("Associating sleeves with body wearable SVGs...");
-        const setSleevesTx = await svgFacet.setSleeves(sleeveIds);
+        const setSleevesTx = await svgFacet.setSleeves(sleeveIds, gasConfig);
         await setSleevesTx.wait();
         console.log(
           `${sleeveIds.length} sleeves associated with body wearable svgs`
@@ -146,7 +155,8 @@ task(
       const mintTx = await daoFacet.mintItems(
         c.forgeDiamond!,
         itemIds,
-        quantities
+        quantities,
+        gasConfig
       );
       await mintTx.wait();
       console.log("Wearables minted to forge diamond");

@@ -250,7 +250,8 @@ export async function uploadSvgs(
   svgs: string[],
   svgType: string,
   ethers: any,
-  deploymentConfig?: DeploymentConfig
+  deploymentConfig?: DeploymentConfig,
+  gasConfig?: any
 ) {
   // Check if svgsUploaded exists and if this specific svgType is already uploaded
 
@@ -294,7 +295,7 @@ export async function uploadSvgs(
     } else {
       console.log(`${svgType} not uploaded, uploading`);
 
-      let tx = await svgFacet.storeSvg(svg, svgTypesAndSizes);
+      let tx = await svgFacet.storeSvg(svg, svgTypesAndSizes, gasConfig || {});
       // console.log("tx:", tx.hash);
       // let receipt = await tx.wait();
 
@@ -321,7 +322,8 @@ export async function updateSvgs(
   svgType: string,
   svgIds: number[],
   svgFacet: SvgFacet,
-  ethers: any
+  ethers: any,
+  gasConfig?: any
 ) {
   if (svgs.length != svgIds.length)
     console.error("svg length does not match svgid length");
@@ -337,7 +339,7 @@ export async function updateSvgs(
       },
     ];
 
-    let tx = await svgFacet.updateSvg(svg, array);
+    let tx = await svgFacet.updateSvg(svg, array, gasConfig || {});
     console.log("tx:", tx.hash);
     // console.log("tx hash:", tx.hash);
     let receipt = await tx.wait();
@@ -353,7 +355,8 @@ export async function uploadOrUpdateSvg(
   svgId: number[],
   svgFacet: SvgFacet,
   ethers: any,
-  deploymentConfig?: DeploymentConfig
+  deploymentConfig?: DeploymentConfig,
+  gasConfig?: any
 ) {
   // if (typeof svg === "number") svg = [""];
   const idUpload = [];
@@ -374,11 +377,18 @@ export async function uploadOrUpdateSvg(
 
   if (idUpdate.length > 0) {
     console.log(`Svg ${svgType} #${idUpdate} exists, updating`);
-    await updateSvgs(svgUpdate, svgType, idUpdate, svgFacet, ethers);
+    await updateSvgs(svgUpdate, svgType, idUpdate, svgFacet, ethers, gasConfig);
   }
   if (idUpload.length > 0) {
     console.log(`Svg ${svgType} #${idUpload} does not exist, uploading`);
-    await uploadSvgs(svgFacet, svgUpload, svgType, ethers, deploymentConfig);
+    await uploadSvgs(
+      svgFacet,
+      svgUpload,
+      svgType,
+      ethers,
+      deploymentConfig,
+      gasConfig
+    );
   }
 }
 
