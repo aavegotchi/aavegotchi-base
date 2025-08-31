@@ -1,30 +1,41 @@
 import { itemTypes } from "../data/itemTypes/itemTypes";
+import { badge } from "./allBadges";
 import { svgMapping } from "./allWearables";
 
 const fs = require("fs");
 
-function outputBadge(svgId: string) {
+//Front, Right, Back, Left
+type WearableSide = "" | "Right" | "Back" | "Left";
+
+export function outputBadge(svgId: string) {
   return `${svgId}_badge`;
 }
 
-type WearableSide = "Right" | "Back" | "Left";
+export function toCamelCase(name: string) {
+  return name
+    .replace(/(?:^|_)(\w)/g, (_, letter) => letter.toUpperCase())
+    .replace(/[ ']/g, "");
+}
 
-export function wearableSvgs(side: WearableSide) {
+export function wearableSideSvgs(side: WearableSide) {
   const output = [];
 
   const sideMap: Record<
     WearableSide,
     {
       exceptions: number[];
-      validationArray: string[];
+
       bodyWearableFunction: (name: string) => string;
     }
   > = {
+    "": {
+      exceptions: [],
+      bodyWearableFunction: bodyWearable,
+    },
     Right: {
       exceptions: [
         55, 75, 86, 157, 233, 236, 237, 261, 356, 406, 410, 413, 415, 417,
       ],
-      validationArray: wearablesRightSvgsOld,
       bodyWearableFunction: wearableWithSleevesRight,
     },
     Back: {
@@ -32,18 +43,15 @@ export function wearableSvgs(side: WearableSide) {
         14, 53, 86, 146, 157, 209, 214, 219, 249, 259, 260, 262, 356, 367, 368,
         378, 381, 382, 384, 385, 405, 409, 412, 416,
       ],
-      validationArray: wearablesBackSvgsOld,
       bodyWearableFunction: wearableWithSleeves,
     },
     Left: {
       exceptions: [29, 157],
-      validationArray: wearablesLeftSvgsOld,
       bodyWearableFunction: wearableWithSleevesLeft,
     },
   };
 
   const exceptions = sideMap[side].exceptions;
-  const validationArray = sideMap[side].validationArray;
   const bodyWearableFunction = sideMap[side].bodyWearableFunction;
 
   for (let index = 0; index < itemTypes.length; index++) {
@@ -54,14 +62,14 @@ export function wearableSvgs(side: WearableSide) {
       continue;
     }
 
-    // if (itemType.name === "Thaave Suit" && side === "Back") {
-    //   output.push("25_ThaaveSuitBack");
-    //   continue;
-    // }
-
-    //badges
-    if (itemType.category === 1) {
+    //badges don't have side views
+    if (side !== "" && itemType.category === 1) {
       output.push(outputBadge(itemType.svgId.toString()));
+      continue;
+    }
+
+    if (itemType.category === 1) {
+      output.push(badge(Number(itemType.svgId)));
       continue;
     }
 
@@ -69,18 +77,14 @@ export function wearableSvgs(side: WearableSide) {
     if (svgMapping[Number(itemType.svgId)])
       name = svgMapping[Number(itemType.svgId)];
 
-    const camelCaseName = name
-      .replace(/(?:^|_)(\w)/g, (_, letter) => letter.toUpperCase())
-      .replace(/[ ']/g, "");
-
     //potions
     if (itemType.category === 2) {
-      output.push(wearable(`${itemType.svgId}_${camelCaseName}`));
+      output.push(wearable(`${itemType.svgId}_${toCamelCase(name)}`));
       continue;
     }
 
     if (exceptions.includes(Number(itemType.svgId))) {
-      output.push(`${itemType.svgId}_${camelCaseName}${side}`);
+      output.push(`${itemType.svgId}_${toCamelCase(name)}${side}`);
       continue;
     }
 
@@ -91,16 +95,17 @@ export function wearableSvgs(side: WearableSide) {
         continue;
       }
 
-      output.push(bodyWearableFunction(`${itemType.svgId}_${camelCaseName}`));
-    } else output.push(wearable(`${itemType.svgId}_${camelCaseName}${side}`));
+      output.push(
+        bodyWearableFunction(`${itemType.svgId}_${toCamelCase(name)}`)
+      );
+    } else
+      output.push(wearable(`${itemType.svgId}_${toCamelCase(name)}${side}`));
   }
-
-  console.log(output.length);
 
   for (let index = 0; index < output.length; index++) {
     const element = output[index];
 
-    const oldWearableElement = validationArray[index];
+    const oldWearableElement = validationArraysMap.wearables[side][index];
 
     if (element !== oldWearableElement) {
       throw new Error(
@@ -112,10 +117,82 @@ export function wearableSvgs(side: WearableSide) {
   return output;
 }
 
+export function wearableSideSleeveSvgs(side: WearableSide) {
+  const output = [];
+
+  // Define side-specific sleeve functions
+  const sleeveFunctionsMap = {
+    "": sleeves,
+    Right: sleeveWearableRight,
+    Back: sleeveWearableRight, // Back reuses Right function
+    Left: sleeveWearableLeft,
+  };
+
+  // Define void element mapping (Back side has inconsistent naming)
+  const voidElementMap = {
+    "": "0_Void",
+    Right: "0_VoidRight",
+    Back: "0_VoidRight", // Back uses Right void element
+    Left: "0_VoidLeft",
+  };
+
+  // Hardcoded exceptions that don't use sleeve functions
+  const hardcodedExceptions = [25]; // ThaaveSuit
+
+  const sleeveFunction = sleeveFunctionsMap[side];
+  const voidElement = voidElementMap[side];
+
+  // Only process items that have sleeves - this creates a 57-item array
+  for (let index = 0; index < itemTypes.length; index++) {
+    const itemType = itemTypes[index];
+
+    // Handle void element (always first)
+    if (itemType.name === "The Void") {
+      output.push(voidElement);
+      continue;
+    }
+
+    // Only include items that have sleeves (body items with sleeves property)
+    if (itemType.slotPositions === "body" && itemType.sleeves) {
+      console.log(`itemType`, itemType.svgId);
+
+      // Handle hardcoded exceptions
+      if (hardcodedExceptions.includes(Number(itemType.svgId))) {
+        console.log("skip thaavesuit");
+
+        output.push(`${itemType.svgId}_ThaaveSuit`);
+        continue;
+      }
+
+      let name = itemType.name;
+      if (svgMapping[Number(itemType.svgId)])
+        name = svgMapping[Number(itemType.svgId)];
+
+      output.push(sleeveFunction(`${itemType.svgId}_${toCamelCase(name)}`));
+    }
+    // Skip all other items (badges, potions, non-sleeve body items, etc.)
+  }
+
+  // Validation against old arrays
+  for (let index = 0; index < output.length; index++) {
+    const element = output[index];
+    const oldSleeveElement = validationArraysMap.sleeves[side][index];
+
+    if (element !== oldSleeveElement) {
+      throw new Error(
+        `${side} sleeve mismatch at index ${index}: ${element} old element: ${oldSleeveElement}`
+      );
+    }
+  }
+
+  return output;
+}
+
 // Backward compatibility exports
-export const wearablesRightSvgs = () => wearableSvgs("Right");
-export const wearablesBackSvgs = () => wearableSvgs("Back");
-export const wearablesLeftSvgs = () => wearableSvgs("Left");
+export const wearablesFrontSvgs = () => wearableSideSvgs("");
+export const wearablesRightSvgs = () => wearableSideSvgs("Right");
+export const wearablesBackSvgs = () => wearableSideSvgs("Back");
+export const wearablesLeftSvgs = () => wearableSideSvgs("Left");
 
 export const wearablesRightSvgsOld = [
   wearable("0_VoidRight"),
@@ -541,7 +618,7 @@ export const wearablesRightSvgsOld = [
   wearable("420_JessePollakHairRight"),
 ];
 
-export const wearablesBackSvgsOld = [
+const wearablesBackSvgsOld = [
   wearable("0_VoidBack"),
   wearable("1_CamoHatBack"),
   wearable("2_CamoPantsBack"),
@@ -965,7 +1042,7 @@ export const wearablesBackSvgsOld = [
   wearable("420_JessePollakHairBack"),
 ];
 
-export const wearablesLeftSvgsOld = [
+const wearablesLeftSvgsOld = [
   wearable("0_VoidLeft"),
   wearable("1_CamoHatLeft"),
   wearable("2_CamoPantsLeft"),
@@ -1391,90 +1468,493 @@ export const wearablesLeftSvgsOld = [
   wearable("420_JessePollakHairLeft"),
 ];
 
-export function wearableSleeves(side: WearableSide) {
-  const output = [];
+const wearablesFrontSvgsOld = [
+  bodyWearable("0_Void"),
+  wearable("1_CamoHat"),
+  wearable("2_CamoPants"), // body but doesn't have sleeves
+  wearable("3_MK2Grenade"),
+  wearable("4_SnowCamoHat"),
+  wearable("5_SnowCamoPants"), // body but no sleeves
+  wearable("6_M67Grenade"),
+  wearable("7_MarineCap"),
+  bodyWearable("8_MarineJacket"), // bodyWearable("8_MarineJacket"),
+  wearable("9_WalkieTalkie"),
+  wearable("10_LinkWhiteHat"),
+  bodyWearable("11_MessDress"), // bodyWearable("11_MessDress"),
+  wearable("12_LinkBubbly"),
+  wearable("13_SergeyBeard"),
+  wearable("14_SergeyEyes"), // no eyes for  side
+  bodyWearable("15_RedPlaid"), // bodyWearable("15_RedPlaid"),
+  bodyWearable("16_BluePlaid"), //  bodyWearable("16_BluePlaid"),
+  wearable("17_LinkCube"),
+  wearable("18_AaveHeroMask"),
+  bodyWearable("19_AaveHeroShirt"), // bodyWearable("19_AaveHeroShirt"),
+  wearable("20_AavePlush"),
+  wearable("21_CaptainAaveMask"),
+  bodyWearable("22_CaptainAaveSuit"), // bodyWearable("22_CaptainAaveSuit"),
+  wearable("23_CaptainAaveShield"),
+  wearable("24_ThaaveHelmet"),
+  wearable("25_ThaaveSuit"), // bodyWearable("25_ThaaveSuit"),
+  wearable("26_ThaaveHammer"),
+  wearable("27_MarcHair"),
+  bodyWearable("28_MarcOutfit"), // bodyWearable("28_MarcOutfit"),
+  wearable("29_REKTSign"),
+  wearable("30_JordanHair"),
+  bodyWearable("31_JordanSuit"), // bodyWearable("31_JordanSuit"),
+  wearable("32_AaveFlag"),
+  wearable("33_StaniHair"),
+  wearable("34_StaniVest"), // bodyWearable("34_StaniVest"),
+  wearable("35_AaveBoat"),
+  wearable("36_ETHMaxiGlasses"),
+  bodyWearable("37_ETHTShirt"),
+  wearable("38_32ETHCoin"), //may need ETHCoinRight
+  wearable("39_FoxyMask"),
+  wearable("40_FoxyTail"), // body but no sleeves
+  wearable("41_TrezorWallet"),
+  wearable("42_NogaraEagleMask"),
+  bodyWearable("43_NogaraEagleArmor"),
+  wearable("44_DAOEgg"),
+  wearable("45_ApeMask"),
+  bodyWearable("46_HalfRektShirt"),
+  wearable("47_WaifuPillow"),
+  wearable("48_XibotMohawk"),
+  wearable("49_CoderdanShades"),
+  bodyWearable("50_GldnXrossRobe"),
+  wearable("51_MudgenDiamond"),
+  wearable("52_GalaxyBrain"),
+  wearable("53_AllSeeingEyes"),
+  bodyWearable("54_LlamacornShirt"),
+  wearable("55_AagentHeadset"),
+  bodyWearable("56_AagentShirt"),
+  wearable("57_AagentShades"),
+  wearable("58_AagentPistol"),
+  wearable("59_AagentFedoraHat"),
+  wearable("60_WizardHat"),
+  wearable("61_WizardHatLegendary"),
+  wearable("62_WizardHatMythical"),
+  wearable("63_WizardHatGodlike"),
+  wearable("64_WizardStaff"),
+  wearable("65_WizardStaffLegendary"),
+  wearable("66_FutureWizardVisor"),
+  wearable("67_FarmerStrawHat"),
+  wearable("68_FarmerJeans"), // Body but no sleeves
+  wearable("69_FarmerPitchfork"),
+  wearable("70_FarmerHandsaw"),
+  wearable("71_SantagotchiHat"),
+  wearable("72_JaayHairpiece"),
+  wearable("73_JaayGlasses"),
+  bodyWearable("74_JaayHaoSuit"),
+  wearable("75_OKexSign"),
+  wearable("76_BigGHSTToken"),
+  wearable("77_BitcoinBeanie"),
+  wearable("78_SkaterJeans"), // Body but no sleeves
+  wearable("79_Skateboard"),
+  wearable("80_SushiHeadband"),
+  wearable("81_SushiRobe"), // Body but not sleeves
+  wearable("82_SushiRoll"),
+  wearable("83_SushiKnife"),
+  wearable("84_GentlemanHat"),
+  bodyWearable("85_GentlemanSuit"),
+  wearable("86_GentlemanMonocle"),
+  wearable("87_MinerHelmet"),
+  wearable("88_MinerJeans"), // Body but no sleeves
+  wearable("89_MinerPickaxe"),
+  wearable("90_PajamaHat"),
+  bodyWearable("91_PajamaPants"),
+  wearable("92_BedtimeMilk"),
+  wearable("93_FluffyBlanket"),
+  wearable("94_RunnerSweatband"),
+  wearable("95_RunnerShorts"), // Body but no sleeves
+  wearable("96_WaterBottle"),
+  wearable("97_PillboxHat"),
+  wearable("98_LadySkirt"), // Body but no sleeves
+  wearable("99_LadyParasol"),
+  wearable("100_LadyClutch"),
+  wearable("101_WitchHat"),
+  bodyWearable("102_WitchCape"),
+  wearable("103_WitchWand"),
+  wearable("104_PortalMageHelmet"),
+  bodyWearable("105_PortalMageArmor"),
+  wearable("106_PortalMageAxe"),
+  wearable("107_PortalMageBlackAxe"),
+  wearable("108_RastaDreds"),
+  bodyWearable("109_RastaShirt"),
+  wearable("110_JamaicanFlag"),
+  wearable("111_HazmatHood"),
+  bodyWearable("112_HazmatSuit"),
+  wearable("113_UraniumRod"),
+  bodyWearable("114_RedHawaiianShirt"),
+  bodyWearable("115_BlueHawaiianShirt"),
+  wearable("116_Coconut"),
+  wearable("117_DealWithItShades"),
+  wearable("118_WaterJug"),
+  wearable("119_BabyBottle"),
+  wearable("120_Martini"),
+  wearable("121_WineBottle"),
+  wearable("122_Milkshake"),
+  wearable("123_AppleJuice"),
+  wearable("124_BeerHelmet"),
+  bodyWearable("125_TrackSuit"),
+  wearable("126_KinshipPotion"),
+  wearable("127_GreaterKinshipPotion"),
+  wearable("128_XPPotion"),
+  wearable("129_GreaterXPPotion"),
+  wearable("130_Fireball"),
+  wearable("131_DragonHorns"),
+  wearable("132_DragonWings"),
+  wearable("133_PointyHorns"), // Body wearable but not sleeves
+  wearable("134_L2Sign"),
+  bodyWearable("135_PolygonShirt"),
+  wearable("136_PolygonCap"),
+  wearable("137_VoteSign"),
+  bodyWearable("138_SnapshotShirt"),
+  wearable("139_SnapshotHat"),
+  wearable("140_ElfEars"),
+  wearable("141_GemstoneRing"),
+  wearable("142_PrincessTiara"),
+  wearable("143_GoldNecklace"),
+  wearable("144_PrincessHair"),
+  wearable("145_GodliLocks"),
+  wearable("146_ImperialMoustache"),
+  wearable("147_TinyCrown"),
+  wearable("148_RoyalScepter"),
+  wearable("149_RoyalCrown"),
+  bodyWearable("150_RoyalRobes"),
+  wearable("151_CommonRofl"),
+  wearable("152_UncommonRofl"),
+  wearable("153_RareRofl"),
+  wearable("154_LegendaryRofl"),
+  wearable("155_MythicalRofl"),
+  wearable("156_GodlikeRofl"),
+  wearable("157_LilPumpGoatee"),
+  wearable("158_LilPumpDrink"),
+  wearable("159_LilPumpShades"),
+  bodyWearable("160_LilPumpThreads"),
+  wearable("161_LilPumpDreads"),
+  bodyWearable("162_MiamiShirt"),
+  badge(163),
+  badge(164),
+  badge(165),
+  badge(166),
+  badge(167),
+  badge(168),
+  badge(169),
+  badge(170),
+  badge(171),
+  badge(172),
+  badge(173),
+  badge(174),
+  badge(175),
+  badge(176),
+  badge(177),
+  badge(178),
+  badge(179),
+  badge(180),
+  badge(181),
+  badge(182),
+  badge(183),
+  badge(184),
+  badge(185),
+  badge(186),
+  badge(187),
+  badge(188),
+  badge(189),
+  badge(190),
+  badge(191),
+  badge(192),
+  badge(193),
+  badge(194),
+  badge(195),
+  badge(196),
+  badge(197),
+  badge(198),
+  wearable("199_SteampunkGlasses"),
+  wearable("200_SteampunkTrousers"),
+  wearable("201_SteampunkGlove"),
+  wearable("202_CyberpunkVR"),
+  bodyWearable("203_GamerJacket"),
+  wearable("204_CyberpunkControl"),
+  wearable("205_GotchiMug"),
+  wearable("206_BikerHelmet"),
+  wearable("207_BikerJacket"),
+  wearable("208_Aviators"),
+  wearable("209_HorseshoeMustache"),
+  wearable("210_H1background"),
+  wearable("211_GuyFauwkesMask"),
+  wearable("212_1337Laptop"),
+  bodyWearable("213_H4xx0rShirt"),
+  wearable("214_MatrixEyes"),
+  wearable("215_CyborgEye"),
+  wearable("216_RainbowVomit"),
+  wearable("217_CyborgGun"),
+  wearable("218_Mohawk"),
+  wearable("219_MuttonChops"),
+  bodyWearable("220_PunkShirt"),
+  wearable("221_PirateHat"),
+  bodyWearable("222_PirateCoat"),
+  wearable("223_HookHand"),
+  wearable("224_PiratePatch"),
+  wearable("225_Basketball"),
+  wearable("226_RedHeadband"),
+  wearable("227_MJJersey"),
+  wearable("228_10GallonHat"),
+  wearable("229_Lasso"),
+  wearable("230_WraanglerJeans"),
+  bodyWearable("231_ComfyPoncho"),
+  wearable("232_PonchoHoodie"),
+  wearable("233_UncommonCacti"),
+  bodyWearable("234_ShaamanPoncho"),
+  wearable("235_ShaamanHoodie"),
+  wearable("236_BlueCacti"),
+  wearable("237_MythicalCacti"),
+  wearable("238_GodlikeCacti"),
+  wearable("239_WagieCap"),
+  wearable("240_Headphones"),
+  bodyWearable("241_WGMIShirt"),
+  wearable("242_YellowManbun"),
+  wearable("243_TintedShades"),
+  bodyWearable("244_VNeckShirt"),
+  wearable("245_GeckoHat"),
+  wearable("246_APYShades"),
+  wearable("247_UpArrow"),
+  bodyWearable("248_UpOnlyShirt"),
+  wearable("249_CoinGeckoEyes"),
+  bodyWearable("250_CoinGeckoTee"),
+  wearable("251_CoinGeckoCandies"),
+  wearable("252_AastronautHelmet"),
+  bodyWearable("253_AastronautSuit"),
+  wearable("254_uGOTCHIToken"),
+  wearable("255_LilBubbleHelmet"),
+  bodyWearable("256_LilBubbleSpaceSuit"),
+  wearable("257_BitcoinGuitar"),
+  bodyWearable("258_Hanfu"),
+  wearable("259_BushyEyebrows"),
+  wearable("260_AncientBeard"),
+  wearable("261_AantenaBot"),
+  wearable("262_RadarEyes"),
+  wearable("263_SignalHeadset"),
+  badge(264), // Aastronaut Crew Member badge
+  badge(265),
+  badge(266),
+  badge(267),
+  badge(268),
+  badge(269),
+  badge(270),
+  badge(271),
+  badge(272),
+  badge(273),
+  badge(274),
+  badge(275),
+  badge(276),
+  badge(277),
+  badge(278),
+  badge(279),
+  badge(280),
+  badge(281),
+  badge(282),
+  badge(283),
+  badge(284),
+  badge(285),
+  badge(286),
+  badge(287),
+  badge(288),
+  badge(289),
+  badge(290),
+  badge(291),
+  wearable("292_BrunettePonytail"),
+  bodyWearable("293_LeatherTunic"),
+  wearable("294_BowandArrow"),
+  wearable("295_ForkedBeard"),
+  wearable("296_DoublesidedAxe"),
+  bodyWearable("297_AnimalSkins"),
+  wearable("298_HornedHelmet"),
+  wearable("299_Longbow"),
+  wearable("300_FeatheredCap"),
+  wearable("301_AlluringEyes"),
+  wearable("302_GeishaHeadpiece"),
+  bodyWearable("303_Kimono"),
+  wearable("304_PaperFan"),
+  wearable("305_SusButterfly"),
+  wearable("306_FlowerStuds"),
+  bodyWearable("307_FairyWings"),
+  wearable("308_RedHair"),
+  wearable("309_CitaadelHelm"),
+  bodyWearable("310_PlateArmor"),
+  wearable("311_SpiritSword"),
+  wearable("312_PlateShield"),
+  wearable("313_KabutoHelmet"),
+  bodyWearable("314_YoroiArmor"),
+  wearable("315_HaanzoKatana"),
+  badge(316),
+  badge(317),
+  badge(318),
+  badge(319),
+  badge(320),
+  badge(321),
+  badge(322),
+  badge(323),
+  badge(324),
+  badge(325),
+  badge(326),
+  badge(327),
+  badge(328),
+  badge(329),
+  badge(330),
+  badge(331),
+  badge(332),
+  badge(333),
+  badge(334),
+  badge(335),
+  badge(336),
+  badge(337),
+  badge(338),
+  badge(339),
+  badge(340),
+  badge(341),
+  badge(342),
+  badge(343),
+  badge(344),
+  badge(345),
+  badge(346),
+  badge(347),
+  badge(348),
+  badge(349),
+  bodyWearable("350_PixelcraftTee"),
+  wearable("351_3DGlasses"),
+  wearable("352_PixelcraftSquare"),
+  wearable("353_Nimbus"),
+  wearable("354_AlchemicaApron"),
+  wearable("355_SafetyGlasses"),
+  wearable("356_Bandage"),
+  wearable("357_NailGun"),
+  wearable("358_FlamingApron"),
+  wearable("359_ForgeGoggles"),
+  wearable("360_GeodeSmasher"),
+  wearable("361_Geo"),
+  bodyWearable("362_FakeShirt"),
+  wearable("363_FakeBeret"),
+  wearable("364_PaintBrush"),
+  wearable("365_PaintPalette"),
+  bodyWearable("366_HeavenlyRobes"),
+  wearable("367_EyesOfDevotion"),
+  wearable("368_BeardOfDivinity"),
+  wearable("369_StaffOfCreation"),
+  //forge wearables2
+  wearable("370_WavyHair"),
+  wearable("371_PlasticEarrings"),
+  bodyWearable("372_PartyDress"),
+  bodyWearable("373_Overalls"),
+  wearable("374_LensFrensPlant"),
+  wearable("375_GMSeeds"),
+  wearable("376_LickBrain"),
+  wearable("377_LickEyes"),
+  wearable("378_LickTongue"),
+  wearable("379_LickTentacle"),
+  wearable("380_SebastienHair"),
+  wearable("381_VoxelEyes"),
+  wearable("382_GOATee"),
+  bodyWearable("383_SandboxHoodie"),
+  wearable("384_Faangs"),
+  wearable("385_BlockScanners"),
+  wearable("386_StaffCharming"),
+  wearable("387_Roflnoggin"),
+  badge(388),
+  badge(389),
+  badge(390),
+  badge(391),
+  badge(392),
+  badge(393),
+  badge(394),
+  badge(395),
+  badge(396),
+  badge(397),
+  badge(398),
+  badge(399),
+  badge(400),
+  badge(401),
+  badge(402),
+  badge(403),
+  //gotchigang-contest
+  wearable("404_GrannyGlasses"),
+  wearable("405_Freckles"),
+  wearable("406_CommonStohn"),
+  wearable("407_BasedShades"),
+  wearable("408_RastaGlasses"),
+  wearable("409_Braces"),
+  wearable("410_UncommonStohn"),
+  wearable("411_AlohaFlowers"),
+  wearable("412_BaableGum"),
+  wearable("413_RareStohn"),
+  wearable("414_CheapMask"),
+  wearable("415_WildFungi"),
+  wearable("416_KawaiiMouth"),
+  wearable("417_BabyLicky"),
 
-  // Define side-specific sleeve functions
-  const sleeveFunctionsMap = {
-    Right: sleeveWearableRight,
-    Back: sleeveWearableRight, // Back reuses Right function
-    Left: sleeveWearableLeft,
-  };
+  //base wearables
+  bodyWearable("418_BasedShirt"),
+  wearable("419_BaseApp"),
+  wearable("420_JessePollakHair"),
+];
 
-  // Define validation arrays
-  const validationArraysMap = {
-    Right: wearablesRightSleeveSvgsOld,
-    Back: wearablesBackSleeveSvgsOld,
-    Left: wearablesLeftSleeveSvgsOld,
-  };
-
-  // Define void element mapping (Back side has inconsistent naming)
-  const voidElementMap = {
-    Right: "0_VoidRight",
-    Back: "0_VoidRight", // Back uses Right void element
-    Left: "0_VoidLeft",
-  };
-
-  // Hardcoded exceptions that don't use sleeve functions
-  const hardcodedExceptions = [25]; // ThaaveSuit
-
-  const sleeveFunction = sleeveFunctionsMap[side];
-  const validationArray = validationArraysMap[side];
-  const voidElement = voidElementMap[side];
-
-  // Only process items that have sleeves - this creates a 57-item array
-  for (let index = 0; index < itemTypes.length; index++) {
-    const itemType = itemTypes[index];
-
-    // Handle void element (always first)
-    if (itemType.name === "The Void") {
-      output.push(voidElement);
-      continue;
-    }
-
-    // Only include items that have sleeves (body items with sleeves property)
-    if (itemType.slotPositions === "body" && itemType.sleeves) {
-      console.log(`itemType`, itemType.svgId);
-
-      // Handle hardcoded exceptions
-      if (hardcodedExceptions.includes(Number(itemType.svgId))) {
-        console.log("skip thaavesuit");
-
-        output.push(`${itemType.svgId}_ThaaveSuit`);
-        continue;
-      }
-
-      let name = itemType.name;
-      if (svgMapping[Number(itemType.svgId)])
-        name = svgMapping[Number(itemType.svgId)];
-
-      const camelCaseName = name
-        .replace(/(?:^|_)(\w)/g, (_, letter) => letter.toUpperCase())
-        .replace(" ", "")
-        .replace(" ", "")
-        .replace(" ", "")
-        .replace(" ", "")
-        .replace("'", "");
-
-      output.push(sleeveFunction(`${itemType.svgId}_${camelCaseName}`));
-    }
-    // Skip all other items (badges, potions, non-sleeve body items, etc.)
-  }
-
-  // Validation against old arrays
-  for (let index = 0; index < output.length; index++) {
-    const element = output[index];
-    const oldSleeveElement = validationArray[index];
-
-    if (element !== oldSleeveElement) {
-      throw new Error(
-        `${side} sleeve mismatch at index ${index}: ${element} old element: ${oldSleeveElement}`
-      );
-    }
-  }
-
-  return output;
-}
+const sleeveFrontSvgsOld = [
+  "0_Void",
+  sleeves("8_MarineJacket"), // sleeves("8_MarineJacket"),
+  sleeves("11_MessDress"), // sleeves("11_MessDress"),
+  sleeves("15_RedPlaid"), // sleeves("15_RedPlaid"),
+  sleeves("16_BluePlaid"), //  sleeves("16_BluePlaid"),
+  sleeves("19_AaveHeroShirt"), // sleeves("19_AaveHeroShirt"),
+  sleeves("22_CaptainAaveSuit"), // sleeves("22_CaptainAaveSuit"),
+  "25_ThaaveSuit", //no front sleeves
+  sleeves("28_MarcOutfit"), // sleeves("28_MarcOutfit"),
+  sleeves("31_JordanSuit"), // sleeves("31_JordanSuit"),
+  sleeves("37_ETHTShirt"),
+  sleeves("43_NogaraEagleArmor"),
+  sleeves("46_HalfRektShirt"),
+  sleeves("50_GldnXrossRobe"),
+  sleeves("54_LlamacornShirt"),
+  sleeves("56_AagentShirt"),
+  sleeves("74_JaayHaoSuit"),
+  sleeves("85_GentlemanSuit"),
+  sleeves("91_PajamaPants"),
+  sleeves("102_WitchCape"),
+  sleeves("105_PortalMageArmor"),
+  sleeves("109_RastaShirt"),
+  sleeves("112_HazmatSuit"),
+  sleeves("114_RedHawaiianShirt"),
+  sleeves("115_BlueHawaiianShirt"),
+  sleeves("125_TrackSuit"),
+  sleeves("135_PolygonShirt"),
+  sleeves("138_SnapshotShirt"),
+  sleeves("150_RoyalRobes"),
+  sleeves("160_LilPumpThreads"),
+  sleeves("162_MiamiShirt"),
+  sleeves("203_GamerJacket"),
+  sleeves("213_H4xx0rShirt"),
+  sleeves("220_PunkShirt"),
+  sleeves("222_PirateCoat"),
+  sleeves("231_ComfyPoncho"),
+  sleeves("234_ShaamanPoncho"),
+  sleeves("241_WGMIShirt"),
+  sleeves("244_VNeckShirt"),
+  sleeves("248_UpOnlyShirt"),
+  sleeves("250_CoinGeckoTee"),
+  sleeves("253_AastronautSuit"),
+  sleeves("256_LilBubbleSpaceSuit"),
+  sleeves("258_Hanfu"),
+  sleeves("293_LeatherTunic"),
+  sleeves("297_AnimalSkins"),
+  sleeves("303_Kimono"),
+  sleeves("307_FairyWings"),
+  sleeves("310_PlateArmor"),
+  sleeves("314_YoroiArmor"),
+  sleeves("350_PixelcraftTee"),
+  sleeves("362_FakeShirt"),
+  sleeves("366_HeavenlyRobes"),
+  sleeves("372_PartyDress"),
+  sleeves("373_Overalls"),
+  sleeves("383_SandboxHoodie"),
+  sleeves("418_BasedShirt"),
+];
 
 // Store old arrays for validation
 const wearablesLeftSleeveSvgsOld = [
@@ -1657,10 +2137,26 @@ const wearablesBackSleeveSvgsOld = [
   sleeveWearableRight("418_BasedShirt"),
 ];
 
+const validationArraysMap = {
+  wearables: {
+    "": wearablesFrontSvgsOld,
+    Right: wearablesRightSvgsOld,
+    Back: wearablesBackSvgsOld,
+    Left: wearablesLeftSvgsOld,
+  },
+  sleeves: {
+    "": sleeveFrontSvgsOld,
+    Right: wearablesRightSleeveSvgsOld,
+    Back: wearablesBackSleeveSvgsOld,
+    Left: wearablesLeftSleeveSvgsOld,
+  },
+};
+
 // Backward compatibility exports
-export const wearablesLeftSleeveSvgs = wearableSleeves("Left");
-export const wearablesRightSleeveSvgs = wearableSleeves("Right");
-export const wearablesBackSleeveSvgs = wearableSleeves("Back");
+export const wearablesFrontSleeveSvgs = wearableSideSleeveSvgs("");
+export const wearablesLeftSleeveSvgs = wearableSideSleeveSvgs("Left");
+export const wearablesRightSleeveSvgs = wearableSideSleeveSvgs("Right");
+export const wearablesBackSleeveSvgs = wearableSideSleeveSvgs("Back");
 
 function stripSvg(svg: string) {
   // removes svg tag
@@ -1672,15 +2168,26 @@ function stripSvg(svg: string) {
 }
 
 function readSvg(name: string) {
+  //check if file exists
+  if (!fs.existsSync(`./svgs/svgItems/${name}.svg`)) {
+    throw new Error(`File ${name}.svg does not exist!`);
+  }
+
   return stripSvg(fs.readFileSync(`./svgs/svgItems/${name}.svg`, "utf8"));
 }
 
 function wearable(name: string) {
   const svg = readSvg(name);
-  // svg = `<g>${svg}</g>`
   return svg;
 }
 
+//front only
+function bodyWearable(name: string) {
+  let svg = readSvg(name);
+  return svg;
+}
+
+//apparently also used for back...?
 function wearableWithSleeves(name: string) {
   let svg = readSvg(name);
   const back = readSvg(`${name}Back`);
@@ -1783,4 +2290,31 @@ function sleeveWearableBack(name: string) {
 
 function EmptySvg() {
   return stripSvg(fs.readFileSync(`./svgs/svgItems/EmptyFile.svg`, "utf8"));
+}
+
+export function sleeves(name: string) {
+  const leftSleevesUp =
+    '<g class="gotchi-sleeves gotchi-sleeves-left gotchi-sleeves-up">' +
+    readSvg(`${name}LeftUp`) +
+    "</g>";
+  const leftSleeves =
+    '<g class="gotchi-sleeves gotchi-sleeves-left gotchi-sleeves-down">' +
+    readSvg(`${name}Left`) +
+    "</g>";
+  const rightSleevesUp =
+    '<g class="gotchi-sleeves gotchi-sleeves-right gotchi-sleeves-up">' +
+    readSvg(`${name}RightUp`) +
+    "</g>";
+  const rightSleeves =
+    '<g class="gotchi-sleeves gotchi-sleeves-right gotchi-sleeves-down">' +
+    readSvg(`${name}Right`) +
+    "</g>";
+  let svg =
+    "<g>" +
+    leftSleevesUp +
+    leftSleeves +
+    rightSleevesUp +
+    rightSleeves +
+    "</g>";
+  return svg;
 }

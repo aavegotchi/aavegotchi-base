@@ -6,9 +6,9 @@ import { itemManager, itemManagerAlt } from "./helperFunctions";
 import { aavegotchiSvgs } from "../svgs/aavegotchi-side-typeScript";
 import { aavegotchiSvgs as frontGotchiSvgs } from "../svgs/aavegotchi-typescript";
 import {
-  wearablesSvgs as front,
-  sleeveSvgs as frontSleeve,
-} from "../svgs/wearables";
+  wearablesFrontSvgs as front,
+  wearablesFrontSleeveSvgs as frontSleeve,
+} from "../svgs/wearables-sides";
 import {
   wearablesLeftSvgs as left,
   wearablesRightSvgs as right,
@@ -387,7 +387,7 @@ export async function updateSvgTaskFront(_itemIds: number[]) {
 
   for (let index = 0; index < _itemIds.length; index++) {
     const itemId = _itemIds[index];
-    const sideArrays = [front[itemId]];
+    const sideArrays = [front()[itemId]];
 
     let taskArgsFront: UpdateSvgsTaskArgs = {
       svgIds: [itemId].join(","),
@@ -412,7 +412,7 @@ export async function updateSvgTaskForSvgType(
 
   if ("front" === _side) {
     for (let i = 0; i < _itemIds.length; i++) {
-      frontSvg.push(`***${front[_itemIds[i]]}`);
+      frontSvg.push(`***${front()[_itemIds[i]]}`);
     }
 
     taskArgs = {

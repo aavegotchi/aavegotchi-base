@@ -13,7 +13,6 @@ import {
   wearablesBackSleeveSvgs,
 } from "../svgs/wearables-sides";
 import { itemTypes } from "../data/itemTypes/itemTypes";
-import { allSleeves } from "./wearables";
 import { allBadges } from "./BadgeData";
 import { badge } from "./allBadges";
 
@@ -105,8 +104,7 @@ export function getWearables() {
     if (allBadges.includes(Number(itemType.svgId))) {
       wearables.push(badge(Number(itemType.svgId)));
     } else if (
-      (itemType.slotPositions === "body" &&
-        allSleeves.includes(itemType.svgId)) ||
+      (itemType.slotPositions === "body" && itemType.sleeves) ||
       itemType.svgId == 0
     ) {
       const output: BodyWearableOutput = bodyWearable(

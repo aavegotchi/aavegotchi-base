@@ -9,7 +9,6 @@ import {
 import { varsForNetwork } from "../../helpers/constants";
 import { itemTypes } from "../../data/itemTypes/itemTypes";
 import { getItemTypes, toItemTypeInputNew } from "../itemTypeHelpers";
-import { getWearables } from "../../svgs/allWearables";
 import { sideViewDimensions } from "../../data/itemTypes/baseWearableSideWearables";
 import { convertSideDimensionsToTaskFormat } from "../../tasks/updateItemSideDimensions";
 
@@ -23,9 +22,6 @@ async function main() {
     c.aavegotchiDiamond!,
     signer
   );
-
-  //first assert that wearables and sleeves are valid
-  const { sleeves, wearables } = getWearables();
 
   //Set item ids for script
   const itemIds = [418, 419, 420];
@@ -41,9 +37,6 @@ async function main() {
   const sleeveIds = itemTypesToAdd
     .map((item) => item.sleeves)
     .filter((s) => s !== undefined);
-
-  //get sleeve svgs
-  const sleeveSvgs = sleeveIds.map((s) => sleeves[Number(s.sleeveId)]);
 
   //add item types
   const tx = await daoFacet.addItemTypes(finalItemTypes);
@@ -64,7 +57,7 @@ async function main() {
   );
 
   //upload wearable svgs
-  const wearableGroups = generateWearableGroups(itemIds, wearables);
+  const wearableGroups = generateWearableGroups(itemIds);
   for (const svgGroup of Object.entries(wearableGroups)) {
     const svgData = svgGroup[1] as string[];
     const svgType = svgGroup[0];
@@ -73,8 +66,7 @@ async function main() {
 
   //upload sleeve svgs
   const sleeveGroups = generateSleeveGroups(
-    sleeveIds.map((s) => Number(s.sleeveId)),
-    sleeveSvgs
+    sleeveIds.map((s) => Number(s.sleeveId))
   );
   for (const svgGroup of Object.entries(sleeveGroups)) {
     const svgData = svgGroup[1];

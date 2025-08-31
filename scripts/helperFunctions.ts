@@ -6,22 +6,20 @@ import {
   DefenderRelayProvider,
   DefenderRelaySigner,
 } from "defender-relay-client/lib/ethers";
-// import { run } from "hardhat";
 
-import { fundSigner } from "../helpers/helpers";
 import { LedgerSigner } from "@anders-t/ethers-ledger";
-import { Provider } from "@ethersproject/abstract-provider";
 import {
   wearablesBackSvgs,
+  wearablesFrontSleeveSvgs,
   wearablesLeftSvgs,
   wearablesRightSvgs,
 } from "../svgs/wearables-sides";
 import {
+  wearablesFrontSvgs,
   wearablesBackSleeveSvgs,
   wearablesLeftSleeveSvgs,
   wearablesRightSleeveSvgs,
 } from "../svgs/wearables-sides";
-import { SleeveObject } from "./itemTypeHelpers";
 
 export const gasPrice = 570000000000;
 
@@ -432,10 +430,7 @@ export async function verifyContract(
   }
 }
 
-export function generateWearableGroups(
-  itemIds: number[],
-  wearables: Record<number, string>
-) {
+export function generateWearableGroups(itemIds: number[]) {
   function assertWearableGroupsExist(
     itemIds: number[],
     groups: Record<string, unknown[]>
@@ -450,7 +445,7 @@ export function generateWearableGroups(
   }
 
   const sides = {
-    wearables: wearables,
+    wearables: wearablesFrontSvgs(),
     "wearables-left": wearablesLeftSvgs(),
     "wearables-right": wearablesRightSvgs(),
     "wearables-back": wearablesBackSvgs(),
@@ -469,10 +464,7 @@ export function generateWearableGroups(
   return wearableGroups;
 }
 
-export function generateSleeveGroups(
-  sleeveIds: number[],
-  sleeveSvgs: SleeveObject[]
-) {
+export function generateSleeveGroups(sleeveIds: number[]) {
   function assertSleeveGroupsExist(
     sleeveIds: number[],
     groups: Record<string, unknown[]>
@@ -487,7 +479,7 @@ export function generateSleeveGroups(
   }
 
   const sleeveGroups = {
-    sleeves: sleeveSvgs.map((s) => s.svg),
+    sleeves: sleeveIds.map((s) => wearablesFrontSleeveSvgs[Number(s)]),
     "sleeves-left": sleeveIds.map(
       (sleeveId) => wearablesLeftSleeveSvgs[Number(sleeveId)]
     ),

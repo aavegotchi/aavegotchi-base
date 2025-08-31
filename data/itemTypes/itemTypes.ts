@@ -9384,6 +9384,26 @@ export const itemTypes: ItemTypeInput[] = [
     experienceBonus: 0,
     kinshipBonus: 0,
   },
+  // {
+  //   svgId: 421,
+  //   name: "Test Wearable",
+  //   setId: [],
+  //   author: "XIBOT",
+  //   description: "",
+  //   dimensions: { x: 9, y: 0, width: 46, height: 34 },
+  //   allowedCollaterals: [],
+  //   minLevel: 1,
+  //   ghstPrice: 0,
+  //   maxQuantity: 100,
+  //   traitModifiers: [2, -2, 0, 0, 0, 0],
+  //   canPurchaseWithGhst: false,
+  //   slotPositions: "head",
+  //   category: 0,
+  //   canBeTransferred: true,
+  //   totalQuantity: 0,
+  //   experienceBonus: 0,
+  //   kinshipBonus: 0,
+  // },
 ];
 
 export type { ItemTypeInput } from "../../scripts/itemTypeHelpers";
