@@ -7,6 +7,7 @@ import { varsForNetwork } from "../helpers/constants";
 import { getRelayerSigner } from "./helperFunctions";
 import * as readline from "readline";
 import * as fs from "fs";
+import { mine } from "@nomicfoundation/hardhat-network-helpers";
 
 function askQuestion(query: string): Promise<string> {
   const rl = readline.createInterface({
@@ -578,6 +579,10 @@ export async function confirmChecklist(
     try {
       const c = await varsForNetwork(hre.ethers);
       const signer = await getRelayerSigner(hre);
+
+      if (hre.network.name === "hardhat" || hre.network.name === "localhost") {
+        await mine();
+      }
 
       const itemsFacet = await hre.ethers.getContractAt(
         "ItemsFacet",
