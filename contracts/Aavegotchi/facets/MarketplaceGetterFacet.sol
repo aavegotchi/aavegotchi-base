@@ -85,4 +85,19 @@ contract MarketplaceGetterFacet is Modifiers {
     function getGHSTAmountOut(address tokenIn, uint256 amountIn) external view returns (uint256 amountOut) {
         return LibTokenSwap.getGHSTAmountOut(tokenIn, amountIn);
     }
+
+    ///@notice Calculate minimum GHST output with slippage protection
+    ///@param tokenIn Address of input token (address(0) for ETH, token address for ERC20)
+    ///@param amountIn Amount of input token
+    ///@param maxSlippageBps Maximum slippage in basis points (e.g., 500 = 5%)
+    ///@return minAmountOut Minimum GHST output after applying slippage protection
+    function getMinGHSTAmountOut(address tokenIn, uint256 amountIn, uint256 maxSlippageBps) external view returns (uint256 minAmountOut) {
+        require(maxSlippageBps <= 2000, "MarketplaceGetter: Slippage too high");
+
+        uint256 estimatedOut = LibTokenSwap.getGHSTAmountOut(tokenIn, amountIn);
+        if (estimatedOut == 0) return 0;
+
+        // Apply slippage protection: minOut = estimatedOut * (10000 - slippageBps) / 10000
+        minAmountOut = (estimatedOut * (10000 - maxSlippageBps)) / 10000;
+    }
 }

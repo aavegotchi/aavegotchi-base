@@ -51,7 +51,7 @@ contract ERC1155MarketplaceSwapFacet is Modifiers {
         uint256 initialBalance = IERC20(s.ghstContract).balanceOf(address(this));
 
         // Perform token swap to GHST
-        uint256 ghstReceived = LibTokenSwap.swapForGHST(tokenIn, swapAmount, minGhstOut, swapDeadline, address(this));
+        uint256 ghstReceived = LibTokenSwap.swapForGHST(tokenIn, swapAmount, minGhstOut, swapDeadline, address(this), maxSlippageBps);
 
         // Verify we have enough GHST for the purchase
         require(ghstReceived >= totalCost, "ERC1155MarketplaceSwap: Insufficient GHST for purchase");

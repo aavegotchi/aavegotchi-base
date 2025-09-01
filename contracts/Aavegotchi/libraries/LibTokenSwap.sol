@@ -34,6 +34,9 @@ library LibTokenSwap {
     // WETH address on Base (from zRouter contract)
     address constant WETH = address(0x4200000000000000000000000000000000000006);
 
+    // USDC address on Base mainnet
+    address constant USDC = 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913;
+
     event TokenSwapped(address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut, address indexed recipient);
 
     /**
@@ -44,6 +47,7 @@ library LibTokenSwap {
      * @param minGhstOut Minimum GHST to receive (slippage protection)
      * @param deadline Deadline for the swap
      * @param recipient Address to receive the GHST
+     * @param maxSlippageBps Maximum slippage in basis points (0 = use minGhstOut only)
      * @return amountOut Amount of GHST received
      */
     function swapForGHST(
@@ -51,72 +55,88 @@ library LibTokenSwap {
         uint256 swapAmount,
         uint256 minGhstOut,
         uint256 deadline,
-        address recipient
+        address recipient,
+        uint256 maxSlippageBps
     ) internal returns (uint256 amountOut) {
         require(swapAmount > 0, "LibTokenSwap: swapAmount must be > 0");
         require(deadline >= block.timestamp, "LibTokenSwap: deadline expired");
-
-        AppStorage storage s = LibAppStorage.diamondStorage();
-        IZRouter router = IZRouter(ROUTER);
-
-        // DEBUG: Add require to check router exists
         require(ROUTER != address(0), "LibTokenSwap: Router address is zero");
 
-        // DEBUG: Handle token transfer for ERC20
+        AppStorage storage s = LibAppStorage.diamondStorage();
+
+        // Handle token transfers in separate scope to reduce stack depth
+        _handleTokenTransfer(tokenIn, swapAmount);
+
+        // Calculate minimum output with slippage protection
+        uint256 calculatedMinOut = _calculateMinOutput(tokenIn, swapAmount, minGhstOut, maxSlippageBps);
+
+        // Execute swap with fallback
+        amountOut = _executeSwap(tokenIn, swapAmount, calculatedMinOut, deadline, recipient, s.ghstContract);
+
+        emit TokenSwapped(tokenIn, s.ghstContract, swapAmount, amountOut, recipient);
+    }
+
+    function _handleTokenTransfer(address tokenIn, uint256 swapAmount) private {
         if (tokenIn != address(0)) {
             // For ERC20, transfer tokens from sender to this contract first
             IERC20(tokenIn).transferFrom(msg.sender, address(this), swapAmount);
-
             // Verify we received the tokens
-            uint256 balance = IERC20(tokenIn).balanceOf(address(this));
-            require(balance >= swapAmount, "LibTokenSwap: Token transfer failed");
-
+            require(IERC20(tokenIn).balanceOf(address(this)) >= swapAmount, "LibTokenSwap: Token transfer failed");
             // Approve zRouter to spend our tokens
             IERC20(tokenIn).approve(ROUTER, swapAmount);
         }
+    }
 
-        // Try Aerodrome first for best GHST liquidity
-        // Set amountLimit to 0 initially to bypass zRouter's slippage check
-        // We handle slippage protection ourselves with minGhstOut
+    function _calculateMinOutput(
+        address tokenIn,
+        uint256 swapAmount,
+        uint256 minGhstOut,
+        uint256 maxSlippageBps
+    ) private pure returns (uint256 calculatedMinOut) {
+        calculatedMinOut = minGhstOut;
+        if (maxSlippageBps > 0) {
+            uint256 estimatedOut = getGHSTAmountOut(tokenIn, swapAmount);
+            uint256 slippageMinOut = (estimatedOut * (10000 - maxSlippageBps)) / 10000;
+            calculatedMinOut = minGhstOut > slippageMinOut ? minGhstOut : slippageMinOut;
+        }
+    }
 
-        // Handle token address for zRouter (ETH needs to be passed as address(0), not WETH)
-        address tokenForRouter = tokenIn; // Keep as-is for zRouter
+    function _executeSwap(
+        address tokenIn,
+        uint256 swapAmount,
+        uint256 calculatedMinOut,
+        uint256 deadline,
+        address recipient,
+        address ghstContract
+    ) private returns (uint256 amountOut) {
+        IZRouter router = IZRouter(ROUTER);
 
         try
             router.swapAero{value: tokenIn == address(0) ? swapAmount : 0}(
                 recipient,
                 false, // volatile pair
-                tokenForRouter,
-                s.ghstContract,
+                tokenIn,
+                ghstContract,
                 swapAmount,
-                0, // amountLimit = 0 (let zRouter handle best execution)
+                calculatedMinOut,
                 deadline
             )
         returns (uint256, uint256 amountOut_) {
-            // Apply our own slippage check after successful swap
-            require(amountOut_ >= minGhstOut, "LibTokenSwap: Insufficient output amount");
-            amountOut = amountOut_;
-            emit TokenSwapped(tokenIn, s.ghstContract, swapAmount, amountOut, recipient);
-            return amountOut;
+            require(amountOut_ >= calculatedMinOut, "LibTokenSwap: Insufficient output amount");
+            return amountOut_;
         } catch {
             // Fallback to V2 if Aerodrome fails
-            // Tokens are already transferred and approved above
-
             (, amountOut) = router.swapV2{value: tokenIn == address(0) ? swapAmount : 0}(
                 recipient,
                 false, // exactIn
-                tokenForRouter,
-                s.ghstContract,
+                tokenIn,
+                ghstContract,
                 swapAmount,
-                0, // amountLimit = 0 (let zRouter handle best execution)
+                calculatedMinOut,
                 deadline
             );
-
-            // Apply our own slippage check after successful swap
-            require(amountOut >= minGhstOut, "LibTokenSwap: Insufficient output amount");
+            require(amountOut >= calculatedMinOut, "LibTokenSwap: Insufficient output amount");
         }
-
-        emit TokenSwapped(tokenIn, s.ghstContract, swapAmount, amountOut, recipient);
     }
 
     /**
@@ -135,16 +155,21 @@ library LibTokenSwap {
 
         // Conservative estimates based on approximate market rates:
         if (tokenIn == address(0)) {
-            // ETH -> GHST: ~1 ETH = ~2000 GHST (very rough estimate)
-            amountOut = amountIn * 2000; // This is a placeholder - adjust based on market
+            // ETH -> GHST: ~1 ETH = ~2000 GHST (approximate)
+            // ETH has 18 decimals, GHST has 18 decimals
+            amountOut = amountIn * 2000;
+        } else if (tokenIn == USDC) {
+            // USDC -> GHST: ~1 USDC = ~2.17 GHST (approximate)
+            // USDC has 6 decimals, GHST has 18 decimals, so we need to scale up
+            amountOut = (amountIn * 217 * 1e18) / (100 * 1e6); // 2.17 ratio with proper decimals
         } else {
-            // For ERC20 tokens, assume roughly 1:1 ratio as conservative estimate
-            // This is very rough and should be replaced with actual pricing logic
+            // For other ERC20 tokens, assume roughly 1:1 ratio as conservative estimate
+            // Adjust decimals if needed (assume 18 decimals for unknown tokens)
             amountOut = amountIn;
         }
 
-        // Return a conservative estimate (80% of rough calculation)
-        amountOut = (amountOut * 80) / 100;
+        // Return a conservative estimate (85% of rough calculation for better UX)
+        amountOut = (amountOut * 85) / 100;
     }
 
     /**

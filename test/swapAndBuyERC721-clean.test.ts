@@ -138,7 +138,6 @@ describe("SwapAndBuyERC721 Integration Test", function () {
             cancelled: false
             timePurchased: "0"
             priceInWei_gt: "0"
-            priceInWei_lt: "1000000000000000000"
           }
           orderBy: priceInWei
           orderDirection: asc

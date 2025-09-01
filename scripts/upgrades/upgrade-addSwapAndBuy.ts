@@ -37,6 +37,7 @@ export async function upgradeAddSwapAndBuy(
         "contracts/Aavegotchi/facets/MarketplaceGetterFacet.sol:MarketplaceGetterFacet",
       addSelectors: [
         "function getGHSTAmountOut(address tokenIn,uint256 amountIn) external view returns (uint256)",
+        "function getMinGHSTAmountOut(address tokenIn,uint256 amountIn,uint256 maxSlippageBps) external view returns (uint256)",
       ],
       removeSelectors: [],
     },

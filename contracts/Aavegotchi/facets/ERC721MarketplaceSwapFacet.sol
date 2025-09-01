@@ -54,7 +54,7 @@ contract ERC721MarketplaceSwapFacet is Modifiers {
         uint256 initialBalance = IERC20(s.ghstContract).balanceOf(address(this));
 
         // Perform token swap to GHST
-        uint256 ghstReceived = LibTokenSwap.swapForGHST(tokenIn, swapAmount, minGhstOut, swapDeadline, address(this));
+        uint256 ghstReceived = LibTokenSwap.swapForGHST(tokenIn, swapAmount, minGhstOut, swapDeadline, address(this), maxSlippageBps);
 
         // Verify we have enough GHST for the purchase
         require(ghstReceived >= priceInWei, "ERC721MarketplaceSwap: Insufficient GHST for purchase");
@@ -66,6 +66,6 @@ contract ERC721MarketplaceSwapFacet is Modifiers {
         // Refund any excess GHST to the recipient using shared library
         LibTokenSwap.refundExcessGHST(recipient, initialBalance);
 
-        emit SwapAndPurchase(msg.sender, tokenIn, swapAmount, ghstReceived, listingId, tokenId, contractAddress);
+        emit SwapAndPurchase(recipient, tokenIn, swapAmount, ghstReceived, listingId, tokenId, contractAddress);
     }
 }
