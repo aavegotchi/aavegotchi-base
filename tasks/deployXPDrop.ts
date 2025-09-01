@@ -3,7 +3,7 @@ import { task } from "hardhat/config";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import {
   getRelayerSigner,
-  maticDiamondAddress,
+  chainAddressesMap,
   xpRelayerAddress,
   propType,
 } from "../scripts/helperFunctions";
@@ -26,7 +26,7 @@ task("deployXPDrop", "Deploys an onchain airdrop for a certain proposal")
     //get root and do file writes
     const { root, prop } = await generateMerkleTree(propId, hre);
 
-    const diamondAddress = maticDiamondAddress;
+    const diamondAddress = chainAddressesMap[8453].aavegotchiDiamond;
     const gameManager = xpRelayerAddress;
     let signer: Signer;
     const testing = ["hardhat", "localhost"].includes(hre.network.name);

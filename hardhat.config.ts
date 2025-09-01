@@ -32,6 +32,7 @@ require("./tasks/grantXP_customValues");
 require("./tasks/generateDiamondABI");
 require("./tasks/updateWearableExceptions");
 require("./tasks/deployXPDrop");
+require("./tasks/deployXPDrops");
 require("./tasks/verifyContracts");
 
 // You have to export an object to set up your config

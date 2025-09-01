@@ -11,6 +11,17 @@ contract MerkleDropFacet is Modifiers {
         LibXPAllocation._createXPDrop(_propId, _merkleRoot, _xpAmount);
     }
 
+    //allow the diamond owner to create new xp drops
+    function batchCreateXPDrop(
+        bytes32[] calldata _propId,
+        bytes32[] calldata _merkleRoot,
+        uint256[] calldata _xpAmount
+    ) external onlyOwnerOrDaoOrGameManager {
+        for (uint256 i; i < _propId.length; i++) {
+            LibXPAllocation._createXPDrop(_propId[i], _merkleRoot[i], _xpAmount[i]);
+        }
+    }
+
     function claimXPDrop(
         bytes32 _propId,
         address _claimer,
