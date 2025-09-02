@@ -5,7 +5,7 @@ import {
   FacetsAndAddSelectors,
 } from "../../tasks/deployUpgrade";
 import { varsForNetwork } from "../../helpers/constants";
-import { diamondOwner } from "../helperFunctions";
+import { diamondOwner, itemManager } from "../helperFunctions";
 
 export async function upgrade() {
   const facets: FacetsAndAddSelectors[] = [
@@ -26,11 +26,10 @@ export async function upgrade() {
 
   const joined = convertFacetAndSelectorsToString(facets);
   const c = await varsForNetwork(ethers);
-  const owner = await await diamondOwner(c.aavegotchiDiamond!, ethers);
 
   const args: DeployUpgradeTaskArgs = {
     diamondAddress: c.aavegotchiDiamond!,
-    diamondOwner: owner,
+    diamondOwner: itemManager,
     facetsAndAddSelectors: joined,
     useLedger: true,
     useMultisig: false,
