@@ -71,7 +71,7 @@ contract ForgeFacet is Modifiers {
         aavegotchiDiamond = address(aavegotchiFacet());
     }
 
-    function gltrContract() internal view returns (IERC20 token) {
+    function gltrContract() public view returns (IERC20 token) {
         token = IERC20(s.gltr);
     }
 
@@ -322,25 +322,27 @@ contract ForgeFacet is Modifiers {
         _burnItem(sender, itemId, 1);
 
         uint256 forgeReqTime = forgeTime(gotchiId, rsm);
+        uint40 actualGltrUsed = 0;
         if (_gltr > 0) {
-            require(_gltr <= forgeReqTime, "ForgeFacet: too much GLTR");
+            // Use the minimum of requested GLTR and required forge time
+            actualGltrUsed = _gltr > forgeReqTime ? uint40(forgeReqTime) : _gltr;
 
+            // Transfer the actual GLTR used to burn address
             require(
-                gltrContract().transferFrom(sender, 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF, (uint256(_gltr) * 1e18)),
+                gltrContract().transferFrom(sender, 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF, (uint256(actualGltrUsed) * 1e18)),
                 "ForgeFacet: Failed GLTR transfer"
             );
         }
-        if (forgeReqTime - _gltr == 0) {
+        if (forgeReqTime - actualGltrUsed == 0) {
             // Immediately forge the item.
             wearablesFacet().safeTransferFrom(address(this), sender, itemId, 1, "");
-            emit ForgeTimeReduced(0, gotchiId, itemId, _gltr);
+            emit ForgeTimeReduced(0, gotchiId, itemId, actualGltrUsed);
         } else {
-            uint40 readyBlock = uint40(block.number) + uint40(forgeReqTime) - _gltr;
+            uint40 readyBlock = uint40(block.number) + uint40(forgeReqTime) - actualGltrUsed;
             ForgeQueueItem memory newQueueItem = ForgeQueueItem(itemId, gotchiId, s.forgeQueueId, readyBlock, false);
             s.forgeQueue.push(newQueueItem);
 
-            GotchiForging memory gf = GotchiForging(s.forgeQueueId, true);
-            s.gotchiForging[gotchiId] = gf;
+            s.gotchiForging[gotchiId] = GotchiForging(s.forgeQueueId, true);
 
             s.forgeQueueId += 1;
 

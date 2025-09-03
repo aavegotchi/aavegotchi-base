@@ -186,8 +186,7 @@ task(
         console.log("facet:", facet);
         if (facet.facetName.length > 0) {
           const factory = (await hre.ethers.getContractFactory(
-            facet.facetName,
-            signer
+            facet.facetName
           )) as ContractFactory;
           const deployedFacet: Contract = await factory.deploy();
           await deployedFacet.deployed();
@@ -197,8 +196,8 @@ task(
           );
           //verify all new facets by default
           //wait for some time to ensure the contract is deployed
-          await delay(2000);
-          await verifyContract(deployedFacet.address);
+          // await delay(2000);
+          // await verifyContract(deployedFacet.address);
           deployedFacets.push(deployedFacet);
 
           const newSelectors = getSighashes(facet.addSelectors, hre.ethers);
@@ -253,6 +252,8 @@ task(
           });
         }
       }
+
+      console.log("diamond cut");
 
       //Execute the Cut
       const diamondCut = (await hre.ethers.getContractAt(
@@ -309,6 +310,8 @@ task(
             );
           await sendToMultisig(diamondOwner, signer, tx, hre.ethers);
         } else {
+          console.log("Diamond cut without multisig");
+
           const tx: ContractTransaction = await diamondCut.diamondCut(
             cut,
             initAddress ? initAddress : hre.ethers.constants.AddressZero,
