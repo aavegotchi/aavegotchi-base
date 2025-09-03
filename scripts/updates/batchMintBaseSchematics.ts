@@ -1,5 +1,5 @@
 import { ethers, network } from "hardhat";
-import { gasPrice, getLedgerSigner, impersonate } from "../helperFunctions";
+import { getLedgerSigner, impersonate } from "../helperFunctions";
 import { ForgeDAOFacet, ForgeFacet, ItemsFacet } from "../../typechain";
 
 import { varsForNetwork } from "../../helpers/constants";
@@ -8,9 +8,6 @@ import { mine } from "@nomicfoundation/hardhat-network-helpers";
 
 export async function batchMintBaseWearables() {
   const c = await varsForNetwork(ethers);
-
-  console.log("network:", network.name);
-  console.log("forgeDiamond:", c.forgeDiamond);
 
   const testing = ["hardhat", "localhost"].includes(network.name);
   let forgeFacet = (await ethers.getContractAt(
@@ -77,8 +74,7 @@ export async function batchMintBaseWearables() {
     const tx = await forgeFacet.adminMintBatch(
       recipient,
       transferIds,
-      transferAmount,
-      { gasPrice: gasPrice }
+      transferAmount
     );
     console.log("tx hash:", tx.hash);
     const receipt = await tx.wait();
@@ -98,18 +94,18 @@ export async function batchMintBaseWearables() {
     c.aavegotchiDiamond!
   )) as ItemsFacet;
 
-  const ids2 = [418, 419, 420];
-  const items = await itemsFacet.getItemTypes(ids2);
+  const idsFlat = [418, 419, 420];
+  const items = await itemsFacet.getItemTypes(idsFlat);
   let modifiers: number[] = [];
   for (let i = 0; i < items.length; i++) {
     modifiers.push(Number(items[i].rarityScoreModifier));
   }
 
-  console.log("Creating Geode Prizes for Schematics:", ids2);
+  console.log("Creating Geode Prizes for Schematics:", idsFlat);
   console.log("rarites", modifiers);
 
   const tx = await forgeDaoFacet.setMultiTierGeodePrizes(
-    ids2,
+    idsFlat,
     toForge,
     modifiers
   );
@@ -117,6 +113,90 @@ export async function batchMintBaseWearables() {
   await tx.wait();
 
   console.log("set multi tier geode prizes");
+
+  // Verification: Check on-chain balances
+  console.log("\n=== VERIFICATION: Checking on-chain balances ===");
+
+  const forgeTokenFacet = (await ethers.getContractAt(
+    "contracts/Aavegotchi/ForgeDiamond/facets/ForgeTokenFacet.sol:ForgeTokenFacet",
+    c.forgeDiamond!
+  )) as any; // Using any to avoid type issues with the interface
+
+  let allBalancesCorrect = true;
+
+  // Calculate expected balances dynamically using the same arrays as minting
+  const expectedBalances = [];
+
+  for (let j = 0; j < receipients.length; j++) {
+    const recipient = receipients[j];
+    const percent = percents[j];
+    const name = j === 0 ? "PC_WALLET" : "ForgeDiamond";
+
+    const expectedItemIds = [];
+    const expectedAmounts = [];
+
+    for (let i = 0; i < ids.length; i++) {
+      for (let k = 0; k < ids[i].length; k++) {
+        expectedItemIds.push(ids[i][k]);
+        expectedAmounts.push(totalAmounts[i] * percent);
+      }
+    }
+
+    expectedBalances.push({
+      recipient,
+      name,
+      itemIds: expectedItemIds,
+      amounts: expectedAmounts,
+    });
+  }
+
+  for (const expected of expectedBalances) {
+    console.log(
+      `\nChecking balances for ${expected.name} (${expected.recipient}):`
+    );
+
+    for (let i = 0; i < expected.itemIds.length; i++) {
+      const itemId = expected.itemIds[i];
+      const expectedAmount = expected.amounts[i];
+
+      try {
+        const actualBalance = await forgeTokenFacet.balanceOf(
+          expected.recipient,
+          itemId
+        );
+        const actualAmount = Number(actualBalance.toString());
+
+        if (actualAmount === expectedAmount) {
+          console.log(`  ✅ Item ID ${itemId}: ${actualAmount} (correct)`);
+        } else {
+          console.log(
+            `  ❌ Item ID ${itemId}: Expected ${expectedAmount}, got ${actualAmount}`
+          );
+          allBalancesCorrect = false;
+        }
+      } catch (error) {
+        console.log(
+          `  ❌ Item ID ${itemId}: Error checking balance - ${error}`
+        );
+        allBalancesCorrect = false;
+      }
+    }
+  }
+
+  // Summary
+  console.log("\n=== VERIFICATION SUMMARY ===");
+  if (allBalancesCorrect) {
+    console.log("✅ All balances verified successfully!");
+  } else {
+    console.log(
+      "❌ Some balance mismatches detected. Please review the output above."
+    );
+    if (!testing) {
+      throw new Error(
+        "Balance verification failed - aborting to prevent issues"
+      );
+    }
+  }
 }
 
 if (require.main === module) {
