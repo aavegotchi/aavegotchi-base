@@ -27,6 +27,7 @@ require("./tasks/grantXP_snapshot");
 require("./tasks/grantXP_minigame");
 require("./tasks/grantXP");
 require("./tasks/addItemTypes");
+require("./tasks/addAndMintWearables");
 require("./tasks/addWearableSets");
 require("./tasks/grantXP_customValues");
 require("./tasks/generateDiamondABI");
@@ -47,6 +48,7 @@ export default {
     hardhat: {
       forking: {
         url: process.env.BASE_RPC_URL,
+        blockNumber: 34874127,
         // timeout: 12000000,
       },
       blockGasLimit: 20000000,

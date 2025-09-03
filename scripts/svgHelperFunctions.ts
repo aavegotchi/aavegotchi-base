@@ -6,9 +6,9 @@ import { itemManager, itemManagerAlt } from "./helperFunctions";
 import { aavegotchiSvgs } from "../svgs/aavegotchi-side-typeScript";
 import { aavegotchiSvgs as frontGotchiSvgs } from "../svgs/aavegotchi-typescript";
 import {
-  wearablesSvgs as front,
-  sleeveSvgs as frontSleeve,
-} from "../svgs/wearables";
+  wearablesFrontSvgs as front,
+  wearablesFrontSleeveSvgs as frontSleeve,
+} from "../svgs/wearables-sides";
 import {
   wearablesLeftSvgs as left,
   wearablesRightSvgs as right,
@@ -250,7 +250,8 @@ export async function uploadSvgs(
   svgs: string[],
   svgType: string,
   ethers: any,
-  deploymentConfig?: DeploymentConfig
+  deploymentConfig?: DeploymentConfig,
+  gasConfig?: any
 ) {
   // Check if svgsUploaded exists and if this specific svgType is already uploaded
 
@@ -278,13 +279,14 @@ export async function uploadSvgs(
       ethers
     );
 
-    if (!deploymentConfig?.svgsUploaded[svgType]) {
-      deploymentConfig!.svgsUploaded[svgType] = {};
-    }
+    // if (!deploymentConfig?.svgsUploaded[svgType]) {
+    //   deploymentConfig!.svgsUploaded[svgType] = {};
+    // }
 
     uniqueId = `${svgItemsStart}_${svgItemsEnd}`;
 
-    isUploaded = deploymentConfig!.svgsUploaded?.[svgType]?.[uniqueId];
+    // isUploaded = deploymentConfig!.svgsUploaded?.[svgType]?.[uniqueId];
+    isUploaded = false;
 
     console.log(uniqueId, isUploaded);
 
@@ -293,14 +295,14 @@ export async function uploadSvgs(
     } else {
       console.log(`${svgType} not uploaded, uploading`);
 
-      let tx = await svgFacet.storeSvg(svg, svgTypesAndSizes);
+      let tx = await svgFacet.storeSvg(svg, svgTypesAndSizes, gasConfig || {});
       // console.log("tx:", tx.hash);
       // let receipt = await tx.wait();
 
       //todo:
-      deploymentConfig!.svgsUploaded![svgType][
-        `${svgItemsStart}_${svgItemsEnd}`
-      ] = true;
+      // deploymentConfig!.svgsUploaded![svgType][
+      //   `${svgItemsStart}_${svgItemsEnd}`
+      // ] = true;
 
       // if (!receipt.status) {
       //   throw Error(`Error:: ${tx.hash}`);
@@ -320,7 +322,8 @@ export async function updateSvgs(
   svgType: string,
   svgIds: number[],
   svgFacet: SvgFacet,
-  ethers: any
+  ethers: any,
+  gasConfig?: any
 ) {
   if (svgs.length != svgIds.length)
     console.error("svg length does not match svgid length");
@@ -336,7 +339,7 @@ export async function updateSvgs(
       },
     ];
 
-    let tx = await svgFacet.updateSvg(svg, array);
+    let tx = await svgFacet.updateSvg(svg, array, gasConfig || {});
     console.log("tx:", tx.hash);
     // console.log("tx hash:", tx.hash);
     let receipt = await tx.wait();
@@ -352,7 +355,8 @@ export async function uploadOrUpdateSvg(
   svgId: number[],
   svgFacet: SvgFacet,
   ethers: any,
-  deploymentConfig?: DeploymentConfig
+  deploymentConfig?: DeploymentConfig,
+  gasConfig?: any
 ) {
   // if (typeof svg === "number") svg = [""];
   const idUpload = [];
@@ -373,11 +377,18 @@ export async function uploadOrUpdateSvg(
 
   if (idUpdate.length > 0) {
     console.log(`Svg ${svgType} #${idUpdate} exists, updating`);
-    await updateSvgs(svgUpdate, svgType, idUpdate, svgFacet, ethers);
+    await updateSvgs(svgUpdate, svgType, idUpdate, svgFacet, ethers, gasConfig);
   }
   if (idUpload.length > 0) {
     console.log(`Svg ${svgType} #${idUpload} does not exist, uploading`);
-    await uploadSvgs(svgFacet, svgUpload, svgType, ethers, deploymentConfig);
+    await uploadSvgs(
+      svgFacet,
+      svgUpload,
+      svgType,
+      ethers,
+      deploymentConfig,
+      gasConfig
+    );
   }
 }
 
@@ -386,7 +397,7 @@ export async function updateSvgTaskFront(_itemIds: number[]) {
 
   for (let index = 0; index < _itemIds.length; index++) {
     const itemId = _itemIds[index];
-    const sideArrays = [front[itemId]];
+    const sideArrays = [front()[itemId]];
 
     let taskArgsFront: UpdateSvgsTaskArgs = {
       svgIds: [itemId].join(","),
@@ -411,7 +422,7 @@ export async function updateSvgTaskForSvgType(
 
   if ("front" === _side) {
     for (let i = 0; i < _itemIds.length; i++) {
-      frontSvg.push(`***${front[_itemIds[i]]}`);
+      frontSvg.push(`***${front()[_itemIds[i]]}`);
     }
 
     taskArgs = {
@@ -423,7 +434,7 @@ export async function updateSvgTaskForSvgType(
     return taskArgs;
   } else if ("left" === _side) {
     for (let i = 0; i < _itemIds.length; i++) {
-      leftSvg.push(`***${left[_itemIds[i]]}`);
+      leftSvg.push(`***${left()[_itemIds[i]]}`);
     }
 
     taskArgs = {
@@ -435,7 +446,7 @@ export async function updateSvgTaskForSvgType(
     return taskArgs;
   } else if ("right" === _side) {
     for (let i = 0; i < _itemIds.length; i++) {
-      rightSvg.push(`***${right[_itemIds[i]]}`);
+      rightSvg.push(`***${right()[_itemIds[i]]}`);
     }
 
     taskArgs = {
@@ -447,7 +458,7 @@ export async function updateSvgTaskForSvgType(
     return taskArgs;
   } else if ("back" === _side) {
     for (let i = 0; i < _itemIds.length; i++) {
-      backSvg.push(`***${back[_itemIds[i]]}`);
+      backSvg.push(`***${back()[_itemIds[i]]}`);
     }
 
     taskArgs = {
@@ -573,7 +584,7 @@ export async function updateSvgTaskForSideViews(_itemIds: number[]) {
 
   for (let index = 0; index < _itemIds.length; index++) {
     const itemId = _itemIds[index];
-    const sideArrays = [left[itemId], right[itemId], back[itemId]];
+    const sideArrays = [left()[itemId], right()[itemId], back()[itemId]];
 
     for (let index = 0; index < sideViews.length; index++) {
       const side = sideViews[index];

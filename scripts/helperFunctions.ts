@@ -6,9 +6,18 @@ import {
   DefenderRelayProvider,
   DefenderRelaySigner,
 } from "defender-relay-client/lib/ethers";
-// import { run } from "hardhat";
 
 import { LedgerSigner } from "@anders-t/ethers-ledger";
+import {
+  wearablesBackSvgs,
+  wearablesFrontSleeveSvgs,
+  wearablesLeftSvgs,
+  wearablesRightSvgs,
+  wearablesFrontSvgs,
+  wearablesBackSleeveSvgs,
+  wearablesLeftSleeveSvgs,
+  wearablesRightSleeveSvgs,
+} from "../svgs/wearables-sides";
 
 export const gasPrice = 570000000000;
 
@@ -292,35 +301,33 @@ export const xpRelayerAddressBase =
 
 export async function getRelayerSigner(hre: HardhatRuntimeEnvironment) {
   const testing = ["hardhat", "localhost"].includes(hre.network.name);
-  let xpRelayer;
+  let relayerAddress;
   if (
     hre.network.config.chainId === 137 ||
     hre.network.config.chainId === 8453
   ) {
-    xpRelayer = xpRelayerAddress;
+    relayerAddress = xpRelayerAddress;
   } else if (hre.network.config.chainId === 84532) {
-    xpRelayer = xpRelayerAddressBaseSepolia;
+    relayerAddress = xpRelayerAddressBaseSepolia;
   } else if (hre.network.config.chainId === 8453) {
-    xpRelayer = xpRelayerAddressBase;
+    relayerAddress = xpRelayerAddressBase;
   }
 
   if (testing) {
-    xpRelayer = xpRelayerAddress;
-    if (hre.network.config.chainId !== 31337) {
-      console.log("Using Hardhat");
+    relayerAddress = xpRelayerAddressBase;
 
-      await hre.network.provider.request({
-        method: "hardhat_impersonateAccount",
-        params: [xpRelayer],
-      });
-      await hre.network.provider.request({
-        method: "hardhat_setBalance",
-        params: [xpRelayerAddress, "0x100000000000000000000000"],
-      });
-      return await hre.ethers.provider.getSigner(xpRelayerAddress);
-    } else {
-      return (await hre.ethers.getSigners())[0];
-    }
+    console.log("Using Hardhat");
+
+    await hre.network.provider.request({
+      method: "hardhat_impersonateAccount",
+      params: [relayerAddress],
+    });
+    await hre.network.provider.request({
+      method: "hardhat_setBalance",
+      params: [relayerAddress, "0x100000000000000000000000"],
+    });
+    return await hre.ethers.provider.getSigner(relayerAddress);
+
     //we assume same defender for base mainnet
   } else if (hre.network.name === "matic" || hre.network.name === "base") {
     console.log(`USING ${hre.network.name}`);
@@ -441,4 +448,70 @@ export async function verifyContract(
       );
     }
   }
+}
+
+export function generateWearableGroups(itemIds: number[]) {
+  function assertWearableGroupsExist(
+    itemIds: number[],
+    groups: Record<string, unknown[]>
+  ) {
+    for (let index = 0; index < itemIds.length; index++) {
+      const itemId = itemIds[index];
+      for (const [groupName, groupArr] of Object.entries(groups)) {
+        if (!groupArr[index])
+          throw new Error(`Wearable ${itemId} not found in ${groupName}`);
+      }
+    }
+  }
+
+  const sides = {
+    wearables: wearablesFrontSvgs(),
+    "wearables-left": wearablesLeftSvgs(),
+    "wearables-right": wearablesRightSvgs(),
+    "wearables-back": wearablesBackSvgs(),
+  };
+
+  const wearableGroups: Record<string, unknown[]> = {};
+
+  Object.keys(sides).forEach((side) => {
+    wearableGroups[side] = itemIds.map(
+      (id) => sides[side as keyof typeof sides][id]
+    );
+  });
+
+  assertWearableGroupsExist(itemIds, wearableGroups);
+
+  return wearableGroups;
+}
+
+export function generateSleeveGroups(sleeveIds: number[]) {
+  function assertSleeveGroupsExist(
+    sleeveIds: number[],
+    groups: Record<string, unknown[]>
+  ) {
+    for (let index = 0; index < sleeveIds.length; index++) {
+      const sleeveId = sleeveIds[index];
+      for (const [groupName, groupArr] of Object.entries(groups)) {
+        if (!groupArr[index])
+          throw new Error(`Sleeve ${sleeveId} not found in ${groupName}`);
+      }
+    }
+  }
+
+  const sleeveGroups = {
+    sleeves: sleeveIds.map((s) => wearablesFrontSleeveSvgs[Number(s)]),
+    "sleeves-left": sleeveIds.map(
+      (sleeveId) => wearablesLeftSleeveSvgs[Number(sleeveId)]
+    ),
+    "sleeves-right": sleeveIds.map(
+      (sleeveId) => wearablesRightSleeveSvgs[Number(sleeveId)]
+    ),
+    "sleeves-back": sleeveIds.map(
+      (sleeveId) => wearablesBackSleeveSvgs[Number(sleeveId)]
+    ),
+  };
+
+  assertSleeveGroupsExist(sleeveIds, sleeveGroups);
+
+  return sleeveGroups;
 }
