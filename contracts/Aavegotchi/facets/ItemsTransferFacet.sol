@@ -337,7 +337,7 @@ contract ItemsTransferFacet is Modifiers {
 
     ///@notice Used to extract items that have been accidentally sent to the Diamond contract
 
-    function extractItemsFromDiamond(address _to, uint256[] calldata _itemIds, uint256[] calldata _values) external onlyItemManager {
+    function extractItemsFromDiamond(address _to, uint256[] calldata _itemIds, uint256[] calldata _values) public onlyItemManager {
         address sender = LibMeta.msgSender();
 
         for (uint256 i; i < _itemIds.length; i++) {
@@ -348,5 +348,11 @@ contract ItemsTransferFacet is Modifiers {
         }
 
         IEventHandlerFacet(s.wearableDiamond).emitTransferBatchEvent(sender, address(this), sender, _itemIds, _values);
+    }
+
+    function batchExtractItemsFromDiamond(address[] calldata _tos, uint256[][] calldata _ids, uint256[][] calldata _values) external onlyItemManager {
+        for (uint256 i; i < _tos.length; i++) {
+            extractItemsFromDiamond(_tos[i], _ids[i], _values[i]);
+        }
     }
 }
