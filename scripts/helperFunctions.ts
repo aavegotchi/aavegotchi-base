@@ -293,28 +293,21 @@ export interface RelayerInfo {
   apiSecret: string;
 }
 
-export const xpRelayerAddress = "0xb6384935d68e9858f8385ebeed7db84fc93b1420";
-export const xpRelayerAddressBaseSepolia =
+export const baseSepoliaRelayerAddress =
   "0x39e86c0e02076E83694083e2eb48B510B3a96E4e";
-export const xpRelayerAddressBase =
-  "0xf52398257A254D541F392667600901f710a006eD";
+export const baseRelayerAddress = "0xf52398257A254D541F392667600901f710a006eD";
 
 export async function getRelayerSigner(hre: HardhatRuntimeEnvironment) {
   const testing = ["hardhat", "localhost"].includes(hre.network.name);
   let relayerAddress;
-  if (
-    hre.network.config.chainId === 137 ||
-    hre.network.config.chainId === 8453
-  ) {
-    relayerAddress = xpRelayerAddress;
+  if (hre.network.config.chainId === 8453) {
+    relayerAddress = baseRelayerAddress;
   } else if (hre.network.config.chainId === 84532) {
-    relayerAddress = xpRelayerAddressBaseSepolia;
-  } else if (hre.network.config.chainId === 8453) {
-    relayerAddress = xpRelayerAddressBase;
+    relayerAddress = baseSepoliaRelayerAddress;
   }
 
   if (testing) {
-    relayerAddress = xpRelayerAddressBase;
+    relayerAddress = baseRelayerAddress;
 
     console.log("Using Hardhat");
 

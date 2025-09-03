@@ -295,9 +295,21 @@ export async function uploadSvgs(
     } else {
       console.log(`${svgType} not uploaded, uploading`);
 
-      let tx = await svgFacet.storeSvg(svg, svgTypesAndSizes, gasConfig || {});
-      // console.log("tx:", tx.hash);
-      // let receipt = await tx.wait();
+      try {
+        let tx = await svgFacet.storeSvg(
+          svg,
+          svgTypesAndSizes,
+          gasConfig || {}
+        );
+        console.log("tx:", tx.hash);
+        let receipt = await tx.wait();
+        if (!receipt.status) {
+          throw Error(`Error:: ${tx.hash}`);
+        }
+      } catch (error) {
+        console.error(`Error uploading SVG for ${svgType}:`, error);
+        throw error;
+      }
 
       //todo:
       // deploymentConfig!.svgsUploaded![svgType][

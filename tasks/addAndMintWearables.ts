@@ -128,10 +128,15 @@ task(
         }
 
         // Add item types
-        console.log(`Adding ${finalItemTypes.length} item types...`);
-        const tx = await daoFacet.addItemTypes(finalItemTypes, gasConfig);
-        await tx.wait();
-        console.log("Item types added");
+        try {
+          console.log(`Adding ${finalItemTypes.length} item types...`);
+          const tx = await daoFacet.addItemTypes(finalItemTypes, gasConfig);
+          await tx.wait();
+          console.log("Item types added in tx:", tx.hash);
+        } catch (error) {
+          console.error("Error adding item types:", error);
+          throw error;
+        }
 
         // Upload dimensions
         console.log("Updating item side dimensions...");
