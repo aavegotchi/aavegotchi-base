@@ -2,14 +2,9 @@
 pragma solidity 0.8.1;
 
 import {LibAavegotchi, AavegotchiInfo} from "../libraries/LibAavegotchi.sol";
-import {IERC721} from "../../shared/interfaces/IERC721.sol";
 import {ERC721Listing} from "../libraries/LibERC721Marketplace.sol";
-import {Modifiers, ListingListItem} from "../libraries/LibAppStorage.sol";
-
-import {LibERC1155Marketplace, ERC1155Listing} from "../libraries/LibERC1155Marketplace.sol";
-import {IERC1155} from "../../shared/interfaces/IERC1155.sol";
-import {LibERC1155} from "../../shared/libraries/LibERC1155.sol";
-import {LibTokenSwap} from "../libraries/LibTokenSwap.sol";
+import {Modifiers} from "../libraries/LibAppStorage.sol";
+import {ERC1155Listing} from "../libraries/LibERC1155Marketplace.sol";
 
 contract MarketplaceGetterFacet is Modifiers {
     ///@notice Get an aavegotchi listing details through an identifier
@@ -76,28 +71,5 @@ contract MarketplaceGetterFacet is Modifiers {
     ) external view returns (ERC1155Listing memory listing_) {
         uint256 listingId = s.erc1155TokenToListingId[_erc1155TokenAddress][_erc1155TypeId][_owner];
         listing_ = s.erc1155Listings[listingId];
-    }
-
-    ///@notice Get expected GHST output for a given input amount (for UI quote display)
-    ///@param tokenIn Address of input token (address(0) for ETH, token address for ERC20)
-    ///@param amountIn Amount of input token
-    ///@return amountOut Expected GHST output (0 if no valid swap path exists)
-    function getGHSTAmountOut(address tokenIn, uint256 amountIn) external view returns (uint256 amountOut) {
-        return LibTokenSwap.getGHSTAmountOut(tokenIn, amountIn);
-    }
-
-    ///@notice Calculate minimum GHST output with slippage protection
-    ///@param tokenIn Address of input token (address(0) for ETH, token address for ERC20)
-    ///@param amountIn Amount of input token
-    ///@param maxSlippageBps Maximum slippage in basis points (e.g., 500 = 5%)
-    ///@return minAmountOut Minimum GHST output after applying slippage protection
-    function getMinGHSTAmountOut(address tokenIn, uint256 amountIn, uint256 maxSlippageBps) external view returns (uint256 minAmountOut) {
-        require(maxSlippageBps <= 2000, "MarketplaceGetter: Slippage too high");
-
-        uint256 estimatedOut = LibTokenSwap.getGHSTAmountOut(tokenIn, amountIn);
-        if (estimatedOut == 0) return 0;
-
-        // Apply slippage protection: minOut = estimatedOut * (10000 - slippageBps) / 10000
-        minAmountOut = (estimatedOut * (10000 - maxSlippageBps)) / 10000;
     }
 }

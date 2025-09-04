@@ -20,7 +20,7 @@ export async function upgradeAddSwapAndBuy(
       facetName:
         "contracts/Aavegotchi/facets/ERC721MarketplaceSwapFacet.sol:ERC721MarketplaceSwapFacet",
       addSelectors: [
-        "function swapAndBuyERC721(address tokenIn,uint256 swapAmount,uint256 minGhstOut,uint256 swapDeadline,uint256 listingId,address contractAddress,uint256 priceInWei,uint256 tokenId,address recipient,uint256 maxSlippageBps) external",
+        "function swapAndBuyERC721(address tokenIn,uint256 swapAmount,uint256 minGhstOut,uint256 swapDeadline,uint256 listingId,address contractAddress,uint256 priceInWei,uint256 tokenId,address recipient) external",
       ],
       removeSelectors: [],
     },
@@ -28,16 +28,7 @@ export async function upgradeAddSwapAndBuy(
       facetName:
         "contracts/Aavegotchi/facets/ERC1155MarketplaceSwapFacet.sol:ERC1155MarketplaceSwapFacet",
       addSelectors: [
-        "function swapAndBuyERC1155(address tokenIn, uint256 swapAmount,uint256 minGhstOut,uint256 swapDeadline,uint256 listingId,address contractAddress,uint256 itemId,uint256 quantity,uint256 priceInWei,address recipient,uint256 maxSlippageBps) external",
-      ],
-      removeSelectors: [],
-    },
-    {
-      facetName:
-        "contracts/Aavegotchi/facets/MarketplaceGetterFacet.sol:MarketplaceGetterFacet",
-      addSelectors: [
-        "function getGHSTAmountOut(address tokenIn,uint256 amountIn) external view returns (uint256)",
-        "function getMinGHSTAmountOut(address tokenIn,uint256 amountIn,uint256 maxSlippageBps) external view returns (uint256)",
+        "function swapAndBuyERC1155(address tokenIn, uint256 swapAmount,uint256 minGhstOut,uint256 swapDeadline,uint256 listingId,address contractAddress,uint256 itemId,uint256 quantity,uint256 priceInWei,address recipient) external",
       ],
       removeSelectors: [],
     },
