@@ -233,6 +233,7 @@ contract AavegotchiGameFacet is Modifiers {
 
     function claimAavegotchi(uint256 _tokenId, uint256 _option) external whenNotPaused onlyUnlocked(_tokenId) onlyAavegotchiOwner(_tokenId) {
         Aavegotchi storage aavegotchi = s.aavegotchis[_tokenId];
+        address owner = LibMeta.msgSender();
         require(aavegotchi.status == LibAavegotchi.STATUS_OPEN_PORTAL, "AavegotchiGameFacet: Portal not open");
         require(_option < PORTAL_AAVEGOTCHIS_NUM, "AavegotchiGameFacet: Only 10 aavegotchi options available");
         uint256 randomNumber = s.tokenIdToRandomNumber[_tokenId];
@@ -250,9 +251,9 @@ contract AavegotchiGameFacet is Modifiers {
         aavegotchi.status = LibAavegotchi.STATUS_AAVEGOTCHI;
         emit ClaimAavegotchi(_tokenId);
 
-        address escrow = address(new CollateralEscrow(address(this), _tokenId, msg.sender));
+        address escrow = address(new CollateralEscrow(address(this), _tokenId, owner));
         aavegotchi.escrow = escrow;
-        address owner = LibMeta.msgSender();
+
         LibERC721Marketplace.cancelERC721Listing(address(this), _tokenId, owner);
     }
 
