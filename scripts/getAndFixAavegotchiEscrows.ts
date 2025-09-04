@@ -1,9 +1,11 @@
 import { ethers } from "hardhat";
 import { varsForNetwork } from "../helpers/constants";
-import { getLedgerSigner } from "./helperFunctions";
+import { getLedgerSigner, getRelayerSigner } from "./helperFunctions";
 
 async function main() {
   const c = await varsForNetwork(ethers);
+  //@ts-ignore
+  const signer = await getRelayerSigner(hre);
   const aavegotchiFacet = await ethers.getContractAt(
     "AavegotchiFacet",
     c.aavegotchiDiamond!
@@ -35,15 +37,13 @@ async function main() {
   console.log(`Fetched ${gotchisWithStatus3.length} gotchis with status === 3`);
   //console.log(gotchisWithStatus3);
 
-  const signer = await getLedgerSigner(ethers);
-
   const CollateralFacet = await ethers.getContractAt(
     "CollateralFacet",
     c.aavegotchiDiamond!,
     signer
   );
 
-  //call redeployTokenEscrows on batches of 40 gotchis
+  //call redeployTokenEscrows on batches of 50 gotchis
   for (let i = 0; i < gotchisWithStatus3.length; i += 50) {
     const batch = gotchisWithStatus3.slice(i, i + 50);
     console.log(
