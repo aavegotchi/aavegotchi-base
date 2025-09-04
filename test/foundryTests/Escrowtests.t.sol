@@ -30,6 +30,7 @@ contract Escrowtests is Constants {
 
         //deploy
         CollateralFacet newCollateralFacet = new CollateralFacet();
+        AavegotchiFacet newAavegotchiFacet = new AavegotchiFacet();
 
         //upgrade diamond
         addFunctionToDiamond(
@@ -37,6 +38,13 @@ contract Escrowtests is Constants {
             address(newCollateralFacet),
             (CollateralFacet).collaterals.selector,
             CollateralFacet.redeployTokenEscrows.selector
+        );
+
+        replaceFunctionInDiamond(
+            c.aavegotchiDiamond,
+            address(newAavegotchiFacet),
+            (AavegotchiFacet).transferFrom.selector,
+            (AavegotchiFacet).transferFrom.selector
         );
 
         uint256[] memory tokenIds = new uint256[](1);
@@ -58,7 +66,7 @@ contract Escrowtests is Constants {
         IERC20(c.fud).transfer(finalEscrow, 10000000000000000000);
         //get token owner
         address owner = AavegotchiFacet(c.aavegotchiDiamond).ownerOf(tokenId);
-        //we test approve ffud or the diamond
+        //we test approve fud for the diamond
         vm.prank(owner);
         EscrowFacet(c.aavegotchiDiamond).transferEscrow(tokenId, c.fud, address(this), 1);
         assertEq(IERC20(c.fud).allowance(finalEscrow, c.aavegotchiDiamond), type(uint256).max);
@@ -82,9 +90,18 @@ contract Escrowtests is Constants {
     function test_owner_transfer() public {
         address owner = AavegotchiFacet(c.aavegotchiDiamond).ownerOf(tokenId);
         vm.prank(owner);
+        //only diamond can transfer ownership
+        vm.expectRevert("CollateralEscrow: Not diamond");
         CollateralEscrow(payable(finalEscrow)).transferOwnership(address(this));
 
-        assertEq(CollateralEscrow(payable(finalEscrow)).owner(), address(this));
+        assertEq(CollateralEscrow(payable(finalEscrow)).owner(), owner);
+    }
+
+    function test_owner_transfer_diamond() public {
+        address owner = AavegotchiFacet(c.aavegotchiDiamond).ownerOf(tokenId);
+        vm.prank(owner);
+        AavegotchiFacet(c.aavegotchiDiamond).transferFrom(owner, address(0xdead), tokenId);
+        assertEq(CollateralEscrow(payable(finalEscrow)).owner(), address(0xdead));
     }
 
     function addFunctionToDiamond(address diamond, address _deployedFacet, bytes4 existingFnSelector, bytes4 newSelector) internal {
@@ -98,6 +115,25 @@ contract Escrowtests is Constants {
         IDiamondCut.FacetCut memory facetCut = IDiamondCut.FacetCut({
             facetAddress: _deployedFacet,
             action: IDiamondCut.FacetCutAction.Add,
+            functionSelectors: functionSelectors
+        });
+
+        IDiamondCut.FacetCut[] memory cuts = new IDiamondCut.FacetCut[](1);
+        cuts[0] = facetCut;
+        //cut diamond
+        IDiamondCut(diamond).diamondCut(cuts, address(0), "");
+    }
+
+    function replaceFunctionInDiamond(address diamond, address _deployedFacet, bytes4 existingFnSelector, bytes4 newSelector) internal {
+        //get facet address
+        address facetAddress = DiamondLoupeFacet(diamond).facetAddress(existingFnSelector);
+        assert(facetAddress != address(0));
+        //build cut object
+        bytes4[] memory functionSelectors = new bytes4[](1);
+        functionSelectors[0] = newSelector;
+        IDiamondCut.FacetCut memory facetCut = IDiamondCut.FacetCut({
+            facetAddress: _deployedFacet,
+            action: IDiamondCut.FacetCutAction.Replace,
             functionSelectors: functionSelectors
         });
 

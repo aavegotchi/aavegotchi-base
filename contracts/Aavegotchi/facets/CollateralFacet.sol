@@ -16,6 +16,7 @@ contract CollateralFacet is Modifiers {
     event IncreaseStake(uint256 indexed _tokenId, uint256 _stakeAmount);
     event DecreaseStake(uint256 indexed _tokenId, uint256 _reduceAmount);
     event ExperienceTransfer(uint256 indexed _fromTokenId, uint256 indexed _toTokenId, uint256 experience);
+    event EscrowUpdated(uint256 indexed _tokenId, address _newEscrow);
 
     /***********************************|
    |             Read Functions         |
@@ -163,11 +164,16 @@ contract CollateralFacet is Modifiers {
         s.collateralTypeInfo[_collateralToken].eyeShapeSvgId = _svgId;
     }
 
-    function redeployTokenEscrows(uint256[] calldata _tokenIds) external onlyDaoOrOwner {
+    function setBaseRelayer(address _baseRelayer) external onlyDaoOrOwner {
+        s.baseRelayer = _baseRelayer;
+    }
+
+    function redeployTokenEscrows(uint256[] calldata _tokenIds) external onlyBaseRelayer {
         for (uint256 i; i < _tokenIds.length; i++) {
             uint256 tokenId = _tokenIds[i];
             address newEscrow = address(new CollateralEscrow(address(this), tokenId, s.aavegotchis[tokenId].owner));
             s.aavegotchis[tokenId].escrow = newEscrow;
+            emit EscrowUpdated(tokenId, newEscrow);
         }
     }
 }

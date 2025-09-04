@@ -44,10 +44,10 @@ async function main() {
   );
 
   //call redeployTokenEscrows on batches of 40 gotchis
-  for (let i = 0; i < gotchisWithStatus3.length; i += 40) {
-    const batch = gotchisWithStatus3.slice(i, i + 40);
+  for (let i = 0; i < gotchisWithStatus3.length; i += 50) {
+    const batch = gotchisWithStatus3.slice(i, i + 50);
     console.log(
-      `Redeploying batch ${i / 40 + 1} of ${gotchisWithStatus3.length / 40}`
+      `Redeploying batch ${i / 50 + 1} of ${gotchisWithStatus3.length / 50}`
     );
     const tx = await CollateralFacet.redeployTokenEscrows(batch);
     await tx.wait();

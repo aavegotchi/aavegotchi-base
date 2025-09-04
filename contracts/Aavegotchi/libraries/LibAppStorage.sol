@@ -369,6 +369,7 @@ struct AppStorage {
     address VRFSystem;
     bool diamondPaused;
     address relayerPetter;
+    address baseRelayer;
 }
 
 library LibAppStorage {
@@ -446,6 +447,11 @@ contract Modifiers {
         if (msg.sender != LibDiamond.contractOwner() || msg.sender != s.relayerPetter) {
             require(!s.diamondPaused, "AppStorage: Diamond paused");
         }
+        _;
+    }
+
+    modifier onlyBaseRelayer() {
+        require(LibMeta.msgSender() == s.baseRelayer, "LibAppStorage: Not base relayer");
         _;
     }
 

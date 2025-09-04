@@ -7,6 +7,7 @@ import {
 
 import { varsForNetwork } from "../../../helpers/constants";
 import { xpRelayerAddressBase } from "../../helperFunctions";
+import { CollateralFacet__factory } from "../../../typechain";
 
 export async function upgradeForgeDiamondForPet() {
   console.log("Deploying forge pet fix");
@@ -16,6 +17,7 @@ export async function upgradeForgeDiamondForPet() {
       facetName: "CollateralFacet",
       addSelectors: [
         "function redeployTokenEscrows(uint256[] calldata _tokenIds) external",
+        "function setBaseRelayer(address _baseRelayer) external",
       ],
       removeSelectors: [],
     },
@@ -33,6 +35,12 @@ export async function upgradeForgeDiamondForPet() {
 
   const joined1 = convertFacetAndSelectorsToString(facets);
 
+  //set the base Relayer onchain
+  const iface = new ethers.utils.Interface(CollateralFacet__factory.abi);
+  const calldata = iface.encodeFunctionData("setBaseRelayer", [
+    "0xf52398257A254D541F392667600901f710a006eD",
+  ]);
+
   const args1: DeployUpgradeTaskArgs = {
     diamondOwner: xpRelayerAddressBase,
     diamondAddress: c.aavegotchiDiamond!,
@@ -40,8 +48,8 @@ export async function upgradeForgeDiamondForPet() {
     useLedger: false,
     useRelayer: true,
     useMultisig: false,
-    initAddress: ethers.constants.AddressZero,
-    initCalldata: "0x",
+    initAddress: c.aavegotchiDiamond!,
+    initCalldata: calldata,
   };
 
   await run("deployUpgrade", args1);
