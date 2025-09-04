@@ -32,6 +32,8 @@ abstract contract Constants is Test {
     address constant BASE_INSTALLATION_DIAMOND = 0xebba5b725A2889f7f089a6cAE0246A32cad4E26b;
     address constant BASE_TILE_DIAMOND = 0x617fdB8093b309e4699107F48812b407A7c37938;
 
+    address constant BASE_RELAYER = 0xf52398257A254D541F392667600901f710a006eD;
+
     struct Contracts {
         address aavegotchiDiamond;
         address wearableDiamond;

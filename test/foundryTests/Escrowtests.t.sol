@@ -40,6 +40,12 @@ contract Escrowtests is Constants {
             CollateralFacet.redeployTokenEscrows.selector
         );
 
+        addFunctionToDiamond(
+            c.aavegotchiDiamond,
+            address(newCollateralFacet),
+            (CollateralFacet).collaterals.selector,
+            CollateralFacet.setBaseRelayer.selector
+        );
         replaceFunctionInDiamond(
             c.aavegotchiDiamond,
             address(newAavegotchiFacet),
@@ -47,6 +53,11 @@ contract Escrowtests is Constants {
             (AavegotchiFacet).transferFrom.selector
         );
 
+        //set base relayer
+
+        CollateralFacet(c.aavegotchiDiamond).setBaseRelayer(BASE_RELAYER);
+
+        vm.startPrank(BASE_RELAYER);
         uint256[] memory tokenIds = new uint256[](1);
         tokenIds[0] = tokenId;
         escrowBefore = EscrowFacet(c.aavegotchiDiamond).gotchiEscrow(tokenId);
