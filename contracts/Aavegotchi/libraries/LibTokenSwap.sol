@@ -16,6 +16,17 @@ interface IZRouter {
         uint256 deadline
     ) external payable returns (uint256 amountIn, uint256 amountOut);
 
+    function swapAeroCL(
+        address to,
+        bool exactOut,
+        int24 tickSpacing,
+        address tokenIn,
+        address tokenOut,
+        uint256 swapAmount,
+        uint256 amountLimit,
+        uint256 deadline
+    ) external payable returns (uint256 amountIn, uint256 amountOut);
+
     function swapV2(
         address to,
         bool exactOut,
@@ -66,7 +77,15 @@ library LibTokenSwap {
         _handleTokenTransfer(tokenIn, swapAmount);
 
         // Execute swap with fallback
-        amountOut = _executeSwap(tokenIn, swapAmount, minGhstOut, deadline, recipient, s.ghstContract);
+
+        //CL swap for USDC
+        if (tokenIn == USDC) {
+            amountOut = _executeSwapCL(tokenIn, swapAmount, minGhstOut, deadline, recipient, s.ghstContract);
+        }
+        //normal swap for everything else
+        else {
+            amountOut = _executeSwap(tokenIn, swapAmount, minGhstOut, deadline, recipient, s.ghstContract);
+        }
 
         emit TokenSwapped(tokenIn, s.ghstContract, swapAmount, amountOut, recipient);
     }
@@ -96,6 +115,45 @@ library LibTokenSwap {
             router.swapAero{value: tokenIn == address(0) ? swapAmount : 0}(
                 recipient,
                 false, // volatile pair
+                tokenIn,
+                ghstContract,
+                swapAmount,
+                calculatedMinOut,
+                deadline
+            )
+        returns (uint256, uint256 amountOut_) {
+            require(amountOut_ >= calculatedMinOut, "LibTokenSwap: Insufficient output amount");
+            return amountOut_;
+        } catch {
+            // Fallback to V2 if Aerodrome fails
+            (, amountOut) = router.swapV2{value: tokenIn == address(0) ? swapAmount : 0}(
+                recipient,
+                false, // exactIn
+                tokenIn,
+                ghstContract,
+                swapAmount,
+                calculatedMinOut,
+                deadline
+            );
+            require(amountOut >= calculatedMinOut, "LibTokenSwap: Insufficient output amount");
+        }
+    }
+
+    function _executeSwapCL(
+        address tokenIn,
+        uint256 swapAmount,
+        uint256 calculatedMinOut,
+        uint256 deadline,
+        address recipient,
+        address ghstContract
+    ) private returns (uint256 amountOut) {
+        IZRouter router = IZRouter(ROUTER);
+
+        try
+            router.swapAeroCL{value: tokenIn == address(0) ? swapAmount : 0}(
+                recipient,
+                false,
+                int24(2000),
                 tokenIn,
                 ghstContract,
                 swapAmount,
