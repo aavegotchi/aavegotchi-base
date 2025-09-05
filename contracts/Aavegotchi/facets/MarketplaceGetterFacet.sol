@@ -2,13 +2,9 @@
 pragma solidity 0.8.1;
 
 import {LibAavegotchi, AavegotchiInfo} from "../libraries/LibAavegotchi.sol";
-import {IERC721} from "../../shared/interfaces/IERC721.sol";
 import {ERC721Listing} from "../libraries/LibERC721Marketplace.sol";
-import {Modifiers, ListingListItem} from "../libraries/LibAppStorage.sol";
-
-import {LibERC1155Marketplace, ERC1155Listing} from "../libraries/LibERC1155Marketplace.sol";
-import {IERC1155} from "../../shared/interfaces/IERC1155.sol";
-import {LibERC1155} from "../../shared/libraries/LibERC1155.sol";
+import {Modifiers} from "../libraries/LibAppStorage.sol";
+import {ERC1155Listing} from "../libraries/LibERC1155Marketplace.sol";
 
 contract MarketplaceGetterFacet is Modifiers {
     ///@notice Get an aavegotchi listing details through an identifier
