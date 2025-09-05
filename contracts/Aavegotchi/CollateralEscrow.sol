@@ -32,7 +32,6 @@ contract CollateralEscrow {
         require(IERC20(_tokenContract).approve(s.diamond, type(uint256).max), "CollateralEscrow: token not approved for transfer");
     }
 
-    //we skip the operation assertion
     function execute(address to, uint256 value, bytes calldata data, uint8 operation) external payable virtual returns (bytes memory result) {
         require(_isValidSigner(msg.sender), "Invalid signer");
         ++s.state;
