@@ -6,7 +6,6 @@ import {
 } from "../../../tasks/deployUpgrade";
 
 import { varsForNetwork } from "../../../helpers/constants";
-import { xpRelayerAddressBase } from "../../helperFunctions";
 import { CollateralFacet__factory } from "../../../typechain";
 
 export async function upgradeForgeDiamondForPet() {
@@ -42,11 +41,11 @@ export async function upgradeForgeDiamondForPet() {
   ]);
 
   const args1: DeployUpgradeTaskArgs = {
-    diamondOwner: xpRelayerAddressBase,
+    diamondOwner: "0x01F010a5e001fe9d6940758EA5e8c777885E351e",
     diamondAddress: c.aavegotchiDiamond!,
     facetsAndAddSelectors: joined1,
-    useLedger: false,
-    useRelayer: true,
+    useLedger: true,
+    useRelayer: false,
     useMultisig: false,
     initAddress: c.aavegotchiDiamond!,
     initCalldata: calldata,
