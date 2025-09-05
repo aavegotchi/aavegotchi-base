@@ -1,6 +1,8 @@
 [profile.default]
-src = 'src'
+src = 'contracts'
 out = 'out'
+optimizer = true
+optimizer_runs = 200
 libs = ["node_modules", "lib"]
 remappings = [
     '@ensdomains/=node_modules/@ensdomains/',

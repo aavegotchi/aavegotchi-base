@@ -206,7 +206,7 @@ contract AavegotchiBridgeFacet is Modifiers {
         s.aavegotchis[_tokenId].status = _aavegotchi.status;
         s.aavegotchis[_tokenId].lastInteracted = _aavegotchi.lastInteracted;
         s.aavegotchis[_tokenId].locked = _aavegotchi.locked;
-        s.aavegotchis[_tokenId].escrow = address(new CollateralEscrow(address(this), _tokenId));
+        s.aavegotchis[_tokenId].escrow = address(new CollateralEscrow(address(this), _tokenId, _aavegotchi.owner));
         s.aavegotchis[_tokenId].respecCount = _aavegotchi.respecCount;
         //set in storage
         s.aavegotchiNamesUsed[LibAavegotchi.validateAndLowerNameBridge(_aavegotchi.name)] = true;
@@ -238,6 +238,7 @@ contract AavegotchiBridgeFacet is Modifiers {
     }
 
     event ResyncAavegotchis(uint256 _tokenId);
+
     function resyncAavegotchis(uint256[] calldata _tokenIds) external onlyOwner {
         for (uint256 i = 0; i < _tokenIds.length; i++) {
             emit ResyncAavegotchis(_tokenIds[i]);

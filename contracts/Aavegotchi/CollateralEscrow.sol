@@ -16,19 +16,20 @@ contract CollateralEscrow {
         uint256 state;
         address token;
         uint256 tokenId;
+        address diamond;
     }
     AppStorage internal s;
 
-    constructor(address _token, uint256 _tokenId) {
-        s.owner = LibMeta.msgSender();
+    constructor(address _token, uint256 _tokenId, address _owner) {
         s.token = _token;
         s.tokenId = _tokenId;
-        //  approveAavegotchiDiamond(_aTokenContract);
+        s.owner = _owner;
+        s.diamond = _token;
     }
 
-    function approveAavegotchiDiamond(address _aTokenContract) public {
-        require(LibMeta.msgSender() == s.owner, "CollateralEscrow: Not owner of contract");
-        require(IERC20(_aTokenContract).approve(s.owner, type(uint256).max), "CollateralEscrow: token not approved for transfer");
+    function approveAavegotchiDiamond(address _tokenContract) public {
+        require(isOwnerOrDiamond(), "CollateralEscrow: Not owner or diamond");
+        require(IERC20(_tokenContract).approve(s.diamond, type(uint256).max), "CollateralEscrow: token not approved for transfer");
     }
 
     //we skip the operation assertion
@@ -82,6 +83,16 @@ contract CollateralEscrow {
     //use stored var
     function owner() public view returns (address) {
         return s.owner;
+    }
+
+    //must be either owner or diamond
+    function isOwnerOrDiamond() public view returns (bool) {
+        return LibMeta.msgSender() == s.owner || LibMeta.msgSender() == s.diamond;
+    }
+
+    function transferOwnership(address _newOwner) public {
+        require(LibMeta.msgSender() == s.diamond, "CollateralEscrow: Not diamond");
+        s.owner = _newOwner;
     }
 
     receive() external payable {}

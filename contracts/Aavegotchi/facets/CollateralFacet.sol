@@ -10,11 +10,13 @@ import {LibMeta} from "../../shared/libraries/LibMeta.sol";
 import {LibERC721} from "../../shared/libraries/LibERC721.sol";
 
 import {ForgeFacet} from "../ForgeDiamond/facets/ForgeFacet.sol";
+import {CollateralEscrow} from "../CollateralEscrow.sol";
 
 contract CollateralFacet is Modifiers {
     event IncreaseStake(uint256 indexed _tokenId, uint256 _stakeAmount);
     event DecreaseStake(uint256 indexed _tokenId, uint256 _reduceAmount);
     event ExperienceTransfer(uint256 indexed _fromTokenId, uint256 indexed _toTokenId, uint256 experience);
+    event EscrowUpdated(uint256 indexed _tokenId, address _newEscrow);
 
     /***********************************|
    |             Read Functions         |
@@ -160,5 +162,18 @@ contract CollateralFacet is Modifiers {
     ///@param _svgId The identifier for the onchain svg to be mapped to the collateral
     function setCollateralEyeShapeSvgId(address _collateralToken, uint8 _svgId) external onlyDaoOrOwner {
         s.collateralTypeInfo[_collateralToken].eyeShapeSvgId = _svgId;
+    }
+
+    function setBaseRelayer(address _baseRelayer) external onlyDaoOrOwner {
+        s.baseRelayer = _baseRelayer;
+    }
+
+    function redeployTokenEscrows(uint256[] calldata _tokenIds) external onlyBaseRelayer {
+        for (uint256 i; i < _tokenIds.length; i++) {
+            uint256 tokenId = _tokenIds[i];
+            address newEscrow = address(new CollateralEscrow(address(this), tokenId, s.aavegotchis[tokenId].owner));
+            s.aavegotchis[tokenId].escrow = newEscrow;
+            emit EscrowUpdated(tokenId, newEscrow);
+        }
     }
 }
