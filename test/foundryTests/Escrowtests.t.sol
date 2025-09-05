@@ -75,11 +75,14 @@ contract Escrowtests is Constants {
         address fudOwner = 0x5BE66FE7E6bfFFa5AF7d9F9a3B49aE7c50CA54dF;
         vm.prank(fudOwner);
         IERC20(c.fud).transfer(finalEscrow, 10000000000000000000);
+        uint fudBalanceBefore = IERC20(c.fud).balanceOf(address(this));
         //get token owner
         address owner = AavegotchiFacet(c.aavegotchiDiamond).ownerOf(tokenId);
         //we test approve fud for the diamond
         vm.prank(owner);
         EscrowFacet(c.aavegotchiDiamond).transferEscrow(tokenId, c.fud, address(this), 1);
+        uint fudBalanceAfter = IERC20(c.fud).balanceOf(address(this));
+        assertEq(fudBalanceAfter, fudBalanceBefore + 1);
         assertEq(IERC20(c.fud).allowance(finalEscrow, c.aavegotchiDiamond), type(uint256).max);
     }
 
