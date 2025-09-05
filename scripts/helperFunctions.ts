@@ -146,6 +146,8 @@ export const maticFakeGotchiArt = "0xA4E3513c98b30d4D7cc578d2C328Bd550725D1D0";
 
 export const maticForgeDiamond = "0x4fDfc1B53Fd1D80d969C984ba7a8CE4c7bAaD442";
 
+export const baseDiamondAddress = "0xa99c4b08201f2913db8d28e71d020c4298f29dbf";
+
 export async function diamondOwner(address: string, ethers: any) {
   return await (await ethers.getContractAt("OwnershipFacet", address)).owner();
 }

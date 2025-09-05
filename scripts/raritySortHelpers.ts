@@ -4,6 +4,36 @@ import request from "graphql-request";
 import { wearableSetArrays } from "./wearableSets";
 import { baseGraphUrl } from "./query/queryAavegotchis";
 
+export function calculateCurrentKinship(
+  subgraphKinship: string | number | undefined,
+  lastInteracted: string | number | undefined,
+  blockTimestamp: number
+): string {
+  // If no kinship or lastInteracted data, return the original value or "0"
+  if (!subgraphKinship || !lastInteracted) {
+    return subgraphKinship?.toString() || "0";
+  }
+
+  const kinshipValue = Number(subgraphKinship);
+  const lastInteractedTimestamp = Number(lastInteracted);
+
+  // If kinship is already 0, no further decay possible
+  if (kinshipValue <= 0) {
+    return "0";
+  }
+
+  const now = blockTimestamp; //|| Math.floor(Date.now() / 1000); // Current time in seconds
+  const timeElapsed = now - lastInteractedTimestamp;
+
+  // Each full 24-hour period (86400 seconds) reduces kinship by 1
+  const daysPassed = Math.floor(timeElapsed / 86400);
+
+  // Calculate current kinship (cannot go below 0)
+  const currentKinship = Math.max(0, kinshipValue - daysPassed);
+
+  return currentKinship.toString();
+}
+
 export function calculateRarityScore(traitArray: number[]) {
   const energy: number = returnRarity(traitArray[0]);
   const aggressiveness: number = returnRarity(traitArray[1]);
@@ -52,6 +82,8 @@ export function confirmCorrectness(
 
     if (subgraphData[i] === localData[i]) {
       j++;
+    } else {
+      console.log("mismatch in position:", i, subgraphData[i], localData[i]);
     }
   }
 
@@ -118,6 +150,9 @@ export function leaderboardQuery(blockNumber: string): string {
     }`;
   const reqs: string[] = [];
   const max_runs = 25_000 / 1000; // 25_000 gotchis atm
+
+  console.log("block number:", blockNumber);
+
   for (let i = 0; i < max_runs; i++) {
     reqs.push(`first${
       i * 1000
@@ -227,7 +262,8 @@ const findRightGotchiBonuses = (gotchi: any) => {
 export async function fetchAndSortLeaderboard(
   category: "withSetsRarityScore" | "kinship" | "experience",
   blockNumber: string,
-  tieBreakerIndex: number
+  tieBreakerIndex: number,
+  blockTimestamp: number
 ) {
   let eachFinalResult: LeaderboardAavegotchi[] = [];
   const query = leaderboardQuery(blockNumber);
@@ -246,15 +282,34 @@ export async function fetchAndSortLeaderboard(
     findRightGotchiBonuses(val)
   );
 
+  // // Update kinship values to reflect current decay
+  // eachFinalResult = eachFinalResult.map((gotchi) => ({
+  //   ...gotchi,
+  //   kinship: calculateCurrentKinship(gotchi.kinship, gotchi.lastInteracted),
+  // }));
+
   function _sortByBRS(a: LeaderboardAavegotchi, b: LeaderboardAavegotchi) {
     if (a.withSetsRarityScore == b.withSetsRarityScore) {
-      return Number(b.kinship) - Number(a.kinship);
+      const aCurrentKinship = Number(
+        calculateCurrentKinship(a.kinship, a.lastInteracted, blockTimestamp)
+      );
+      const bCurrentKinship = Number(
+        calculateCurrentKinship(b.kinship, b.lastInteracted, blockTimestamp)
+      );
+      return bCurrentKinship - aCurrentKinship;
     }
     return Number(b.withSetsRarityScore) - Number(a.withSetsRarityScore);
   }
 
   function _sortByKinship(a: LeaderboardAavegotchi, b: LeaderboardAavegotchi) {
-    if (a.kinship === b.kinship) {
+    const aCurrentKinship = Number(
+      calculateCurrentKinship(a.kinship, a.lastInteracted, blockTimestamp)
+    );
+    const bCurrentKinship = Number(
+      calculateCurrentKinship(b.kinship, b.lastInteracted, blockTimestamp)
+    );
+
+    if (aCurrentKinship === bCurrentKinship) {
       //Kinship and XP are the same
       if (a.experience === b.experience) {
         return (
@@ -265,7 +320,7 @@ export async function fetchAndSortLeaderboard(
         );
       } else return Number(b.experience) - Number(a.experience);
     }
-    return Number(b.kinship) - Number(a.kinship);
+    return bCurrentKinship - aCurrentKinship;
   }
 
   function _sortByExperience(
@@ -277,7 +332,13 @@ export async function fetchAndSortLeaderboard(
         _distanceFrom50(_aavegotchiNumericTraits(a)[tieBreakerIndex]) ===
         _distanceFrom50(_aavegotchiNumericTraits(b)[tieBreakerIndex])
       ) {
-        return Number(b.kinship) - Number(a.kinship);
+        const aCurrentKinship = Number(
+          calculateCurrentKinship(a.kinship, a.lastInteracted, blockTimestamp)
+        );
+        const bCurrentKinship = Number(
+          calculateCurrentKinship(b.kinship, b.lastInteracted, blockTimestamp)
+        );
+        return bCurrentKinship - aCurrentKinship;
       } else {
         //Kinship and XP are the same
         return (

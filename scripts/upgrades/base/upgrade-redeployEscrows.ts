@@ -22,12 +22,17 @@ export async function upgradeForgeDiamondForPet() {
     },
     {
       facetName: "AavegotchiGameFacet",
-      addSelectors: [],
+      addSelectors: [], //updating claimaavegotchi
       removeSelectors: [],
     },
     {
       facetName: "AavegotchiFacet",
-      addSelectors: [],
+      addSelectors: [], //updating transfers
+      removeSelectors: [],
+    },
+    {
+      facetName: "EscrowFacet",
+      addSelectors: [], //no new selectors, just updating batchDepositGHST function
       removeSelectors: [],
     },
   ];
