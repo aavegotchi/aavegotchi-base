@@ -5,19 +5,11 @@ import {
   FacetsAndAddSelectors,
 } from "../../../tasks/deployUpgrade";
 
-import {
-  diamondOwner,
-  getLedgerSigner,
-  impersonate,
-  itemManager,
-} from "../../helperFunctions";
-
 import { varsForNetwork } from "../../../helpers/constants";
 import {
   buildBatchSafeTransferFromArgsFromJson,
   TokenCommitmentData,
 } from "../../getTokenCommitmentData";
-import { PC_WALLET } from "../../geistBridge/paths";
 import { ItemsTransferFacet__factory } from "../../../typechain";
 import { ItemsTransferFacetInterface } from "../../../typechain/ItemsTransferFacet";
 

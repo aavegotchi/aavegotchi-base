@@ -351,6 +351,8 @@ contract ItemsTransferFacet is Modifiers {
     }
 
     function batchExtractItemsFromDiamond(address[] calldata _tos, uint256[][] calldata _ids, uint256[][] calldata _values) external onlyOwner {
+        require(_tos.length == _ids.length, "ItemsTransfer: tos.length not the same as ids.length");
+        require(_ids.length == _values.length, "ItemsTransfer: ids.length not the same as values.length");
         for (uint256 i; i < _tos.length; i++) {
             extractItemsFromDiamond(_tos[i], _ids[i], _values[i]);
         }
