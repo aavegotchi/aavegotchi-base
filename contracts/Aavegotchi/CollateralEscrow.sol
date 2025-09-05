@@ -33,17 +33,31 @@ contract CollateralEscrow {
     }
 
     //we skip the operation assertion
-    function execute(address to, uint256 value, bytes calldata data) external payable virtual returns (bytes memory result) {
+    function execute(address to, uint256 value, bytes calldata data, uint8 operation) external payable virtual returns (bytes memory result) {
         require(_isValidSigner(msg.sender), "Invalid signer");
         ++s.state;
 
         bool success;
-        (success, result) = to.call{value: value}(data);
+        if (operation == 0) {
+            (success, result) = to.call{value: value}(data);
 
-        if (!success) {
-            assembly {
-                revert(add(result, 32), mload(result))
+            if (!success) {
+                assembly {
+                    revert(add(result, 32), mload(result))
+                }
             }
+        }
+        //delegate call
+        else if (operation == 1) {
+            require(msg.sender == s.diamond, "Only Diamond can execute delegatecall");
+            (success, result) = to.delegatecall(data);
+            if (!success) {
+                assembly {
+                    revert(add(result, 32), mload(result))
+                }
+            }
+        } else {
+            revert("Operation not supported");
         }
     }
 
