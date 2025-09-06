@@ -164,6 +164,8 @@ contract ERC721MarketplaceFacet is Modifiers {
         //Lock Aavegotchis when listing is created
         if (_erc721TokenAddress == address(this)) {
             s.aavegotchis[_erc721TokenId].locked = true;
+            //transfer escrow ownership
+            CollateralEscrow(payable(s.aavegotchis[_erc721TokenId].escrow)).transferOwnership(address(0));
         }
 
         //Burn listing fee
@@ -314,9 +316,9 @@ contract ERC721MarketplaceFacet is Modifiers {
 
         if (listing.erc721TokenAddress == address(this)) {
             s.aavegotchis[listing.erc721TokenId].locked = false;
-            LibAavegotchi.transfer(seller, _recipient, listing.erc721TokenId);
             //transfer escrow ownership
-            CollateralEscrow(payable(s.aavegotchis[listing.erc721TokenId].escrow)).transferOwnership(_recipient);
+            CollateralEscrow(payable(s.aavegotchis[listing.erc721TokenId].escrow)).transferOwnership(buyer);
+            LibAavegotchi.transfer(seller, _recipient, listing.erc721TokenId);
         } else {
             // External contracts
             IERC721(listing.erc721TokenAddress).safeTransferFrom(seller, _recipient, listing.erc721TokenId);
