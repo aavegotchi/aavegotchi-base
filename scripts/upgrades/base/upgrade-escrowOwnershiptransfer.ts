@@ -6,14 +6,13 @@ import {
 } from "../../../tasks/deployUpgrade";
 
 import { varsForNetwork } from "../../../helpers/constants";
-import { xpRelayerAddressBase } from "../../helperFunctions";
 import { PC_WALLET } from "../../geistBridge/paths";
 
 export async function upgrade() {
   const c = await varsForNetwork(ethers);
   const facets: FacetsAndAddSelectors[] = [
     {
-      facetName: "contracts/Aavegotchi/Aavegotchi.sol:AavegotchiFacet",
+      facetName: "AavegotchiFacet",
       addSelectors: [],
       removeSelectors: [],
     },
@@ -38,7 +37,7 @@ export async function upgrade() {
       removeSelectors: [],
     },
     {
-      facetName: "ERC721MarketPlaceFacet",
+      facetName: "ERC721MarketplaceFacet",
       addSelectors: [],
       removeSelectors: [],
     },
@@ -50,8 +49,8 @@ export async function upgrade() {
     diamondOwner: PC_WALLET,
     diamondAddress: c.aavegotchiDiamond!,
     facetsAndAddSelectors: joined1,
-    useLedger: false,
-    useRelayer: true,
+    useLedger: true,
+    useRelayer: false,
     useMultisig: false,
     initAddress: ethers.constants.AddressZero,
     initCalldata: "0x",
