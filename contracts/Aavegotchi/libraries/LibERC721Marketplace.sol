@@ -6,6 +6,8 @@ import {LibMeta} from "../../shared/libraries/LibMeta.sol";
 
 import "../../shared/interfaces/IERC721.sol";
 
+import {CollateralEscrow} from "../CollateralEscrow.sol";
+
 library LibERC721Marketplace {
     event ERC721ListingCancelled(uint256 indexed listingId, uint256 category, uint256 time);
     event ERC721ListingRemoved(uint256 indexed listingId, uint256 category, uint256 time);
@@ -24,9 +26,11 @@ library LibERC721Marketplace {
         require(listing.seller == _owner, "Marketplace: owner not seller");
         listing.cancelled = true;
 
-        //Unlock Aavegotchis when listing is created
+        //Unlock Aavegotchis when listing is cancelled
         if (listing.erc721TokenAddress == address(this)) {
             s.aavegotchis[listing.erc721TokenId].locked = false;
+            //transfer escrow ownership back to owner
+            CollateralEscrow(payable(s.aavegotchis[listing.erc721TokenId].escrow)).transferOwnership(listing.seller);
         }
 
         emit ERC721ListingCancelled(_listingId, listing.category, block.number);
