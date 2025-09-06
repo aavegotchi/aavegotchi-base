@@ -12,6 +12,7 @@ import {LibERC721Marketplace, ERC721Listing} from "../libraries/LibERC721Marketp
 import {LibBuyOrder} from "../libraries/LibBuyOrder.sol";
 import {Modifiers, ListingListItem} from "../libraries/LibAppStorage.sol";
 import {BaazaarSplit, LibSharedMarketplace, SplitAddresses} from "../libraries/LibSharedMarketplace.sol";
+import {CollateralEscrow} from "../CollateralEscrow.sol";
 
 contract ERC721MarketplaceFacet is Modifiers {
     event ERC721ListingAdd(
@@ -314,6 +315,8 @@ contract ERC721MarketplaceFacet is Modifiers {
         if (listing.erc721TokenAddress == address(this)) {
             s.aavegotchis[listing.erc721TokenId].locked = false;
             LibAavegotchi.transfer(seller, _recipient, listing.erc721TokenId);
+            //transfer escrow ownership
+            CollateralEscrow(payable(s.aavegotchis[listing.erc721TokenId].escrow)).transferOwnership(_recipient);
         } else {
             // External contracts
             IERC721(listing.erc721TokenAddress).safeTransferFrom(seller, _recipient, listing.erc721TokenId);

@@ -176,6 +176,8 @@ library LibGotchiLending {
         });
 
         s.aavegotchis[_listing.tokenId].locked = true;
+        //transfer escrow ownership to address 0
+        CollateralEscrow(payable(s.aavegotchis[_listing.tokenId].escrow)).transferOwnership(address(0));
 
         emit GotchiLendingAdd(listingId);
         emit GotchiLendingAdded(
@@ -273,8 +275,10 @@ library LibGotchiLending {
         require(lending.timeAgreed == 0, "LibGotchiLending: Listing already agreed");
         lending.canceled = true;
 
-        //Unlock Aavegotchis when lending is created
+        //Unlock Aavegotchis when lending is cancelled
         s.aavegotchis[lending.erc721TokenId].locked = false;
+        //reinstate escrow ownership
+        CollateralEscrow(payable(s.aavegotchis[lending.erc721TokenId].escrow)).transferOwnership(lending.lender);
         s.aavegotchiToListingId[lending.erc721TokenId] = 0;
 
         emit GotchiLendingCancel(_listingId, block.timestamp);
@@ -377,6 +381,8 @@ library LibGotchiLending {
 
         // STATE CHANGES
         s.aavegotchis[tokenId].locked = false;
+        //resinstate owner
+        CollateralEscrow(payable(s.aavegotchis[tokenId].escrow)).transferOwnership(lender);
         LibAavegotchi.transfer(lending.borrower, lender, tokenId);
         lending.completed = true;
         s.aavegotchiToListingId[tokenId] = 0;
