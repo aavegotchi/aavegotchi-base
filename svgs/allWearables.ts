@@ -13,12 +13,11 @@ import {
   wearablesBackSleeveSvgs,
 } from "../svgs/wearables-sides";
 import { itemTypes } from "../data/itemTypes/itemTypes";
-import { allSleeves } from "./wearables";
 import { allBadges } from "./BadgeData";
 import { badge } from "./allBadges";
 
 //for wearables that have irregular file names
-const svgMapping: { [key: number]: string } = {
+export const svgMapping: { [key: number]: string } = {
   0: "Void",
   11: "MessDress",
   36: "ETHMaxiGlasses",
@@ -62,6 +61,9 @@ const svgMapping: { [key: number]: string } = {
   121: "WineBottle",
   139: "SnapshotHat",
   158: "LilPumpDrink",
+  200: "SteampunkTrousers",
+  201: "SteampunkGlove",
+  202: "CyberpunkVR",
   210: "H1background",
   211: "GuyFauwkesMask",
   217: "CyborgGun",
@@ -79,7 +81,7 @@ const svgMapping: { [key: number]: string } = {
   258: "Hanfu",
   259: "BushyEyebrows",
   260: "AncientBeard",
-  261: "AantenaBot",
+  261: "Aantenabot",
   362: "FakeShirt",
   363: "FakeBeret",
   367: "EyesOfDevotion",
@@ -102,8 +104,7 @@ export function getWearables() {
     if (allBadges.includes(Number(itemType.svgId))) {
       wearables.push(badge(Number(itemType.svgId)));
     } else if (
-      (itemType.slotPositions === "body" &&
-        allSleeves.includes(itemType.svgId)) ||
+      (itemType.slotPositions === "body" && itemType.sleeves) ||
       itemType.svgId == 0
     ) {
       const output: BodyWearableOutput = bodyWearable(
@@ -118,7 +119,7 @@ export function getWearables() {
   });
 
   console.log(wearables.length);
-  console.log(`Right side views length: ${wearablesRightSvgs.length}`);
+  console.log(`Right side views length: ${wearablesRightSvgs().length}`);
   console.log(`Left side views length: ${wearablesLeftSvgs.length}`);
   console.log(`Back side views length: ${wearablesBackSvgs.length}`);
 
@@ -129,13 +130,22 @@ export function getWearables() {
   console.log(`Front sleeves length: ${sleeves.length}`);
 
   if (
-    [wearablesRightSvgs, wearablesLeftSvgs, wearablesBackSvgs, wearables].some(
-      (arr1, index, arrs) =>
-        arrs.slice(index + 1).some((arr2) => arr1.length !== arr2.length)
+    [
+      wearablesRightSvgs(),
+      wearablesLeftSvgs(),
+      wearablesBackSvgs(),
+      wearables,
+    ].some((arr1, index, arrs) =>
+      arrs.slice(index + 1).some((arr2) => arr1.length !== arr2.length)
     )
   ) {
     throw new Error("All side views must be the same length.");
   }
+
+  console.log("sleeves:", wearablesRightSleeveSvgs.length);
+  console.log("sleeves:", wearablesLeftSleeveSvgs.length);
+  console.log("sleeves:", wearablesBackSleeveSvgs.length);
+  console.log("sleeves:", sleeves.length);
 
   if (
     [

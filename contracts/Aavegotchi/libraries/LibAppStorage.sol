@@ -256,6 +256,10 @@ struct ERC1155BuyOrder {
     bool cancelled;
     bool completed;
 }
+struct WearablesConfig {
+    string name;
+    uint16[EQUIPPED_WEARABLE_SLOTS] wearables;
+}
 
 struct AppStorage {
     mapping(address => AavegotchiCollateralTypeInfo) collateralTypeInfo;
@@ -369,6 +373,11 @@ struct AppStorage {
     address VRFSystem;
     bool diamondPaused;
     address relayerPetter;
+    //wearablesConfig
+    // gotchi => owner => wearable configs
+    mapping(uint256 => mapping(address => WearablesConfig[])) gotchiWearableConfigs;
+    // owner => gotchi => slots used
+    mapping(address => mapping(uint256 => uint16)) ownerGotchiSlotsUsed;
     address baseRelayer;
 }
 

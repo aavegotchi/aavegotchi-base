@@ -55,14 +55,14 @@ contract EscrowFacet is Modifiers {
     function batchDepositGHST(uint256[] calldata _tokenIds, uint256[] calldata _values) external {
         require(_tokenIds.length == _values.length, "EscrowFacet: TokenIDs and Values length must match");
 
-        address maticGHST = 0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7;
+        address baseGHST = 0xcD2F22236DD9Dfe2356D7C543161D4d260FD9BcB;
         for (uint256 index = 0; index < _tokenIds.length; index++) {
             uint256 tokenId = _tokenIds[index];
             uint256 value = _values[index];
             address escrow = s.aavegotchis[tokenId].escrow;
             require(escrow != address(0), "EscrowFacet: Does not have an escrow");
-            //emit Erc20Deposited(tokenId, maticGHST, value, LibMeta.msgSender(), escrow);
-            LibERC20.transferFrom(maticGHST, LibMeta.msgSender(), escrow, value);
+
+            LibERC20.transferFrom(baseGHST, LibMeta.msgSender(), escrow, value);
         }
     }
 

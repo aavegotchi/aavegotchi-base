@@ -1,19 +1,10 @@
 import { request } from "graphql-request";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-import {
-  GotchisOwned,
-  LendedGotchis,
-  UserGotchisOwned,
-  VaultGotchisOwned,
-} from "../../types";
+import { GotchisOwned, LendedGotchis, UserGotchisOwned } from "../../types";
 
 export const maticGraphUrl: string = process.env.SUBGRAPH_CORE_MATIC as string;
 
-// export const ethGraphUrl: string =
-("https://api.thegraph.com/subgraphs/name/aavegotchi/aavegotchi-ethereum");
-
-// export const vaultGraphUrl: string =
-("https://api.thegraph.com/subgraphs/name/aavegotchi/gotchi-vault");
+export const baseGraphUrl: string = process.env.SUBGRAPH_CORE_BASE as string;
 
 export const blockllamaUrl: string = "https://coins.llama.fi/block/polygon";
 

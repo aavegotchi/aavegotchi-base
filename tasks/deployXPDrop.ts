@@ -4,7 +4,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import {
   getRelayerSigner,
   chainAddressesMap,
-  xpRelayerAddress,
+  baseRelayerAddress,
   propType,
 } from "../scripts/helperFunctions";
 import { generateMerkleTree } from "../scripts/query/getAavegotchisXPData";
@@ -27,7 +27,7 @@ task("deployXPDrop", "Deploys an onchain airdrop for a certain proposal")
     const { root, prop } = await generateMerkleTree(propId, hre);
 
     const diamondAddress = chainAddressesMap[8453].aavegotchiDiamond;
-    const gameManager = xpRelayerAddress;
+    const gameManager = baseRelayerAddress;
     let signer: Signer;
     const testing = ["hardhat", "localhost"].includes(hre.network.name);
     if (testing) {
@@ -57,7 +57,7 @@ task("deployXPDrop", "Deploys an onchain airdrop for a certain proposal")
     console.log("title:", prop.title);
 
     const e =
-      proposalType === "sigprop" ? 10 : proposalType === "coreprop" ? 20 : 0;
+      proposalType === "sigprop" ? 20 : proposalType === "coreprop" ? 40 : 0;
 
     const tx: ContractTransaction = await xpMerkle.createXPDrop(
       prop.id,

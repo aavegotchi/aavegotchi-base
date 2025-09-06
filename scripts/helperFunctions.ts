@@ -6,9 +6,18 @@ import {
   DefenderRelayProvider,
   DefenderRelaySigner,
 } from "defender-relay-client/lib/ethers";
-// import { run } from "hardhat";
 
 import { LedgerSigner } from "@anders-t/ethers-ledger";
+import {
+  wearablesBackSvgs,
+  wearablesFrontSleeveSvgs,
+  wearablesLeftSvgs,
+  wearablesRightSvgs,
+  wearablesFrontSvgs,
+  wearablesBackSleeveSvgs,
+  wearablesLeftSleeveSvgs,
+  wearablesRightSleeveSvgs,
+} from "../svgs/wearables-sides";
 
 export const gasPrice = 570000000000;
 
@@ -136,6 +145,8 @@ export const maticFakeGotchiCards =
 export const maticFakeGotchiArt = "0xA4E3513c98b30d4D7cc578d2C328Bd550725D1D0";
 
 export const maticForgeDiamond = "0x4fDfc1B53Fd1D80d969C984ba7a8CE4c7bAaD442";
+
+export const baseDiamondAddress = "0xa99c4b08201f2913db8d28e71d020c4298f29dbf";
 
 export async function diamondOwner(address: string, ethers: any) {
   return await (await ethers.getContractAt("OwnershipFacet", address)).owner();
@@ -284,43 +295,34 @@ export interface RelayerInfo {
   apiSecret: string;
 }
 
-export const xpRelayerAddress = "0xb6384935d68e9858f8385ebeed7db84fc93b1420";
-export const xpRelayerAddressBaseSepolia =
+export const baseSepoliaRelayerAddress =
   "0x39e86c0e02076E83694083e2eb48B510B3a96E4e";
-export const xpRelayerAddressBase =
-  "0xf52398257A254D541F392667600901f710a006eD";
+export const baseRelayerAddress = "0xf52398257A254D541F392667600901f710a006eD";
 
 export async function getRelayerSigner(hre: HardhatRuntimeEnvironment) {
   const testing = ["hardhat", "localhost"].includes(hre.network.name);
-  let xpRelayer;
-  if (
-    hre.network.config.chainId === 137 ||
-    hre.network.config.chainId === 8453
-  ) {
-    xpRelayer = xpRelayerAddress;
+  let relayerAddress;
+  if (hre.network.config.chainId === 8453) {
+    relayerAddress = baseRelayerAddress;
   } else if (hre.network.config.chainId === 84532) {
-    xpRelayer = xpRelayerAddressBaseSepolia;
-  } else if (hre.network.config.chainId === 8453) {
-    xpRelayer = xpRelayerAddressBase;
+    relayerAddress = baseSepoliaRelayerAddress;
   }
 
   if (testing) {
-    xpRelayer = xpRelayerAddress;
-    if (hre.network.config.chainId !== 31337) {
-      console.log("Using Hardhat");
+    relayerAddress = baseRelayerAddress;
 
-      await hre.network.provider.request({
-        method: "hardhat_impersonateAccount",
-        params: [xpRelayer],
-      });
-      await hre.network.provider.request({
-        method: "hardhat_setBalance",
-        params: [xpRelayerAddress, "0x100000000000000000000000"],
-      });
-      return await hre.ethers.provider.getSigner(xpRelayerAddress);
-    } else {
-      return (await hre.ethers.getSigners())[0];
-    }
+    console.log("Using Hardhat");
+
+    await hre.network.provider.request({
+      method: "hardhat_impersonateAccount",
+      params: [relayerAddress],
+    });
+    await hre.network.provider.request({
+      method: "hardhat_setBalance",
+      params: [relayerAddress, "0x100000000000000000000000"],
+    });
+    return await hre.ethers.provider.getSigner(relayerAddress);
+
     //we assume same defender for base mainnet
   } else if (hre.network.name === "matic" || hre.network.name === "base") {
     console.log(`USING ${hre.network.name}`);
@@ -441,4 +443,70 @@ export async function verifyContract(
       );
     }
   }
+}
+
+export function generateWearableGroups(itemIds: number[]) {
+  function assertWearableGroupsExist(
+    itemIds: number[],
+    groups: Record<string, unknown[]>
+  ) {
+    for (let index = 0; index < itemIds.length; index++) {
+      const itemId = itemIds[index];
+      for (const [groupName, groupArr] of Object.entries(groups)) {
+        if (!groupArr[index])
+          throw new Error(`Wearable ${itemId} not found in ${groupName}`);
+      }
+    }
+  }
+
+  const sides = {
+    wearables: wearablesFrontSvgs(),
+    "wearables-left": wearablesLeftSvgs(),
+    "wearables-right": wearablesRightSvgs(),
+    "wearables-back": wearablesBackSvgs(),
+  };
+
+  const wearableGroups: Record<string, unknown[]> = {};
+
+  Object.keys(sides).forEach((side) => {
+    wearableGroups[side] = itemIds.map(
+      (id) => sides[side as keyof typeof sides][id]
+    );
+  });
+
+  assertWearableGroupsExist(itemIds, wearableGroups);
+
+  return wearableGroups;
+}
+
+export function generateSleeveGroups(sleeveIds: number[]) {
+  function assertSleeveGroupsExist(
+    sleeveIds: number[],
+    groups: Record<string, unknown[]>
+  ) {
+    for (let index = 0; index < sleeveIds.length; index++) {
+      const sleeveId = sleeveIds[index];
+      for (const [groupName, groupArr] of Object.entries(groups)) {
+        if (!groupArr[index])
+          throw new Error(`Sleeve ${sleeveId} not found in ${groupName}`);
+      }
+    }
+  }
+
+  const sleeveGroups = {
+    sleeves: sleeveIds.map((s) => wearablesFrontSleeveSvgs[Number(s)]),
+    "sleeves-left": sleeveIds.map(
+      (sleeveId) => wearablesLeftSleeveSvgs[Number(sleeveId)]
+    ),
+    "sleeves-right": sleeveIds.map(
+      (sleeveId) => wearablesRightSleeveSvgs[Number(sleeveId)]
+    ),
+    "sleeves-back": sleeveIds.map(
+      (sleeveId) => wearablesBackSleeveSvgs[Number(sleeveId)]
+    ),
+  };
+
+  assertSleeveGroupsExist(sleeveIds, sleeveGroups);
+
+  return sleeveGroups;
 }

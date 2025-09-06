@@ -7,7 +7,7 @@ import { ERC20, EscrowFacet } from "../typechain";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import {
   getRelayerSigner,
-  maticDiamondAddress,
+  baseDiamondAddress,
 } from "../scripts/helperFunctions";
 import { LeaderboardDataName, LeaderboardType } from "../types";
 import {
@@ -44,6 +44,7 @@ export interface RarityPayoutTaskArgs {
   rounds: string;
   totalAmount: string;
   blockNumber: string;
+  blockTimestamp: string;
   tieBreakerIndex: string;
   deployerAddress: string;
   rarityParams: string;
@@ -68,6 +69,18 @@ task("rarityPayout")
     async (taskArgs: RarityPayoutTaskArgs, hre: HardhatRuntimeEnvironment) => {
       const filename: string = taskArgs.rarityDataFile;
       const deployerAddress = taskArgs.deployerAddress;
+
+      const blockNumber = taskArgs.blockNumber;
+      const tieBreakerIndex = taskArgs.tieBreakerIndex;
+      const blockTimestamp = taskArgs.blockTimestamp;
+
+      if (blockNumber === "") {
+        throw new Error("Block number is not set");
+      }
+
+      if (tieBreakerIndex === "") {
+        throw new Error("Tiebreaker index is not set");
+      }
 
       const rarityParams = taskArgs.rarityParams.split(",");
       const kinshipParams = taskArgs.kinshipParams.split(",");
@@ -111,7 +124,7 @@ task("rarityPayout")
 
       console.log("deployer:", deployerAddress);
       // const accounts = await hre.ethers.getSigners(;
-      tiebreakerIndex = taskArgs.tieBreakerIndex;
+      tiebreakerIndex = tieBreakerIndex;
 
       const testing = ["hardhat", "localhost"].includes(hre.network.name);
       let signer: Signer;
@@ -160,11 +173,15 @@ task("rarityPayout")
       for (let index = 0; index < leaderboards.length; index++) {
         let element: LeaderboardType = leaderboards[index] as LeaderboardType;
 
+        console.log("fetching leaderboard for:", element);
+        console.log("tiebreaker index:", tiebreakerIndex);
+
         const result = stripGotchis(
           await fetchAndSortLeaderboard(
             element,
-            taskArgs.blockNumber,
-            Number(taskArgs.tieBreakerIndex)
+            blockNumber,
+            Number(tieBreakerIndex),
+            Number(blockTimestamp)
           )
         );
 
@@ -368,7 +385,7 @@ async function sendGhst(
     );
 
     const escrowFacet = (
-      await hre.ethers.getContractAt("EscrowFacet", maticDiamondAddress)
+      await hre.ethers.getContractAt("EscrowFacet", baseDiamondAddress)
     ).connect(signer) as EscrowFacet;
 
     try {
