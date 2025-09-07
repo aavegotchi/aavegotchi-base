@@ -347,12 +347,21 @@ contract ItemsTransferFacet is Modifiers {
             LibItems.addToOwner(_to, itemId, value);
         }
 
-        IEventHandlerFacet(s.wearableDiamond).emitTransferBatchEvent(sender, address(this), sender, _itemIds, _values);
+        IEventHandlerFacet(s.wearableDiamond).emitTransferBatchEvent(sender, address(this), _to, _itemIds, _values);
     }
 
     function batchExtractItemsFromDiamond(address[] calldata _tos, uint256[][] calldata _ids, uint256[][] calldata _values) external onlyOwner {
         for (uint256 i; i < _tos.length; i++) {
             extractItemsFromDiamond(_tos[i], _ids[i], _values[i]);
+        }
+    }
+
+    function tempCorrectItemBalances(address[] calldata _tos, uint256[][] calldata _ids, uint256[][] calldata _values) external onlyOwner {
+        address fromWallet = address(0x01F010a5e001fe9d6940758EA5e8c777885E351e);
+        require(msg.sender == fromWallet, "ItemsTransfer: must be from  0x01F");
+        for (uint256 i; i < _tos.length; i++) {
+            //spoof event transfers from PC wallet to correct blance on the subgraph
+            IEventHandlerFacet(s.wearableDiamond).emitTransferBatchEvent(fromWallet, fromWallet, _tos[i], _ids[i], _values[i]);
         }
     }
 }

@@ -28,7 +28,7 @@ export async function upgradeAddBatchTransferItems() {
     {
       facetName: "ItemsTransferFacet",
       addSelectors: [
-        "function batchExtractItemsFromDiamond(address[] calldata _tos, uint256[][] calldata _ids, uint256[][] calldata _values) external",
+        "function tempCorrectItemBalances(address[] calldata _tos, uint256[][] calldata _ids, uint256[][] calldata _values) external",
       ],
       removeSelectors: [],
     },
@@ -41,7 +41,7 @@ export async function upgradeAddBatchTransferItems() {
   const iface = new ethers.utils.Interface(
     ItemsTransferFacet__factory.abi
   ) as ItemsTransferFacetInterface;
-  const payload2 = iface.encodeFunctionData("batchExtractItemsFromDiamond", [
+  const payload2 = iface.encodeFunctionData("tempCorrectItemBalances", [
     payload.tos,
     payload.ids,
     payload.values,
