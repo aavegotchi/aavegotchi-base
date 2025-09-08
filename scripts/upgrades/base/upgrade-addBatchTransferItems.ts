@@ -19,25 +19,14 @@ export async function upgradeAddBatchTransferItems() {
   const facets: FacetsAndAddSelectors[] = [
     {
       facetName: "ItemsTransferFacet",
-      addSelectors: [
+      addSelectors: [],
+      removeSelectors: [
         "function tempCorrectItemBalances(address[] calldata _tos, uint256[][] calldata _ids, uint256[][] calldata _values) external",
       ],
-      removeSelectors: [],
     },
   ];
   const joined = convertFacetAndSelectorsToString(facets);
 
-  const json: TokenCommitmentData = require("../../tokenCommitmentData.json");
-  const payload = buildBatchSafeTransferFromArgsFromJson(json);
-
-  const iface = new ethers.utils.Interface(
-    ItemsTransferFacet__factory.abi
-  ) as ItemsTransferFacetInterface;
-  const payload2 = iface.encodeFunctionData("tempCorrectItemBalances", [
-    payload.tos,
-    payload.ids,
-    payload.values,
-  ]);
   const args: DeployUpgradeTaskArgs = {
     diamondOwner: "0x01F010a5e001fe9d6940758EA5e8c777885E351e",
     diamondAddress: c.aavegotchiDiamond!,
@@ -45,8 +34,6 @@ export async function upgradeAddBatchTransferItems() {
     useLedger: true,
     useMultisig: false,
     useRelayer: false,
-    initAddress: c.aavegotchiDiamond!,
-    initCalldata: payload2,
   };
 
   await run("deployUpgrade", args);
