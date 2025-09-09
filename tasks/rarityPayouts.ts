@@ -19,6 +19,10 @@ import {
 
 import { RarityFarmingData, rarityRewards } from "../types";
 import { generateSeasonRewards } from "../scripts/generateRewards";
+import { ghstAddressBase } from "../helpers/constants";
+import { mine } from "@nomicfoundation/hardhat-network-helpers";
+import * as fs from "fs";
+import * as path from "path";
 
 export let tiebreakerIndex: string;
 
@@ -56,6 +60,32 @@ interface TxArgs {
   tokenID: string;
   amount: Number;
   parsedAmount: string;
+}
+
+interface GotchiReward {
+  gotchiId: string;
+  amount: string;
+  parsedAmount: string;
+}
+
+interface BatchProgress {
+  batchIndex: number;
+  transactionHash: string;
+  blockNumber: number;
+  timestamp: string;
+  gasUsed: string;
+  gotchiRewards: GotchiReward[];
+  totalAmount: string;
+  chainId: number;
+}
+
+interface ProgressFile {
+  season: string;
+  round: string;
+  chainId: number;
+  totalBatches: number;
+  completedBatches: BatchProgress[];
+  completedGotchiIds: Set<string>;
 }
 task("rarityPayout")
   .addParam("season")
@@ -290,17 +320,51 @@ task("rarityPayout")
         tokenIdsNum = 0;
       }
 
-      // console.log("set allowance for:", deployerAddress);
+      console.log("set allowance for:", deployerAddress);
 
-      // await setAllowance(
-      //   hre,
-      //   signer,
-      //   deployerAddress,
-      //   maticDiamondAddress,
-      //   ghstAddress
-      // );
+      if (hre.network.name === "hardhat") {
+        await mine();
+      }
 
-      await sendGhst(hre, signer, txData);
+      await setAllowance(
+        hre,
+        signer,
+        deployerAddress,
+        baseDiamondAddress,
+        ghstAddressBase
+      );
+
+      // Get network chain ID early for progress file naming
+      const chainId = await hre.ethers.provider
+        .getNetwork()
+        .then((n) => n.chainId);
+
+      // Initialize or load progress
+      let progress = loadProgress(taskArgs.season, filename, chainId);
+      if (!progress) {
+        progress = initializeProgress(
+          taskArgs.season,
+          filename,
+          txData.length,
+          chainId
+        );
+        console.log(
+          `Initialized new progress file for season ${taskArgs.season}, round ${filename}, chainId ${chainId}`
+        );
+      } else {
+        console.log(
+          `Loaded existing progress: ${progress.completedBatches.length}/${progress.totalBatches} batches completed (chainId: ${progress.chainId})`
+        );
+
+        // Validate chainId matches
+        if (progress.chainId !== chainId) {
+          throw new Error(
+            `Chain ID mismatch! Progress file is for chainId ${progress.chainId}, but current network is chainId ${chainId}`
+          );
+        }
+      }
+
+      await sendGhst(hre, signer, txData, progress, taskArgs.season, filename);
     }
   );
 
@@ -316,8 +380,6 @@ async function setAllowance(
     ghstAddress,
     signer
   )) as ERC20;
-
-  console.log("ghst token signer:", ghstToken.signer);
 
   const allowance = await ghstToken.allowance(
     deployerAddress,
@@ -343,34 +405,125 @@ interface SacrificedGotchi {
   // Add other properties if needed
 }
 
+function getProgressFilePath(
+  season: string,
+  filename: string,
+  chainId: number
+): string {
+  return path.join(
+    __dirname,
+    `../progress-szn${season}-${filename}-chain${chainId}.json`
+  );
+}
+
+function loadProgress(
+  season: string,
+  filename: string,
+  chainId: number
+): ProgressFile | null {
+  const progressPath = getProgressFilePath(season, filename, chainId);
+
+  if (!fs.existsSync(progressPath)) {
+    return null;
+  }
+
+  try {
+    const data = JSON.parse(fs.readFileSync(progressPath, "utf8"));
+    // Convert completedGotchiIds array back to Set
+    data.completedGotchiIds = new Set(data.completedGotchiIds || []);
+    return data;
+  } catch (error) {
+    console.log(`Error loading progress file: ${error}`);
+    return null;
+  }
+}
+
+function saveProgress(
+  progress: ProgressFile,
+  season: string,
+  filename: string
+): void {
+  const progressPath = getProgressFilePath(season, filename, progress.chainId);
+
+  // Convert Set to array for JSON serialization
+  const dataToSave = {
+    ...progress,
+    completedGotchiIds: Array.from(progress.completedGotchiIds),
+  };
+
+  fs.writeFileSync(progressPath, JSON.stringify(dataToSave, null, 2));
+  console.log(`Progress saved to: ${progressPath}`);
+}
+
+function initializeProgress(
+  season: string,
+  filename: string,
+  totalBatches: number,
+  chainId: number
+): ProgressFile {
+  return {
+    season,
+    round: filename,
+    chainId,
+    totalBatches,
+    completedBatches: [],
+    completedGotchiIds: new Set<string>(),
+  };
+}
+
 async function sendGhst(
   hre: HardhatRuntimeEnvironment,
   signer: Signer,
-  txData: TxArgs[][]
+  txData: TxArgs[][],
+  progress: ProgressFile,
+  season: string,
+  filename: string
 ) {
   let totalGhstSent = BigNumber.from(0);
 
   // Fetch sacrificed gotchis dynamically to ensure they don't break the batchDepositGHST function
   const sacrificedList: SacrificedGotchi[] = await fetchSacrificedGotchis();
 
-  for (const [i, txGroup] of txData.entries()) {
-    console.log("Current index is:", i);
+  // Chain ID is already stored in progress object
 
-    // if (i < 1) continue; // Skip the indices before this one
+  for (const [i, txGroup] of txData.entries()) {
+    console.log(`\n=== Processing batch ${i + 1}/${txData.length} ===`);
+
+    // Check if this batch was already completed
+    if (progress.completedBatches.some((batch) => batch.batchIndex === i)) {
+      console.log(`Batch ${i} already completed, skipping...`);
+      continue;
+    }
 
     let tokenIds: string[] = [];
     let amounts: string[] = [];
+    let gotchiRewards: GotchiReward[] = [];
 
+    // Filter out sacrificed gotchis and gotchis that were already processed
     txGroup.forEach((sendData) => {
       if (sacrificedList.map((val) => val.id).includes(sendData.tokenID)) {
         console.log(
           `Removing ${sendData.tokenID} because it's been sacrificed`
         );
+      } else if (progress.completedGotchiIds.has(sendData.tokenID)) {
+        console.log(
+          `Removing ${sendData.tokenID} because it was already processed in a previous batch`
+        );
       } else {
         tokenIds.push(sendData.tokenID);
         amounts.push(sendData.parsedAmount);
+        gotchiRewards.push({
+          gotchiId: sendData.tokenID,
+          amount: sendData.amount.toString(),
+          parsedAmount: sendData.parsedAmount,
+        });
       }
     });
+
+    if (tokenIds.length === 0) {
+      console.log("No valid gotchis to process in this batch, skipping...");
+      continue;
+    }
 
     let totalAmount = amounts.reduce((prev, curr) => {
       return BigNumber.from(prev).add(BigNumber.from(curr)).toString();
@@ -395,12 +548,45 @@ async function sendGhst(
       let receipt: ContractReceipt = await tx.wait();
       console.log("receipt:", receipt.transactionHash);
       console.log("Gas used:", strDisplay(receipt.gasUsed.toString()));
+
       if (!receipt.status) {
-        throw Error(`Error:: ${tx.hash}`);
+        throw Error(`Transaction failed: ${tx.hash}`);
       }
+
+      // Record successful batch
+      const batchProgress: BatchProgress = {
+        batchIndex: i,
+        transactionHash: receipt.transactionHash,
+        blockNumber: receipt.blockNumber,
+        timestamp: new Date().toISOString(),
+        gasUsed: receipt.gasUsed.toString(),
+        gotchiRewards,
+        totalAmount,
+        chainId: progress.chainId,
+      };
+
+      // Update progress
+      progress.completedBatches.push(batchProgress);
+      tokenIds.forEach((id) => progress.completedGotchiIds.add(id));
+
+      // Save progress after each successful batch
+      saveProgress(progress, season, filename);
+
       console.log("Total GHST Sent:", formatEther(totalGhstSent));
+      console.log(`Batch ${i + 1} completed and saved to progress file`);
     } catch (error) {
-      console.log("error:", error);
+      console.log("Transaction failed:", error);
+      console.log(`Stopping execution. Progress saved up to batch ${i}.`);
+      throw error; // Stop execution on transaction failure
     }
   }
+
+  console.log(`\n=== All batches completed! ===`);
+  console.log(
+    `Total batches processed: ${progress.completedBatches.length}/${progress.totalBatches}`
+  );
+  console.log(`Total GHST sent: ${formatEther(totalGhstSent)}`);
+  console.log(
+    `Progress file: ${getProgressFilePath(season, filename, progress.chainId)}`
+  );
 }

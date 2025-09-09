@@ -12,6 +12,7 @@ export const fomoAddress = "0x44a6e0be76e1d9620a7f76588e4509fe4fa8e8c8";
 export const alphaAddress = "0x6a3e7c3c6ef65ee26975b12293ca1aad7e1daed2";
 export const kekAddress = "0x42e5e06ef5b90fe15f853f59299fc96259209c5c";
 export const ghstAddress = "0x385eeac5cb85a38a9a07a70c73e0a3271cfb54a7";
+export const ghstAddressBase = "0xcd2f22236dd9dfe2356d7c543161d4d260fd9bcb";
 export const aavegotchiDAOAddress =
   "0xb208f8BB431f580CC4b216826AFfB128cd1431aB";
 export const pixelcraftAddress = "0xD4151c984e6CF33E04FFAAF06c3374B2926Ecc64";
