@@ -165,7 +165,7 @@ task("rarityPayout")
           params: [deployerAddress],
         });
         signer = await hre.ethers.provider.getSigner(deployerAddress);
-      } else if (hre.network.name === "matic") {
+      } else if (hre.network.name === "matic" || hre.network.name === "base") {
         signer = await getRelayerSigner(hre);
       } else {
         throw Error("Incorrect network selected");
@@ -372,7 +372,7 @@ async function setAllowance(
   hre: HardhatRuntimeEnvironment,
   signer: Signer,
   deployerAddress: string,
-  aavegotchiDiamondAddressMatic: string,
+  baseDiamondAddress: string,
   ghstAddress: string
 ) {
   const ghstToken = (await hre.ethers.getContractAt(
@@ -383,7 +383,7 @@ async function setAllowance(
 
   const allowance = await ghstToken.allowance(
     deployerAddress,
-    aavegotchiDiamondAddressMatic
+    baseDiamondAddress
   );
 
   console.log("allownce:", allowance.toString());
@@ -392,7 +392,7 @@ async function setAllowance(
     console.log("Setting allowance");
 
     const tx = await ghstToken.approve(
-      aavegotchiDiamondAddressMatic,
+      baseDiamondAddress,
       hre.ethers.constants.MaxUint256
     );
     await tx.wait();
