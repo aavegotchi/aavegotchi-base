@@ -30,7 +30,9 @@ library LibERC721Marketplace {
         if (listing.erc721TokenAddress == address(this)) {
             s.aavegotchis[listing.erc721TokenId].locked = false;
             //transfer escrow ownership back to owner
-            CollateralEscrow(payable(s.aavegotchis[listing.erc721TokenId].escrow)).transferOwnership(listing.seller);
+            if (listing.category == 3) {
+                CollateralEscrow(payable(s.aavegotchis[listing.erc721TokenId].escrow)).transferOwnership(listing.seller);
+            }
         }
 
         emit ERC721ListingCancelled(_listingId, listing.category, block.number);
