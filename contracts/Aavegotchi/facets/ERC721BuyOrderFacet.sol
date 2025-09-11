@@ -236,7 +236,9 @@ contract ERC721BuyOrderFacet is Modifiers {
             LibAavegotchi.transfer(sender, erc721BuyOrder.buyer, _erc721TokenId);
 
             //transfer escrow ownership
-            CollateralEscrow(payable(s.aavegotchis[erc721BuyOrder.erc721TokenId].escrow)).transferOwnership(erc721BuyOrder.buyer);
+            if (LibAavegotchi.getAavegotchi(_erc721TokenId).status == LibAavegotchi.STATUS_AAVEGOTCHI) {
+                CollateralEscrow(payable(s.aavegotchis[erc721BuyOrder.erc721TokenId].escrow)).transferOwnership(erc721BuyOrder.buyer);
+            }
             LibERC721Marketplace.updateERC721Listing(address(this), _erc721TokenId, sender);
         } else {
             IERC721(_erc721TokenAddress).safeTransferFrom(sender, erc721BuyOrder.buyer, _erc721TokenId);

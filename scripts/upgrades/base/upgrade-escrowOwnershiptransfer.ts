@@ -8,6 +8,8 @@ import {
 import { varsForNetwork } from "../../../helpers/constants";
 import { PC_WALLET } from "../../geistBridge/paths";
 
+//adds the aavegotchi status check before escrow transfers
+
 export async function upgrade() {
   const c = await varsForNetwork(ethers);
   const facets: FacetsAndAddSelectors[] = [
@@ -17,22 +19,7 @@ export async function upgrade() {
       removeSelectors: [],
     },
     {
-      facetName: "AavegotchiGameFacet",
-      addSelectors: [],
-      removeSelectors: [],
-    },
-    {
       facetName: "ERC721BuyOrderFacet",
-      addSelectors: [],
-      removeSelectors: [],
-    },
-    {
-      facetName: "GotchiLendingFacet",
-      addSelectors: [],
-      removeSelectors: [],
-    },
-    {
-      facetName: "GotchiLendingFacet",
       addSelectors: [],
       removeSelectors: [],
     },
