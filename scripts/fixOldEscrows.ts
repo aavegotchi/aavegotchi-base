@@ -96,7 +96,7 @@ async function fetchEscrowMapForGotchisAtBlock(
 
 async function main() {
   //upgrade first
-  await upgrade();
+  //  await upgrade();
   // Fetch all historical lending listingIds and gotchiTokenIds from the subgraph
   const { listingIds, gotchiIds } = await fetchLendingListingIdsAndGotchiIds();
   console.log(`Total lendings from subgraph: ${listingIds.length}`);
@@ -124,7 +124,8 @@ async function main() {
   const c = await varsForNetwork(ethers);
   let escrowFacet = await ethers.getContractAt(
     "EscrowFacet",
-    c.aavegotchiDiamond!
+    c.aavegotchiDiamond!,
+    signer
   );
 
   const testing = ["hardhat", "localhost"].includes(network.name);
