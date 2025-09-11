@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.1;
 
-import {Modifiers} from "../libraries/LibAppStorage.sol";
+import {Modifiers, GotchiLending} from "../libraries/LibAppStorage.sol";
 import {LibERC20} from "../../shared/libraries/LibERC20.sol";
 import {IERC20} from "../../shared/interfaces/IERC20.sol";
 import {LibMeta} from "../../shared/libraries/LibMeta.sol";
@@ -129,6 +129,53 @@ contract EscrowFacet is Modifiers {
             address recipient = _recipients[index];
             uint256 _transferAmount = _transferAmounts[index];
             transferEscrow(tokenId, erc20Contract, recipient, _transferAmount);
+        }
+    }
+
+    //old lendings
+    function fixOldLendingsAndSettleAlchemica(
+        uint256[] calldata _lendingIds,
+        address[] calldata _oldEscrows,
+        address[] calldata _alchemicaAddresses
+    ) external onlyBaseRelayer {
+        require(_lendingIds.length == _oldEscrows.length, "EscrowFacet: LendingIds and OldEscrows length must match");
+        for (uint256 i = 0; i < _lendingIds.length; i++) {
+            GotchiLending storage lending = s.gotchiLendings[uint32(_lendingIds[i])];
+
+            if (lending.completed == true && !lending.canceled) {
+                //claim directly from old escrow so far there is a balance
+
+                for (uint256 j = 0; j < _alchemicaAddresses.length; j++) {
+                    address alchemicaAddress = _alchemicaAddresses[j];
+                    uint256 balance = IERC20(alchemicaAddress).balanceOf(_oldEscrows[i]);
+
+                    //check allowance
+                    if (IERC20(alchemicaAddress).allowance(_oldEscrows[i], address(this)) < balance) {
+                        CollateralEscrow(payable(_oldEscrows[i])).approveAavegotchiDiamond(alchemicaAddress);
+                    }
+                    //split
+                    uint256 ownerAmount = (balance * lending.revenueSplit[0]) / 100;
+                    uint256 borrowerAmount = (balance * lending.revenueSplit[1]) / 100;
+                    address owner = lending.originalOwner == address(0) ? lending.lender : lending.originalOwner;
+                    if (ownerAmount > 0) {
+                        LibERC20.transferFrom(alchemicaAddress, _oldEscrows[i], owner, ownerAmount);
+                    }
+                    if (borrowerAmount > 0) {
+                        LibERC20.transferFrom(alchemicaAddress, _oldEscrows[i], lending.borrower, borrowerAmount);
+                    }
+                    if (lending.thirdParty != address(0)) {
+                        uint256 thirdPartyAmount = (balance * lending.revenueSplit[2]) / 100;
+                        LibERC20.transferFrom(alchemicaAddress, _oldEscrows[i], lending.thirdParty, thirdPartyAmount);
+                    }
+                }
+            }
+            //ongoing lendings that do not have revenue tokens
+            else if (!lending.completed && !lending.canceled && lending.timeCreated > 0) {
+                //set the revenue tokens from storage
+                if (lending.revenueTokens.length == 0) {
+                    lending.revenueTokens = _alchemicaAddresses;
+                }
+            }
         }
     }
 }
