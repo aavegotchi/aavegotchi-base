@@ -6,18 +6,17 @@ import {
 } from "../../../tasks/deployUpgrade";
 
 import { varsForNetwork } from "../../../helpers/constants";
-import { CollateralFacet__factory } from "../../../typechain";
 import { PC_WALLET } from "../../geistBridge/paths";
 
 export async function upgrade() {
-  console.log("Deploying forge pet fix");
+  console.log("Deploying fix all old escrows");
   const c = await varsForNetwork(ethers);
   const facets: FacetsAndAddSelectors[] = [
     {
       facetName: "EscrowFacet",
       addSelectors: [
         "function fixOldLendingsAndSettleAlchemica(uint256[] calldata _lendingIds,address[] calldata _oldEscrows,address[] calldata _alchemicaAddresses ) external",
-      ], //no new selectors, just updating batchDepositGHST function
+      ],
       removeSelectors: [],
     },
   ];
