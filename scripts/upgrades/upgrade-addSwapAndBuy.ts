@@ -32,6 +32,16 @@ export async function upgradeAddSwapAndBuy(
       ],
       removeSelectors: [],
     },
+    {
+      facetName: "ERC1155MarketplaceFacet",
+      addSelectors: [],
+      removeSelectors: [],
+    },
+    {
+      facetName: "ERC721MarketplaceFacet",
+      addSelectors: [],
+      removeSelectors: [],
+    },
   ];
 
   const joined = convertFacetAndSelectorsToString(facets);
@@ -40,8 +50,8 @@ export async function upgradeAddSwapAndBuy(
     diamondOwner: diamondOwner,
     diamondAddress: diamondAddress,
     facetsAndAddSelectors: joined,
-    useMultisig: true,
-    useLedger: false,
+    useMultisig: false,
+    useLedger: true,
     useRelayer: false,
     freshDeployment: false,
   };
