@@ -188,6 +188,10 @@ library LibERC721Marketplace {
         // Transfer NFT
         if (listing.erc721TokenAddress == address(this)) {
             s.aavegotchis[listing.erc721TokenId].locked = false;
+            // transfer escrow ownership to recipient for claimed Aavegotchis
+            if (listing.category == LibAavegotchi.STATUS_AAVEGOTCHI) {
+                CollateralEscrow(payable(s.aavegotchis[listing.erc721TokenId].escrow)).transferOwnership(_recipient);
+            }
             LibAavegotchi.transfer(seller, _recipient, listing.erc721TokenId);
         } else {
             // External contracts

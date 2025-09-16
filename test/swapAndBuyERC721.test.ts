@@ -328,8 +328,7 @@ describe("SwapAndBuyERC721 Integration Test", function () {
           activeListing.erc721TokenAddress, // contractAddress
           activeListing.priceInWei, // priceInWei
           activeListing.tokenId, // tokenId
-          deployer.address, // recipient
-          0 // maxSlippageBps (0 = bypass our slippage, let zRouter handle it)
+          deployer.address // recipient
         );
 
         const receipt = await tx.wait();
@@ -380,6 +379,141 @@ describe("SwapAndBuyERC721 Integration Test", function () {
 
         // Re-throw for test failure with more context
         throw new Error(`ERC721 zRouter integration failed: ${error.message}`);
+      }
+    });
+  });
+
+  describe("Escrow Ownership", function () {
+    it("Should transfer escrow ownership to recipient for claimed gotchis (if purchase executed)", async function () {
+      const priceInWei = BigNumber.from(activeListing.priceInWei);
+      const totalCost = priceInWei;
+
+      // fund USDC and approve diamond
+      await impersonateAccount(ADDRESSES.WHALE_USDC, ethers.provider, ethers);
+      const usdcWhale = await ethers.getSigner(ADDRESSES.WHALE_USDC);
+      const usdcToken = await ethers.getContractAt(
+        "contracts/shared/interfaces/IERC20.sol:IERC20",
+        ADDRESSES.USDC_TOKEN
+      );
+
+      const ghstToUsdcRate = ethers.utils.parseUnits("0.46", 6);
+      const usdcNeeded = totalCost
+        .mul(ghstToUsdcRate)
+        .div(ethers.utils.parseEther("1"));
+      const usdcAmount = usdcNeeded.mul(300).div(100);
+      await usdcToken.connect(usdcWhale).transfer(deployer.address, usdcAmount);
+      await usdcToken.connect(deployer).approve(ADDRESSES.DIAMOND, usdcAmount);
+
+      // Attempt swap+buy (may revert due to real listing changing; this is best-effort)
+      try {
+        const tx = await aavegotchiDiamond
+          .connect(deployer)
+          .swapAndBuyERC721(
+            ADDRESSES.USDC_TOKEN,
+            usdcAmount,
+            totalCost,
+            Math.floor(Date.now() / 1000) + 1800,
+            activeListing.id,
+            activeListing.erc721TokenAddress,
+            activeListing.priceInWei,
+            activeListing.tokenId,
+            deployer.address
+          );
+        await tx.wait();
+      } catch {
+        // If purchase doesn't execute due to listing drift, skip assertion
+        return;
+      }
+
+      // If the NFT contract is the diamond and status indicates an Aavegotchi, escrow owner should be recipient
+      if (
+        activeListing.erc721TokenAddress.toLowerCase() ===
+        ADDRESSES.DIAMOND.toLowerCase()
+      ) {
+        const gotchiFacet = await ethers.getContractAt(
+          "contracts/Aavegotchi/facets/AavegotchiFacet.sol:AavegotchiFacet",
+          ADDRESSES.DIAMOND
+        );
+        const gotchi = await gotchiFacet.getAavegotchi(activeListing.tokenId);
+        const status =
+          gotchi.status && (gotchi.status as any).toNumber
+            ? (gotchi.status as any).toNumber()
+            : Number(gotchi.status);
+
+        // 3 == STATUS_AAVEGOTCHI
+        if (status === 3) {
+          const escrowAddr = gotchi.escrow as string;
+          const escrow = await ethers.getContractAt(
+            "contracts/Aavegotchi/CollateralEscrow.sol:CollateralEscrow",
+            escrowAddr
+          );
+          const escrowOwner = await escrow.owner();
+          expect(escrowOwner).to.equal(deployer.address);
+        }
+      }
+    });
+  });
+
+  describe("Events", function () {
+    it("Should emit ERC721ExecutedListing with recipient in buyer slot if purchase executes", async function () {
+      const priceInWei = BigNumber.from(activeListing.priceInWei);
+      const totalCost = priceInWei;
+
+      const ghstToUsdcRate = ethers.utils.parseUnits("0.46", 6);
+      const usdcNeeded = totalCost
+        .mul(ghstToUsdcRate)
+        .div(ethers.utils.parseEther("1"));
+      const usdcAmount = usdcNeeded.mul(300).div(100);
+
+      await impersonateAccount(ADDRESSES.WHALE_USDC, ethers.provider, ethers);
+      const usdcWhale = await ethers.getSigner(ADDRESSES.WHALE_USDC);
+      const usdcToken = await ethers.getContractAt(
+        "contracts/shared/interfaces/IERC20.sol:IERC20",
+        ADDRESSES.USDC_TOKEN
+      );
+
+      await usdcToken.connect(usdcWhale).transfer(deployer.address, usdcAmount);
+      await usdcToken.connect(deployer).approve(ADDRESSES.DIAMOND, usdcAmount);
+
+      let receipt: any | undefined;
+      try {
+        const tx = await aavegotchiDiamond
+          .connect(deployer)
+          .swapAndBuyERC721(
+            ADDRESSES.USDC_TOKEN,
+            usdcAmount,
+            totalCost,
+            Math.floor(Date.now() / 1000) + 1800,
+            activeListing.id,
+            activeListing.erc721TokenAddress,
+            activeListing.priceInWei,
+            activeListing.tokenId,
+            deployer.address
+          );
+        receipt = await tx.wait();
+      } catch (error: any) {
+        // If marketplace validation reverts, skip event assertion (swap path already tested above)
+        return;
+      }
+
+      // Parse logs for ERC721ExecutedListing emitted by the diamond
+      const iface = new ethers.utils.Interface([
+        "event ERC721ExecutedListing(uint256 indexed listingId,address indexed seller,address buyer,address erc721TokenAddress,uint256 erc721TokenId,uint256 indexed category,uint256 priceInWei,uint256 time)",
+      ]);
+      const parsed = receipt.logs
+        .map((l: any) => {
+          try {
+            return iface.parseLog(l);
+          } catch {
+            return undefined;
+          }
+        })
+        .filter((x: any) => x && x.name === "ERC721ExecutedListing");
+
+      if (parsed.length > 0) {
+        // args: [listingId, seller, buyer(recipient), erc721TokenAddress, erc721TokenId, category, priceInWei, time]
+        const evt = parsed[0];
+        expect(evt.args[2]).to.equal(deployer.address);
       }
     });
   });

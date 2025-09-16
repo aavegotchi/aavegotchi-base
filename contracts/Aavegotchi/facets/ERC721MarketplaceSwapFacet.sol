@@ -9,7 +9,7 @@ import {Modifiers} from "../libraries/LibAppStorage.sol";
 
 contract ERC721MarketplaceSwapFacet is Modifiers {
     event SwapAndPurchase(
-        address indexed buyer,
+        address indexed recipient,
         address indexed tokenIn,
         uint256 swapAmount,
         uint256 ghstReceived,

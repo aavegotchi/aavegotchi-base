@@ -93,11 +93,18 @@ library LibTokenSwap {
     function _handleTokenTransfer(address tokenIn, uint256 swapAmount) private {
         if (tokenIn != address(0)) {
             // For ERC20, transfer tokens from sender to this contract first
-            IERC20(tokenIn).transferFrom(msg.sender, address(this), swapAmount);
+            IERC20 erc20 = IERC20(tokenIn);
+            erc20.transferFrom(msg.sender, address(this), swapAmount);
             // Verify we received the tokens
-            require(IERC20(tokenIn).balanceOf(address(this)) >= swapAmount, "LibTokenSwap: Token transfer failed");
-            // Approve zRouter to spend our tokens
-            IERC20(tokenIn).approve(ROUTER, swapAmount);
+            require(erc20.balanceOf(address(this)) >= swapAmount, "LibTokenSwap: Token transfer failed");
+            // Approve zRouter to spend our tokens; some tokens require setting to 0 before updating
+            uint256 currentAllowance = erc20.allowance(address(this), ROUTER);
+            if (currentAllowance < swapAmount) {
+                if (currentAllowance > 0) {
+                    erc20.approve(ROUTER, 0);
+                }
+                erc20.approve(ROUTER, swapAmount);
+            }
         }
     }
 
