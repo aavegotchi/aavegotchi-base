@@ -1,4 +1,4 @@
-import { ethers, run } from "hardhat";
+import { ethers, network, run } from "hardhat";
 import {
   convertFacetAndSelectorsToString,
   DeployUpgradeTaskArgs,
@@ -7,6 +7,11 @@ import {
 
 import { varsForNetwork } from "../../../helpers/constants";
 import { PC_WALLET } from "../../geistBridge/paths";
+import {
+  baseRelayerAddress,
+  getRelayerSigner,
+  impersonate,
+} from "../../helperFunctions";
 
 export async function upgrade() {
   console.log("Deploying fix all old escrows");
@@ -15,7 +20,7 @@ export async function upgrade() {
     {
       facetName: "EscrowFacet",
       addSelectors: [
-        "function fixOldLendingsAndSettleAlchemica(uint256[] calldata _lendingIds,address[] calldata _oldEscrows,address[] calldata _alchemicaAddresses ) external",
+        "function fixOldLendingsAndSettleAlchemica(uint256[] calldata _lendingIds,address[] calldata _alchemicaAddresses) external",
       ],
       removeSelectors: [],
     },
@@ -33,6 +38,46 @@ export async function upgrade() {
   };
 
   await run("deployUpgrade", args1);
+
+  //@ts-ignore
+  //fix and settle all lendings without revenue tokens
+  const signer = await getRelayerSigner(hre);
+  let escrowFacet = await ethers.getContractAt(
+    "EscrowFacet",
+    c.aavegotchiDiamond!,
+    signer
+  );
+
+  const testing = ["hardhat", "localhost"].includes(network.name);
+  if (testing) {
+    escrowFacet = await impersonate(
+      baseRelayerAddress,
+      escrowFacet,
+      ethers,
+      network
+    );
+  }
+
+  //from id 1 to 418
+  const allIds = Array.from({ length: 418 }, (_, i) => i + 1);
+  const revenueTokens = [c.fud!, c.fomo!, c.alpha!, c.kek!];
+
+  //batches of 50
+  for (let i = 0; i < allIds.length; i += 50) {
+    const batch = allIds.slice(i, i + 50);
+    const tx = await escrowFacet.fixOldLendingsAndSettleAlchemica(
+      batch,
+      revenueTokens
+    );
+
+    const tx2 = await tx.wait();
+
+    console.log(
+      `Fixed batch ${i / 50 + 1} of ${Math.ceil(
+        allIds.length / 50
+      )} gas used ${tx2.gasUsed.toString()}`
+    );
+  }
 }
 
 if (require.main === module) {
