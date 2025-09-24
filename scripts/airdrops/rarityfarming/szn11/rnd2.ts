@@ -14,6 +14,7 @@ async function rarityPayout() {
     rarityParams: [750000.0, 7500, 0.94].toString(),
     kinshipParams: [300000.0, 7500, 0.76].toString(),
     xpParams: [150000.0, 7500, 0.65].toString(),
+    confirmSend: true,
   };
   await run("rarityPayout", args);
 }

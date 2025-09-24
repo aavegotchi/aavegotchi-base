@@ -23,6 +23,7 @@ import { ghstAddressBase } from "../helpers/constants";
 import { mine } from "@nomicfoundation/hardhat-network-helpers";
 import * as fs from "fs";
 import * as path from "path";
+import * as readline from "readline";
 
 export let tiebreakerIndex: string;
 
@@ -54,6 +55,7 @@ export interface RarityPayoutTaskArgs {
   rarityParams: string;
   kinshipParams: string;
   xpParams: string;
+  confirmSend?: boolean;
 }
 
 interface TxArgs {
@@ -71,12 +73,15 @@ interface GotchiReward {
 interface BatchProgress {
   batchIndex: number;
   transactionHash: string;
-  blockNumber: number;
+  // Optional until confirmed
+  blockNumber?: number;
   timestamp: string;
-  gasUsed: string;
+  // Optional until confirmed
+  gasUsed?: string;
   gotchiRewards: GotchiReward[];
   totalAmount: string;
   chainId: number;
+  status: "pending" | "confirmed" | "failed";
 }
 
 interface ProgressFile {
@@ -95,6 +100,7 @@ task("rarityPayout")
   )
   .addParam("deployerAddress")
   .addParam("tieBreakerIndex", "The Tiebreaker index")
+  .addFlag("confirmSend", "Actually send GHST instead of dry-run")
   .setAction(
     async (taskArgs: RarityPayoutTaskArgs, hre: HardhatRuntimeEnvironment) => {
       const filename: string = taskArgs.rarityDataFile;
@@ -178,7 +184,14 @@ task("rarityPayout")
         );
       }
 
-      const maxProcess = 1;
+      const maxProcess = 500; // batch size
+
+      // Enforce required batch size on Base network
+      if (hre.network.name === "base" && maxProcess !== 500) {
+        throw new Error(
+          `On Base network, batchSize must be 500. Current value: ${maxProcess}`
+        );
+      }
       const finalRewards: rarityRewards = {};
 
       //Get data for this round from file
@@ -340,8 +353,9 @@ task("rarityPayout")
         .then((n) => n.chainId);
 
       // Initialize or load progress
-      let progress = loadProgress(taskArgs.season, filename, chainId);
-      if (!progress) {
+      const loadedProgress = loadProgress(taskArgs.season, filename, chainId);
+      let progress: ProgressFile;
+      if (!loadedProgress) {
         progress = initializeProgress(
           taskArgs.season,
           filename,
@@ -352,6 +366,7 @@ task("rarityPayout")
           `Initialized new progress file for season ${taskArgs.season}, round ${filename}, chainId ${chainId}`
         );
       } else {
+        progress = loadedProgress;
         console.log(
           `Loaded existing progress: ${progress.completedBatches.length}/${progress.totalBatches} batches completed (chainId: ${progress.chainId})`
         );
@@ -363,6 +378,64 @@ task("rarityPayout")
           );
         }
       }
+
+      // De-duplicate any gotchis that have already been processed according to the loaded progress
+      if (progress.completedGotchiIds && progress.completedGotchiIds.size > 0) {
+        const originalItemCount = txData.reduce(
+          (sum, group) => sum + group.length,
+          0
+        );
+        txData = txData.map((group) =>
+          group.filter((item) => !progress.completedGotchiIds.has(item.tokenID))
+        );
+        const newItemCount = txData.reduce(
+          (sum, group) => sum + group.length,
+          0
+        );
+        const removedCount = originalItemCount - newItemCount;
+        if (removedCount > 0) {
+          console.log(
+            `De-duplicated ${removedCount} gotchis from final array based on progress file (${getProgressFilePath(
+              taskArgs.season,
+              filename,
+              chainId
+            )})`
+          );
+        }
+      }
+
+      //total amount of gotchis to send
+      const totalGotchis = txData.reduce((sum, group) => sum + group.length, 0);
+      console.log("Total gotchis to send:", totalGotchis);
+
+      //total amount of ghst to send
+      const totalGhst = txData.reduce(
+        (sum, group) =>
+          sum + group.reduce((sum, item) => sum + Number(item.amount), 0),
+        0
+      );
+      console.log("Total GHST to send:", totalGhst);
+
+      //total batches to send
+      const totalBatches = txData.length;
+      console.log("Total batches to send:", totalBatches);
+
+      if (!taskArgs.confirmSend) {
+        console.log(
+          "Dry run complete. Set CONFIRM_SEND=1 and re-run to actually send the GHST."
+        );
+        return;
+      }
+
+      const proceed = await askForConfirmation(
+        `Are you sure you want to send ${totalGhst} GHST to ${totalGotchis} gotchis in ${totalBatches} batches on ${hre.network.name}?`
+      );
+      if (!proceed) {
+        console.log("User did not confirm. Aborting without sending.");
+        return;
+      }
+
+      console.log("Sending GHST...");
 
       await sendGhst(hre, signer, txData, progress, taskArgs.season, filename);
     }
@@ -416,6 +489,20 @@ function getProgressFilePath(
   );
 }
 
+function askForConfirmation(message: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    rl.question(`${message} (type 'yes' to confirm): `, (answer) => {
+      rl.close();
+      const normalized = answer.trim().toLowerCase();
+      resolve(normalized === "yes" || normalized === "y");
+    });
+  });
+}
+
 function loadProgress(
   season: string,
   filename: string,
@@ -431,6 +518,11 @@ function loadProgress(
     const data = JSON.parse(fs.readFileSync(progressPath, "utf8"));
     // Convert completedGotchiIds array back to Set
     data.completedGotchiIds = new Set(data.completedGotchiIds || []);
+    // Ensure backward compatibility: add default status and keep optional fields
+    data.completedBatches = (data.completedBatches || []).map((b: any) => ({
+      ...b,
+      status: b.status ?? "confirmed",
+    }));
     return data;
   } catch (error) {
     console.log(`Error loading progress file: ${error}`);
@@ -489,10 +581,45 @@ async function sendGhst(
   for (const [i, txGroup] of txData.entries()) {
     console.log(`\n=== Processing batch ${i + 1}/${txData.length} ===`);
 
-    // Check if this batch was already completed
-    if (progress.completedBatches.some((batch) => batch.batchIndex === i)) {
-      console.log(`Batch ${i} already completed, skipping...`);
-      continue;
+    // Check if there is existing progress for this batch
+    const existingBatch = progress.completedBatches.find(
+      (batch) => batch.batchIndex === i
+    );
+    if (existingBatch) {
+      if (existingBatch.status === "confirmed") {
+        console.log(`Batch ${i} already confirmed, skipping...`);
+        continue;
+      }
+      if (existingBatch.status === "pending") {
+        console.log(
+          `Batch ${i} has pending tx ${existingBatch.transactionHash}. Waiting for confirmation...`
+        );
+        const pendingReceipt: any =
+          await hre.ethers.provider.waitForTransaction(
+            existingBatch.transactionHash,
+            1
+          );
+        if (pendingReceipt && pendingReceipt.status) {
+          existingBatch.blockNumber = pendingReceipt.blockNumber;
+          existingBatch.gasUsed = pendingReceipt.gasUsed.toString();
+          existingBatch.status = "confirmed";
+          // Mark gotchis as completed now that it's confirmed
+          (existingBatch.gotchiRewards || []).forEach((r) =>
+            progress.completedGotchiIds.add(r.gotchiId)
+          );
+          saveProgress(progress, season, filename);
+          console.log(
+            `Batch ${i} confirmed on resume. Tx: ${existingBatch.transactionHash}`
+          );
+          continue;
+        } else {
+          existingBatch.status = "failed";
+          saveProgress(progress, season, filename);
+          throw new Error(
+            `Pending transaction failed for batch ${i}: ${existingBatch.transactionHash}`
+          );
+        }
+      }
     }
 
     let tokenIds: string[] = [];
@@ -543,7 +670,20 @@ async function sendGhst(
 
     try {
       const tx = await escrowFacet.batchDepositGHST(tokenIds, amounts);
-      console.log("Transaction completed with tx hash:", tx.hash);
+      console.log("Transaction submitted with tx hash:", tx.hash);
+
+      // Record pending batch immediately
+      const pendingBatch: BatchProgress = {
+        batchIndex: i,
+        transactionHash: tx.hash,
+        timestamp: new Date().toISOString(),
+        gotchiRewards,
+        totalAmount,
+        chainId: progress.chainId,
+        status: "pending",
+      };
+      progress.completedBatches.push(pendingBatch);
+      saveProgress(progress, season, filename);
 
       let receipt: ContractReceipt = await tx.wait();
       console.log("receipt:", receipt.transactionHash);
@@ -553,20 +693,15 @@ async function sendGhst(
         throw Error(`Transaction failed: ${tx.hash}`);
       }
 
-      // Record successful batch
-      const batchProgress: BatchProgress = {
-        batchIndex: i,
-        transactionHash: receipt.transactionHash,
-        blockNumber: receipt.blockNumber,
-        timestamp: new Date().toISOString(),
-        gasUsed: receipt.gasUsed.toString(),
-        gotchiRewards,
-        totalAmount,
-        chainId: progress.chainId,
-      };
-
-      // Update progress
-      progress.completedBatches.push(batchProgress);
+      // Update the previously recorded pending batch to confirmed
+      const recorded = progress.completedBatches.find(
+        (b) => b.batchIndex === i && b.transactionHash === tx.hash
+      );
+      if (recorded) {
+        recorded.blockNumber = receipt.blockNumber;
+        recorded.gasUsed = receipt.gasUsed.toString();
+        recorded.status = "confirmed";
+      }
       tokenIds.forEach((id) => progress.completedGotchiIds.add(id));
 
       // Save progress after each successful batch
