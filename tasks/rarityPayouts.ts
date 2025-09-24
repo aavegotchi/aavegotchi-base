@@ -178,7 +178,7 @@ task("rarityPayout")
         );
       }
 
-      const maxProcess = 500;
+      const maxProcess = 1;
       const finalRewards: rarityRewards = {};
 
       //Get data for this round from file
