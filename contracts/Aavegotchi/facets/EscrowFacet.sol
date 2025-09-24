@@ -136,13 +136,13 @@ contract EscrowFacet is Modifiers {
     function fixOldLendingsAndSettleAlchemica(uint256[] calldata _lendingIds, address[] calldata _alchemicaAddresses) external onlyBaseRelayer {
         for (uint256 i = 0; i < _lendingIds.length; i++) {
             GotchiLending storage lending = s.gotchiLendings[uint32(_lendingIds[i])];
+            address escrow = s.aavegotchis[lending.erc721TokenId].escrow;
 
             if (lending.completed == true) {
                 //claim directly from old escrow so far there is a balance
 
                 for (uint256 j = 0; j < _alchemicaAddresses.length; j++) {
                     address alchemicaAddress = _alchemicaAddresses[j];
-                    address escrow = s.aavegotchis[lending.erc721TokenId].escrow;
                     uint256 balance = IERC20(alchemicaAddress).balanceOf(escrow);
 
                     //check allowance
