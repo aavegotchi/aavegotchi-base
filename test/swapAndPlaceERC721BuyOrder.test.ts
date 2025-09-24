@@ -204,7 +204,6 @@ describe("SwapAndPlaceERC721BuyOrder Integration Test", function () {
       swapAmount: transferAmount,
       minGhstOut: priceInWei,
       swapDeadline: Math.floor(Date.now() / 1000) + 3600,
-      buyOrderId: 0,
       erc721TokenAddress: activeOrder.erc721TokenAddress,
       erc721TokenId: BigNumber.from(activeOrder.erc721TokenId),
       category,

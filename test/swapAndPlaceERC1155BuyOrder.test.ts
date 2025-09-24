@@ -193,7 +193,6 @@ describe("SwapAndPlaceERC1155BuyOrder Integration Test", function () {
       swapAmount: transferAmount,
       minGhstOut: totalCost,
       swapDeadline: Math.floor(Date.now() / 1000) + 3600,
-      buyOrderId: 0,
       erc1155TokenAddress: activeOrder.erc1155TokenAddress,
       erc1155TokenId: BigNumber.from(activeOrder.erc1155TokenId),
       category: BigNumber.from(activeOrder.category),

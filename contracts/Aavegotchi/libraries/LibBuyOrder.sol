@@ -167,7 +167,7 @@ library LibBuyOrder {
         uint256 _priceInWei,
         uint256 _duration,
         bool[] calldata _validationOptions
-    ) internal {
+    ) internal returns (uint256) {
         AppStorage storage s = LibAppStorage.diamondStorage();
         address sender = LibMeta.msgSender();
         // Place new buy order
@@ -201,6 +201,7 @@ library LibBuyOrder {
             _validationHash,
             block.timestamp
         );
+        return buyOrderId;
     }
 
     function _placeERC1155BuyOrder(
@@ -210,7 +211,7 @@ library LibBuyOrder {
         uint256 _priceInWei,
         uint256 _quantity,
         uint256 _duration
-    ) internal {
+    ) internal returns (uint256) {
         AppStorage storage s = LibAppStorage.diamondStorage();
         s.nextERC1155BuyOrderId++;
         uint256 buyOrderId = s.nextERC1155BuyOrderId;
@@ -240,5 +241,6 @@ library LibBuyOrder {
             _duration,
             block.timestamp
         );
+        return buyOrderId;
     }
 }

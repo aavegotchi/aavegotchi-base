@@ -12,8 +12,8 @@ export async function upgradeAddSwapAndBuyOrders() {
     {
       facetName: "BuyOrderSwapFacet",
       addSelectors: [
-        "function swapAndPlaceERC721BuyOrder((address tokenIn,uint256 swapAmount,uint256 minGhstOut,uint256 swapDeadline,uint256 buyOrderId,address erc721TokenAddress,uint256 erc721TokenId,uint256 category,uint256 priceInWei,uint256 duration,address recipient) calldata params,bool[] calldata validationOptions) external",
-        "function swapAndPlaceERC1155BuyOrder((address tokenIn,uint256 swapAmount,uint256 minGhstOut,uint256 swapDeadline,uint256 buyOrderId,address erc1155TokenAddress,uint256 erc1155TokenId,uint256 category,uint256 priceInWei,uint256 quantity,uint256 duration,address recipient) calldata params) external",
+        "function swapAndPlaceERC721BuyOrder((address tokenIn,uint256 swapAmount,uint256 minGhstOut,uint256 swapDeadline,address erc721TokenAddress,uint256 erc721TokenId,uint256 category,uint256 priceInWei,uint256 duration,address recipient) calldata params,bool[] calldata validationOptions) external",
+        "function swapAndPlaceERC1155BuyOrder((address tokenIn,uint256 swapAmount,uint256 minGhstOut,uint256 swapDeadline,address erc1155TokenAddress,uint256 erc1155TokenId,uint256 category,uint256 priceInWei,uint256 quantity,uint256 duration,address recipient) calldata params) external",
       ],
       removeSelectors: [],
     },

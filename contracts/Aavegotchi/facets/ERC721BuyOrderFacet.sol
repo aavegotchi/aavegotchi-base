@@ -80,8 +80,6 @@ contract ERC721BuyOrderFacet is Modifiers {
         uint256 _duration,
         bool[] calldata _validationOptions // 0: BRS, 1: GHST, 2: skill points
     ) external whenNotPaused {
-        // require(_priceInWei >= 1e18, "ERC721BuyOrder: price should be 1 GHST or larger");
-
         address sender = LibMeta.msgSender();
         uint256 ghstBalance = IERC20(s.ghstContract).balanceOf(sender);
         require(ghstBalance >= _priceInWei, "ERC721BuyOrder: Not enough GHST!");
