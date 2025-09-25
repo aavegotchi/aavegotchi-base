@@ -70,6 +70,7 @@ library LibTokenSwap {
         require(swapAmount > 0, "LibTokenSwap: swapAmount must be > 0");
         require(deadline >= block.timestamp, "LibTokenSwap: deadline expired");
         require(ROUTER != address(0), "LibTokenSwap: Router address is zero");
+        require(recipient != address(0), "LibTokenSwap: recipient address is zero");
 
         AppStorage storage s = LibAppStorage.diamondStorage();
 
