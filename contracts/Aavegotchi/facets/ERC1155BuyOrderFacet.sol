@@ -14,17 +14,6 @@ import {BaazaarSplit, LibSharedMarketplace, SplitAddresses} from "../libraries/L
 import "../WearableDiamond/interfaces/IEventHandlerFacet.sol";
 
 contract ERC1155BuyOrderFacet is Modifiers {
-    event ERC1155BuyOrderAdd(
-        uint256 indexed buyOrderId,
-        address indexed buyer,
-        address erc1155TokenAddress,
-        uint256 erc1155TokenId,
-        uint256 indexed category,
-        uint256 priceInWei,
-        uint256 quantity,
-        uint256 duration,
-        uint256 time
-    );
     event ERC1155BuyOrderCancel(uint256 indexed buyOrderId, uint256 time);
     event ERC1155BuyOrderExecute(
         uint256 indexed buyOrderId,
@@ -46,13 +35,7 @@ contract ERC1155BuyOrderFacet is Modifiers {
         uint256 _quantity,
         uint256 _duration
     ) external whenNotPaused {
-        uint256 cost = _quantity * _priceInWei;
-        require(cost >= 1e15, "ERC1155BuyOrder: cost should be 0.001 GHST or larger");
-
-        require(LibSharedMarketplace.isContractWhitelisted(_erc1155TokenAddress), "ERC1155BuyOrder: contract not whitelisted");
-
-        require(!LibSharedMarketplace.isERC1155ListingExcluded(_erc1155TokenAddress, _erc1155TokenId), "ERC1155BuyOrder: token excluded");
-
+        uint256 cost = LibBuyOrder.validateERC1155Params(_erc1155TokenAddress, _erc1155TokenId, _priceInWei, _quantity);
         address sender = LibMeta.msgSender();
         uint256 ghstBalance = IERC20(s.ghstContract).balanceOf(sender);
 
@@ -62,34 +45,7 @@ contract ERC1155BuyOrderFacet is Modifiers {
         LibERC20.transferFrom(s.ghstContract, sender, address(this), cost);
 
         // Place new buy order
-        s.nextERC1155BuyOrderId++;
-        uint256 buyOrderId = s.nextERC1155BuyOrderId;
-
-        s.erc1155BuyOrders[buyOrderId] = ERC1155BuyOrder({
-            buyOrderId: buyOrderId,
-            buyer: sender,
-            erc1155TokenAddress: _erc1155TokenAddress,
-            erc1155TokenId: _erc1155TokenId,
-            category: _category,
-            priceInWei: _priceInWei,
-            quantity: _quantity,
-            timeCreated: block.timestamp,
-            lastTimePurchased: 0,
-            duration: _duration,
-            completed: false,
-            cancelled: false
-        });
-        emit ERC1155BuyOrderAdd(
-            buyOrderId,
-            sender,
-            _erc1155TokenAddress,
-            _erc1155TokenId,
-            _category,
-            _priceInWei,
-            _quantity,
-            _duration,
-            block.timestamp
-        );
+        LibBuyOrder._placeERC1155BuyOrder(_erc1155TokenAddress, _erc1155TokenId, _category, _priceInWei, _quantity, _duration);
     }
 
     function cancelERC1155BuyOrder(uint256 _buyOrderId) external whenNotPaused {
