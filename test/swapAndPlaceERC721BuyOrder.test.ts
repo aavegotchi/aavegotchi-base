@@ -214,26 +214,36 @@ describe("SwapAndPlaceERC721BuyOrder Integration Test", function () {
 
     const validationOptions = [false, false, false];
 
-    console.log("\n=== BUY ORDER (ERC721) INPUTS ===");
-    console.log("TokenIn:", params.tokenIn);
-    console.log("erc721TokenAddress:", params.erc721TokenAddress);
-    console.log("erc721TokenId:", params.erc721TokenId.toString());
-    console.log("category:", params.category.toString());
-    console.log("priceInWei (GHST):", ethers.utils.formatEther(priceInWei));
-    console.log("duration:", duration.toString());
-    console.log("recipient:", params.recipient);
+    console.log("\n" + "=".repeat(60));
+    console.log("🔄 SWAP AND PLACE ERC721 BUY ORDER TEST");
+    console.log("=".repeat(60));
+
+    console.log("\n📋 ORDER PARAMETERS:");
+    console.log("┌─ TokenIn:", params.tokenIn);
+    console.log("├─ ERC721 Token Address:", params.erc721TokenAddress);
+    console.log("├─ ERC721 Token ID:", params.erc721TokenId.toString());
+    console.log("├─ Category:", params.category.toString());
+    console.log("├─ Price (GHST):", ethers.utils.formatEther(priceInWei));
+    console.log("├─ Duration:", duration.toString());
+    console.log("├─ Recipient:", params.recipient);
     console.log(
-      "swapAmount (USDC):",
+      "├─ Swap Amount (USDC):",
       ethers.utils.formatUnits(params.swapAmount, 6)
     );
     console.log(
-      "minGhstOut (GHST):",
+      "├─ Min GHST Out:",
       ethers.utils.formatEther(params.minGhstOut)
     );
-    console.log("deadline:", params.swapDeadline);
+    console.log("└─ Deadline:", params.swapDeadline);
+
+    console.log("\n💰 BALANCES (BEFORE):");
     console.log(
-      "USDC balance (before):",
+      "┌─ User USDC Balance:",
       ethers.utils.formatUnits(initialUsdcBalance, 6)
+    );
+    console.log(
+      "└─ Diamond GHST Balance:",
+      ethers.utils.formatEther(initialDiamondGhst)
     );
 
     const tx = await buyOrderSwapFacet
@@ -242,16 +252,21 @@ describe("SwapAndPlaceERC721BuyOrder Integration Test", function () {
     const receipt = await tx.wait();
 
     const diamondGhstAfter = await ghstToken.balanceOf(ADDRESSES.DIAMOND);
+
+    console.log("\n🔄 TRANSACTION EXECUTED");
+    console.log("└─ Transaction Hash:", tx.hash);
+
+    console.log("\n💰 BALANCES (AFTER):");
     console.log(
-      "Diamond GHST before:",
+      "┌─ Diamond GHST Before:",
       ethers.utils.formatEther(initialDiamondGhst)
     );
     console.log(
-      "Diamond GHST after:",
+      "├─ Diamond GHST After:",
       ethers.utils.formatEther(diamondGhstAfter)
     );
     console.log(
-      "Diamond GHST delta (order funded):",
+      "└─ Diamond GHST Delta (Order Funded):",
       ethers.utils.formatEther(diamondGhstAfter.sub(initialDiamondGhst))
     );
 
@@ -266,14 +281,12 @@ describe("SwapAndPlaceERC721BuyOrder Integration Test", function () {
         swapEvt.data,
         swapEvt.topics
       );
+      console.log("\n🔄 SWAP RESULTS:");
       console.log(
-        "GHST received from swap:",
+        "┌─ GHST Received from Swap:",
         ethers.utils.formatEther(decodedSwap.ghstReceived)
       );
-      console.log(
-        "BuyOrderId (from swap evt):",
-        decodedSwap.buyOrderId.toString()
-      );
+      console.log("└─ Buy Order ID:", decodedSwap.buyOrderId.toString());
 
       // Parse last GHST Transfer (refund) from receipt logs
       const erc20Iface = new ethers.utils.Interface([
@@ -293,8 +306,9 @@ describe("SwapAndPlaceERC721BuyOrder Integration Test", function () {
           lastGhstLog.topics
         );
         const refundAmount = parsed.value as BigNumber;
+        console.log("\n💸 REFUND DETAILS:");
         console.log(
-          "Refunded GHST (from diamond to recipient):",
+          "└─ Refunded GHST (Diamond → Recipient):",
           ethers.utils.formatEther(refundAmount)
         );
         // refund should equal ghstReceived - order price
@@ -333,10 +347,28 @@ describe("SwapAndPlaceERC721BuyOrder Integration Test", function () {
     expect(statuses[0].status).to.equal("pending");
 
     const finalDiamondGhst = await ghstToken.balanceOf(ADDRESSES.DIAMOND);
+    const finalUsdcBalance = await usdcToken.balanceOf(deployer.address);
+
+    console.log("\n✅ FINAL VERIFICATION:");
+    console.log(
+      "┌─ Final Diamond GHST:",
+      ethers.utils.formatEther(finalDiamondGhst)
+    );
+    console.log(
+      "├─ Final User USDC:",
+      ethers.utils.formatUnits(finalUsdcBalance, 6)
+    );
+    console.log(
+      "├─ Diamond GHST Retained:",
+      ethers.utils.formatEther(finalDiamondGhst.sub(initialDiamondGhst))
+    );
+    console.log(
+      "└─ USDC Spent:",
+      ethers.utils.formatUnits(initialUsdcBalance.sub(finalUsdcBalance), 6)
+    );
+
     // diamond retains GHST equal to order price
     expect(finalDiamondGhst.sub(initialDiamondGhst)).to.equal(priceInWei);
-
-    const finalUsdcBalance = await usdcToken.balanceOf(deployer.address);
     expect(finalUsdcBalance).to.be.lt(initialUsdcBalance);
 
     // Validate the swap event emitted by BuyOrderSwapFacet
