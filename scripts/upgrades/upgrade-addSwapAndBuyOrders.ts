@@ -27,6 +27,18 @@ export async function upgradeAddSwapAndBuyOrders() {
       addSelectors: [],
       removeSelectors: [],
     },
+
+    //Marketplace Swaps
+    {
+      facetName: "ERC721MarketplaceSwapFacet",
+      addSelectors: [],
+      removeSelectors: [],
+    },
+    {
+      facetName: "ERC1155MarketplaceSwapFacet",
+      addSelectors: [],
+      removeSelectors: [],
+    },
   ];
 
   const joined = convertFacetAndSelectorsToString(facets);
