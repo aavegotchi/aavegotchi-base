@@ -15,6 +15,11 @@ import {BaazaarSplit, LibSharedMarketplace, SplitAddresses} from "../libraries/L
 import {CollateralEscrow} from "../CollateralEscrow.sol";
 
 contract ERC721BuyOrderFacet is Modifiers {
+    struct StatusesReturn {
+        string status;
+        uint256 buyOrderId;
+    }
+
     event ERC721BuyOrderExecuted(
         uint256 indexed buyOrderId,
         address indexed buyer,
@@ -28,11 +33,6 @@ contract ERC721BuyOrderFacet is Modifiers {
     function getERC721BuyOrder(uint256 _buyOrderId) external view returns (ERC721BuyOrder memory buyOrder_) {
         buyOrder_ = s.erc721BuyOrders[_buyOrderId];
         require(buyOrder_.timeCreated != 0, "ERC721BuyOrder: ERC721 buyOrder does not exist");
-    }
-
-    struct StatusesReturn {
-        string status;
-        uint256 buyOrderId;
     }
 
     function getERC721BuyOrderStatuses(uint256[] calldata _buyOrderIds) external view returns (StatusesReturn[] memory statuses_) {

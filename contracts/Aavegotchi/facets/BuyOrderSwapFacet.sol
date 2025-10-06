@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.1;
 
-import {LibAppStorage, AppStorage} from "../libraries/LibAppStorage.sol";
 import {LibTokenSwap} from "../libraries/LibTokenSwap.sol";
 import {LibBuyOrder} from "../libraries/LibBuyOrder.sol";
 import {IERC20} from "../../shared/interfaces/IERC20.sol";
@@ -44,6 +43,9 @@ contract BuyOrderSwapFacet is Modifiers {
      */
     function swapAndPlaceERC1155BuyOrder(ERC1155SwapParams calldata params) external payable whenNotPaused {
         LibTokenSwap.validateSwapParams(params.tokenIn, params.swapAmount, params.minGhstOut, params.swapDeadline);
+
+        require(params.recipient == msg.sender, "ERC1155BuyOrderSwap: recipient must be msg.sender");
+
         require(params.recipient != address(0), "ERC1155BuyOrderSwap: recipient cannot be 0 address");
         uint256 totalCost = LibBuyOrder.validateERC1155Params(params.erc1155TokenAddress, params.erc1155TokenId, params.priceInWei, params.quantity);
 
@@ -55,7 +57,6 @@ contract BuyOrderSwapFacet is Modifiers {
         //perform swap
         uint256 ghstReceived = LibTokenSwap.swapForGHST(params.tokenIn, params.swapAmount, params.minGhstOut, params.swapDeadline, address(this));
 
-        //make sure we have received enough ghst
         require(ghstReceived >= totalCost, "ERC1155BuyOrderSwap: Insufficient GHST for purchase");
 
         //place buy order
@@ -69,7 +70,7 @@ contract BuyOrderSwapFacet is Modifiers {
         );
 
         // Refund any excess GHST to the recipient using shared library, leave totalCost in the diamond
-        LibTokenSwap.refundExcessGHST(params.recipient, initialBalance + totalCost);
+        LibTokenSwap.refundExcessGHST(params.recipient, ghstReceived, totalCost);
 
         emit SwapAndPlaceERC1155BuyOrder(msg.sender, buyOrderId, params.tokenIn, ghstReceived);
     }
@@ -82,6 +83,9 @@ contract BuyOrderSwapFacet is Modifiers {
     function swapAndPlaceERC721BuyOrder(ERC721SwapParams calldata params, bool[] calldata validationOptions) external payable whenNotPaused {
         LibTokenSwap.validateSwapParams(params.tokenIn, params.swapAmount, params.minGhstOut, params.swapDeadline);
         require(params.recipient != address(0), "ERC721BuyOrderSwap: recipient cannot be 0 address");
+
+        require(params.recipient == msg.sender, "ERC721BuyOrderSwap: recipient must be msg.sender");
+
         uint256 totalCost = LibBuyOrder.validateERC721Params(
             params.erc721TokenAddress,
             params.erc721TokenId,
@@ -92,12 +96,9 @@ contract BuyOrderSwapFacet is Modifiers {
 
         require(params.minGhstOut >= totalCost, "ERC721BuyOrderSwap: minGhstOut must cover total cost");
 
-        uint256 initialBalance = IERC20(s.ghstContract).balanceOf(address(this));
-
-        //perform swap
+        //perform swap and validate
         uint256 ghstReceived = LibTokenSwap.swapForGHST(params.tokenIn, params.swapAmount, params.minGhstOut, params.swapDeadline, address(this));
 
-        //make sure we have received enough ghst
         require(ghstReceived >= totalCost, "ERC721BuyOrderSwap: Insufficient GHST for purchase");
 
         //place buy order
@@ -111,7 +112,7 @@ contract BuyOrderSwapFacet is Modifiers {
         );
 
         // Refund any excess GHST to the recipient using shared library, leave totalCost in the diamond
-        LibTokenSwap.refundExcessGHST(params.recipient, initialBalance + totalCost);
+        LibTokenSwap.refundExcessGHST(params.recipient, ghstReceived, totalCost);
 
         emit SwapAndPlaceERC721BuyOrder(msg.sender, buyOrderId, params.tokenIn, ghstReceived);
     }

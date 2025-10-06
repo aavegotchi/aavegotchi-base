@@ -212,14 +212,14 @@ library LibTokenSwap {
     /**
      * @notice Refund excess GHST to recipient
      * @param recipient Address to receive excess GHST
-     * @param initialBalance GHST balance before operations
+     * @param ghstReceived GHST received from swap
+     * @param ghstNeeded GHST needed for the operation
      */
-    function refundExcessGHST(address recipient, uint256 initialBalance) internal {
+    function refundExcessGHST(address recipient, uint256 ghstReceived, uint256 ghstNeeded) internal {
         AppStorage storage s = LibAppStorage.diamondStorage();
-        uint256 currentBalance = IERC20(s.ghstContract).balanceOf(address(this));
 
-        if (currentBalance > initialBalance) {
-            uint256 excess = currentBalance - initialBalance;
+        if (ghstReceived > ghstNeeded) {
+            uint256 excess = ghstReceived - ghstNeeded;
             IERC20(s.ghstContract).transfer(recipient, excess);
         }
     }

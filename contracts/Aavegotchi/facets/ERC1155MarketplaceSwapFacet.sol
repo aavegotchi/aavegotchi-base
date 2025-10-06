@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.1;
 
-import {LibAppStorage, AppStorage} from "../libraries/LibAppStorage.sol";
 import {LibERC1155Marketplace} from "../libraries/LibERC1155Marketplace.sol";
 import {LibTokenSwap} from "../libraries/LibTokenSwap.sol";
-import {IERC20} from "../../shared/interfaces/IERC20.sol";
 import {Modifiers} from "../libraries/LibAppStorage.sol";
 
 contract ERC1155MarketplaceSwapFacet is Modifiers {
@@ -43,9 +41,6 @@ contract ERC1155MarketplaceSwapFacet is Modifiers {
         uint256 totalCost = quantity * priceInWei;
         require(minGhstOut >= totalCost, "ERC1155MarketplaceSwap: minGhstOut must cover total cost");
 
-        AppStorage storage s = LibAppStorage.diamondStorage();
-        uint256 initialBalance = IERC20(s.ghstContract).balanceOf(address(this));
-
         // Perform token swap to GHST
         uint256 ghstReceived = LibTokenSwap.swapForGHST(tokenIn, swapAmount, minGhstOut, swapDeadline, address(this));
 
@@ -57,7 +52,7 @@ contract ERC1155MarketplaceSwapFacet is Modifiers {
         LibERC1155Marketplace.executeERC1155Listing(listingId, contractAddress, itemId, quantity, priceInWei, recipient, address(this));
 
         // Refund any excess GHST to the recipient using shared library
-        LibTokenSwap.refundExcessGHST(recipient, initialBalance);
+        LibTokenSwap.refundExcessGHST(recipient, ghstReceived, totalCost);
 
         {
             // Emit event in separate scope to avoid stack too deep
