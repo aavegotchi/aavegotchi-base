@@ -46,13 +46,10 @@ contract BuyOrderSwapFacet is Modifiers {
 
         require(params.recipient == msg.sender, "ERC1155BuyOrderSwap: recipient must be msg.sender");
 
-        require(params.recipient != address(0), "ERC1155BuyOrderSwap: recipient cannot be 0 address");
         uint256 totalCost = LibBuyOrder.validateERC1155Params(params.erc1155TokenAddress, params.erc1155TokenId, params.priceInWei, params.quantity);
 
         //assert ghst to be swapped to is enough
         require(params.minGhstOut >= totalCost, "ERC1155BuyOrderSwap: minGhstOut must cover total cost");
-
-        uint256 initialBalance = IERC20(s.ghstContract).balanceOf(address(this));
 
         //perform swap
         uint256 ghstReceived = LibTokenSwap.swapForGHST(params.tokenIn, params.swapAmount, params.minGhstOut, params.swapDeadline, address(this));
@@ -82,7 +79,6 @@ contract BuyOrderSwapFacet is Modifiers {
      */
     function swapAndPlaceERC721BuyOrder(ERC721SwapParams calldata params, bool[] calldata validationOptions) external payable whenNotPaused {
         LibTokenSwap.validateSwapParams(params.tokenIn, params.swapAmount, params.minGhstOut, params.swapDeadline);
-        require(params.recipient != address(0), "ERC721BuyOrderSwap: recipient cannot be 0 address");
 
         require(params.recipient == msg.sender, "ERC721BuyOrderSwap: recipient must be msg.sender");
 
