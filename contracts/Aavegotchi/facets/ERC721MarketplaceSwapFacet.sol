@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.1;
 
-import {LibAppStorage, AppStorage} from "../libraries/LibAppStorage.sol";
 import {LibERC721Marketplace} from "../libraries/LibERC721Marketplace.sol";
 import {LibTokenSwap} from "../libraries/LibTokenSwap.sol";
-import {IERC20} from "../../shared/interfaces/IERC20.sol";
 import {Modifiers} from "../libraries/LibAppStorage.sol";
 
 contract ERC721MarketplaceSwapFacet is Modifiers {
@@ -45,9 +43,6 @@ contract ERC721MarketplaceSwapFacet is Modifiers {
         LibTokenSwap.validateSwapParams(tokenIn, swapAmount, minGhstOut, swapDeadline);
         require(minGhstOut >= priceInWei, "ERC721MarketplaceSwap: minGhstOut must cover price");
 
-        AppStorage storage s = LibAppStorage.diamondStorage();
-        uint256 initialBalance = IERC20(s.ghstContract).balanceOf(address(this));
-
         // Perform token swap to GHST
         uint256 ghstReceived = LibTokenSwap.swapForGHST(tokenIn, swapAmount, minGhstOut, swapDeadline, address(this));
 
@@ -59,7 +54,7 @@ contract ERC721MarketplaceSwapFacet is Modifiers {
         LibERC721Marketplace.executeERC721Listing(listingId, contractAddress, priceInWei, tokenId, recipient, address(this));
 
         // Refund any excess GHST to the recipient using shared library
-        LibTokenSwap.refundExcessGHST(recipient, initialBalance);
+        LibTokenSwap.refundExcessGHST(recipient, ghstReceived, priceInWei);
 
         emit SwapAndPurchase(recipient, tokenIn, swapAmount, ghstReceived, listingId, tokenId, contractAddress);
     }
