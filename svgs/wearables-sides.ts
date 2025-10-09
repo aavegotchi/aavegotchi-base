@@ -167,9 +167,33 @@ export function getExpectedSleeveFilenames(itemIds: number[]): string[] {
 }
 
 export function toCamelCase(name: string) {
-  return name
-    .replace(/(?:^|_)(\w)/g, (_, letter) => letter.toUpperCase())
-    .replace(/[ ']/g, "");
+  const lowercaseWords = new Set(["and", "of", "the"]);
+  const compatMap: Record<string, string> = {
+    // Historical compatibility with old arrays
+    "uGOTCHI Token": "uGOTCHIToken",
+  };
+
+  const trimmed = name.trim();
+  if (compatMap[trimmed]) return compatMap[trimmed];
+
+  return trimmed
+    .split(/[ _]/g)
+    .map((segment) => {
+      if (!segment) return "";
+      // Preserve acronyms/all-caps tokens (ETH, WGMI, H4XX0R)
+      if (/^[A-Z0-9]{2,}$/.test(segment)) return segment;
+      // Preserve leading-lowercase + caps tokens (uGOTCHI)
+      if (/^[a-z][A-Z0-9]{2,}$/.test(segment)) return segment;
+      // Preserve existing mixed/PascalCase tokens with an extra uppercase inside (MessDress, AantenaBot)
+      if (/[A-Z].*[A-Z]/.test(segment)) return segment;
+      // Keep small connector words lowercase (e.g., and, of, the)
+      const lower = segment.toLowerCase();
+      if (lowercaseWords.has(lower)) return lower;
+      // Otherwise TitleCase the segment
+      return lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
+    .join("")
+    .replace(/[’']/g, "");
 }
 
 // Shared configuration for wearable sides
@@ -600,7 +624,7 @@ export const wearablesRightSvgsOld = [
   wearableWithSleevesRight("258_Hanfu"),
   wearable("259_BushyEyebrowsRight"),
   wearable("260_AncientBeardRight"),
-  "261_AantenabotRight",
+  "261_AantenaBotRight",
   wearable("262_RadarEyesRight"),
   wearable("263_SignalHeadsetRight"),
   "264_badge",
@@ -760,6 +784,12 @@ export const wearablesRightSvgsOld = [
   wearableWithSleevesRight("418_BasedShirt"),
   wearable("419_BaseAppRight"),
   wearable("420_JessePollakHairRight"),
+  wearable("421_Base1BGRight"),
+  wearable("422_Base2BGRight"),
+  wearable("423_OgBeachBGRight"),
+  wearable("424_OgFarmerBGRight"),
+  wearable("425_OgVaporwaveBGRight"),
+  wearable("426_OgWizardBGRight"),
 ];
 
 const wearablesBackSvgsOld = [
@@ -1184,6 +1214,12 @@ const wearablesBackSvgsOld = [
   wearableWithSleevesBack("418_BasedShirt"),
   wearable("419_BaseAppBack"),
   wearable("420_JessePollakHairBack"),
+  wearable("421_Base1BGBack"),
+  wearable("422_Base2BGBack"),
+  wearable("423_OgBeachBGBack"),
+  wearable("424_OgFarmerBGBack"),
+  wearable("425_OgVaporwaveBGBack"),
+  wearable("426_OgWizardBGBack"),
 ];
 
 const wearablesLeftSvgsOld = [
@@ -1610,6 +1646,12 @@ const wearablesLeftSvgsOld = [
   wearableWithSleevesLeft("418_BasedShirt"),
   wearable("419_BaseAppLeft"),
   wearable("420_JessePollakHairLeft"),
+  wearable("421_Base1BGLeft"),
+  wearable("422_Base2BGLeft"),
+  wearable("423_OgBeachBGLeft"),
+  wearable("424_OgFarmerBGLeft"),
+  wearable("425_OgVaporwaveBGLeft"),
+  wearable("426_OgWizardBGLeft"),
 ];
 
 const wearablesFrontSvgsOld = [
@@ -2038,6 +2080,12 @@ const wearablesFrontSvgsOld = [
   wearablesWithSleevesFront("418_BasedShirt"),
   wearable("419_BaseApp"),
   wearable("420_JessePollakHair"),
+  wearable("421_Base1BG"),
+  wearable("422_Base2BG"),
+  wearable("423_OgBeachBG"),
+  wearable("424_OgFarmerBG"),
+  wearable("425_OgVaporwaveBG"),
+  wearable("426_OgWizardBG"),
 ];
 
 const sleeveFrontSvgsOld = [

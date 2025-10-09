@@ -298,7 +298,8 @@ async function verifySleeveSvgsOnchain(
 
 async function verifyItemBalances(
   itemIds: number[],
-  hre: any
+  hre: any,
+  recipient: string
 ): Promise<{ verified: number[]; missing: number[] }> {
   const verified: number[] = [];
   const missing: number[] = [];
@@ -313,9 +314,7 @@ async function verifyItemBalances(
       signer
     );
 
-    console.log(
-      `🔍 Checking item balances for forge diamond: ${c.forgeDiamond}`
-    );
+    console.log(`🔍 Checking item balances for recipient: ${recipient}`);
 
     for (const itemId of itemIds) {
       try {
@@ -327,8 +326,8 @@ async function verifyItemBalances(
           continue;
         }
 
-        // Check balance of the forge diamond for this item
-        const balance = await itemsFacet.balanceOf(c.forgeDiamond!, itemId);
+        // Check balance of the recipient for this item
+        const balance = await itemsFacet.balanceOf(recipient, itemId);
         const expectedQuantity = itemType.maxQuantity;
 
         console.log(`📊 Item ${itemId} (${itemType.name}):`);
@@ -712,7 +711,8 @@ export async function confirmChecklist(
 // Separate function for post-deployment onchain verification
 export async function verifyDeploymentOnchain(
   itemIds: number[],
-  hre: any
+  hre: any,
+  recipient: string
 ): Promise<boolean> {
   const shouldVerifyOnchain = await askQuestion(
     "\n🔍 Would you like to verify the data has been successfully uploaded onchain? (y/n): "
@@ -808,8 +808,8 @@ export async function verifyDeploymentOnchain(
   }
 
   // Verify item balances (minted quantities)
-  console.log("🔍 Checking item balances in forge diamond...");
-  const balanceVerification = await verifyItemBalances(itemIds, hre);
+  console.log("🔍 Checking item balances in recipient...");
+  const balanceVerification = await verifyItemBalances(itemIds, hre, recipient);
   if (balanceVerification.verified.length > 0) {
     console.log(
       `✅ Item balances verified: ${balanceVerification.verified.join(", ")}`
