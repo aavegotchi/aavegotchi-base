@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="base" xmlns="http://www.w3.org/2000/svg" width="64" height="64" version="1.1" viewBox="0 0 64 64">
+  <!-- Generator: Adobe Illustrator 29.7.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 8)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: blue;
+      }
+
+      .st1 {
+        fill: #0000b0;
+      }
+    </style>
+  </defs>
+  <rect class="st0" width="64" height="64"/>
+  <g>
+    <path class="st1" d="M16,1h-3v3h3V1Z"/>
+    <path class="st1" d="M8,1h-3v3h3V1Z"/>
+    <path class="st1" d="M4,1h-2V0h-1v4h3V1Z"/>
+    <path class="st1" d="M12,1h-3v3h3V1Z"/>
+    <path class="st1" d="M63,6h-1v4h2v-3h-1v-1Z"/>
+    <path class="st1" d="M63,18h-1v4h2v-3h-1v-1Z"/>
+    <path class="st1" d="M63,30h-1v4h2v-3h-1v-1Z"/>
+    <path class="st1" d="M63,42h-1v4h2v-3h-1v-1Z"/>
+    <path class="st1" d="M34,1h-3v3h3V1Z"/>
+    <path class="st1" d="M26,1h-3v3h3V1Z"/>
+    <path class="st1" d="M22,1h-2V0h-1v4h3V1Z"/>
+    <path class="st1" d="M30,1h-3v3h3V1Z"/>
+    <path class="st1" d="M52,1h-3v3h3V1Z"/>
+    <path class="st1" d="M44,1h-3v3h3V1Z"/>
+    <path class="st1" d="M40,1h-2V0h-1v4h3V1Z"/>
+    <path class="st1" d="M48,1h-3v3h3V1Z"/>
+    <path class="st1" d="M63,1v3h1V1h-1Z"/>
+    <path class="st1" d="M63,16h1v-3h-1v3Z"/>
+    <path class="st1" d="M63,28h1v-3h-1v3Z"/>
+    <path class="st1" d="M63,40h1v-3h-1v3Z"/>
+    <path class="st1" d="M63,51h-1v-2h-3v2h-1v-2h-2v-1h-1v3h-3v-2h-3v2h-1v-2h-3v2h-1v-2h-3v2h-1v-2h-2v-1h-1v3h-3v-2h-3v2h-1v-2h-3v2h-1v-2h-3v2h-1v-2h-2v-1h-1v3h-3v-2h-3v2h-1v-2h-3v2h-1v-2h-3v2h-1v-2h-2v-1h-1v3H0v13h64v-15h-1v2Z"/>
+    <path class="st1" d="M62,1h-3v3h3V1Z"/>
+    <path class="st1" d="M58,1h-2V0h-1v4h3V1Z"/>
+    <path class="st1" d="M2,10h3v-3h-3v3Z"/>
+    <path class="st1" d="M1,7H0v3h1v-3Z"/>
+    <path class="st1" d="M20,10h3v-3h-3v3Z"/>
+    <path class="st1" d="M12,10h3v-3h-3v3Z"/>
+    <path class="st1" d="M8,6v4h3v-3h-2v-1h-1Z"/>
+    <path class="st1" d="M16,10h3v-3h-3v3Z"/>
+    <path class="st1" d="M38,10h3v-3h-3v3Z"/>
+    <path class="st1" d="M30,10h3v-3h-3v3Z"/>
+    <path class="st1" d="M26,6v4h3v-3h-2v-1h-1Z"/>
+    <path class="st1" d="M34,10h3v-3h-3v3Z"/>
+    <path class="st1" d="M56,10h3v-3h-3v3Z"/>
+    <path class="st1" d="M48,10h3v-3h-3v3Z"/>
+    <path class="st1" d="M44,6v4h3v-3h-2v-1h-1Z"/>
+    <path class="st1" d="M52,10h3v-3h-3v3Z"/>
+    <path class="st1" d="M13,16h3v-3h-3v3Z"/>
+    <path class="st1" d="M5,16h3v-3h-3v3Z"/>
+    <path class="st1" d="M1,12v4h3v-3h-2v-1h-1Z"/>
+    <path class="st1" d="M9,16h3v-3h-3v3Z"/>
+    <path class="st1" d="M31,16h3v-3h-3v3Z"/>
+    <path class="st1" d="M23,16h3v-3h-3v3Z"/>
+    <path class="st1" d="M19,12v4h3v-3h-2v-1h-1Z"/>
+    <path class="st1" d="M27,16h3v-3h-3v3Z"/>
+    <path class="st1" d="M49,16h3v-3h-3v3Z"/>
+    <path class="st1" d="M41,16h3v-3h-3v3Z"/>
+    <path class="st1" d="M37,12v4h3v-3h-2v-1h-1Z"/>
+    <path class="st1" d="M45,16h3v-3h-3v3Z"/>
+    <path class="st1" d="M62,13h-3v3h3v-3Z"/>
+    <path class="st1" d="M55,12v4h3v-3h-2v-1h-1Z"/>
+    <path class="st1" d="M2,22h3v-3h-3v3Z"/>
+    <path class="st1" d="M1,19H0v3h1v-3Z"/>
+    <path class="st1" d="M20,22h3v-3h-3v3Z"/>
+    <path class="st1" d="M12,22h3v-3h-3v3Z"/>
+    <path class="st1" d="M8,18v4h3v-3h-2v-1h-1Z"/>
+    <path class="st1" d="M16,22h3v-3h-3v3Z"/>
+    <path class="st1" d="M38,22h3v-3h-3v3Z"/>
+    <path class="st1" d="M30,22h3v-3h-3v3Z"/>
+    <path class="st1" d="M26,18v4h3v-3h-2v-1h-1Z"/>
+    <path class="st1" d="M34,22h3v-3h-3v3Z"/>
+    <path class="st1" d="M56,22h3v-3h-3v3Z"/>
+    <path class="st1" d="M48,22h3v-3h-3v3Z"/>
+    <path class="st1" d="M44,18v4h3v-3h-2v-1h-1Z"/>
+    <path class="st1" d="M52,22h3v-3h-3v3Z"/>
+    <path class="st1" d="M16,25h-3v3h3v-3Z"/>
+    <path class="st1" d="M5,28h3v-3h-3v3Z"/>
+    <path class="st1" d="M1,28h3v-3h-2v-1h-1v4Z"/>
+    <path class="st1" d="M12,25h-3v3h3v-3Z"/>
+    <path class="st1" d="M34,25h-3v3h3v-3Z"/>
+    <path class="st1" d="M23,28h3v-3h-3v3Z"/>
+    <path class="st1" d="M19,28h3v-3h-2v-1h-1v4Z"/>
+    <path class="st1" d="M30,25h-3v3h3v-3Z"/>
+    <path class="st1" d="M52,25h-3v3h3v-3Z"/>
+    <path class="st1" d="M41,28h3v-3h-3v3Z"/>
+    <path class="st1" d="M37,28h3v-3h-2v-1h-1v4Z"/>
+    <path class="st1" d="M48,25h-3v3h3v-3Z"/>
+    <path class="st1" d="M62,25h-3v3h3v-3Z"/>
+    <path class="st1" d="M55,28h3v-3h-2v-1h-1v4Z"/>
+    <path class="st1" d="M5,31h-3v3h3v-3Z"/>
+    <path class="st1" d="M1,31H0v3h1v-3Z"/>
+    <path class="st1" d="M23,31h-3v3h3v-3Z"/>
+    <path class="st1" d="M15,31h-3v3h3v-3Z"/>
+    <path class="st1" d="M8,30v4h3v-3h-2v-1h-1Z"/>
+    <path class="st1" d="M19,31h-3v3h3v-3Z"/>
+    <path class="st1" d="M41,31h-3v3h3v-3Z"/>
+    <path class="st1" d="M33,31h-3v3h3v-3Z"/>
+    <path class="st1" d="M26,30v4h3v-3h-2v-1h-1Z"/>
+    <path class="st1" d="M37,31h-3v3h3v-3Z"/>
+    <path class="st1" d="M59,31h-3v3h3v-3Z"/>
+    <path class="st1" d="M51,31h-3v3h3v-3Z"/>
+    <path class="st1" d="M44,30v4h3v-3h-2v-1h-1Z"/>
+    <path class="st1" d="M55,31h-3v3h3v-3Z"/>
+    <path class="st1" d="M16,37h-3v3h3v-3Z"/>
+    <path class="st1" d="M8,37h-3v3h3v-3Z"/>
+    <path class="st1" d="M1,40h3v-3h-2v-1h-1v4Z"/>
+    <path class="st1" d="M12,37h-3v3h3v-3Z"/>
+    <path class="st1" d="M34,37h-3v3h3v-3Z"/>
+    <path class="st1" d="M26,37h-3v3h3v-3Z"/>
+    <path class="st1" d="M22,37h-2v-1h-1v4h3v-3Z"/>
+    <path class="st1" d="M30,37h-3v3h3v-3Z"/>
+    <path class="st1" d="M52,37h-3v3h3v-3Z"/>
+    <path class="st1" d="M44,37h-3v3h3v-3Z"/>
+    <path class="st1" d="M40,37h-2v-1h-1v4h3v-3Z"/>
+    <path class="st1" d="M48,37h-3v3h3v-3Z"/>
+    <path class="st1" d="M62,37h-3v3h3v-3Z"/>
+    <path class="st1" d="M58,37h-2v-1h-1v4h3v-3Z"/>
+    <path class="st1" d="M5,43h-3v3h3v-3Z"/>
+    <path class="st1" d="M1,43H0v3h1v-3Z"/>
+    <path class="st1" d="M23,45v-2h-3v3h3v-1Z"/>
+    <path class="st1" d="M15,43h-3v3h3v-3Z"/>
+    <path class="st1" d="M11,43h-2v-1h-1v4h3v-3Z"/>
+    <path class="st1" d="M19,43h-3v3h3v-3Z"/>
+    <path class="st1" d="M41,43h-3v3h3v-3Z"/>
+    <path class="st1" d="M33,43h-3v3h3v-3Z"/>
+    <path class="st1" d="M29,43h-2v-1h-1v4h3v-3Z"/>
+    <path class="st1" d="M37,43h-3v3h3v-3Z"/>
+    <path class="st1" d="M59,43h-3v3h3v-3Z"/>
+    <path class="st1" d="M51,43h-3v3h3v-3Z"/>
+    <path class="st1" d="M47,43h-2v-1h-1v4h3v-3Z"/>
+    <path class="st1" d="M55,43h-3v3h3v-3Z"/>
+  </g>
+</svg>

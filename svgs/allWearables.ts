@@ -81,7 +81,7 @@ export const svgMapping: { [key: number]: string } = {
   258: "Hanfu",
   259: "BushyEyebrows",
   260: "AncientBeard",
-  261: "Aantenabot",
+  261: "AantenaBot",
   362: "FakeShirt",
   363: "FakeBeret",
   367: "EyesOfDevotion",

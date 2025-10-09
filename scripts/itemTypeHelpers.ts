@@ -442,8 +442,10 @@ export function calculateRarityScoreModifier(maxQuantity: number): number {
   return 0;
 }
 
-//exclude some tems from traitBooster checklist
-const excludedItems = [0, 26, 100, 105, 126, 127, 128, 129, 210];
+//exclude some items from traitBooster checklist
+const excludedItems = [
+  0, 26, 100, 105, 126, 127, 128, 129, 210, 421, 422, 423, 424, 425, 426,
+];
 
 export function getItemTypes(
   itemTypes: ItemTypeInputNew[],

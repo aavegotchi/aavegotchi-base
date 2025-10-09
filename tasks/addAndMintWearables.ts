@@ -86,11 +86,15 @@ task(
       );
 
       // Upload wearable svgs
-      console.log("Uploading wearable SVGs...");
+      console.log(
+        `🎨 Uploading wearable SVGs for items: ${itemIds.join(", ")}`
+      );
       const wearableGroups = generateWearableGroups(itemIds);
+
       for (const svgGroup of Object.entries(wearableGroups)) {
         const svgData = svgGroup[1] as string[];
         const svgType = svgGroup[0];
+        console.log(`📤 Processing ${svgType} SVGs...`);
         await uploadOrUpdateSvg(
           svgData,
           svgType,
@@ -107,46 +111,38 @@ task(
         .map((item) => item.sleeves)
         .filter((s) => s !== undefined);
 
+      // Add item types (must be done regardless of sleeves)
+      try {
+        console.log(`Adding ${finalItemTypes.length} item types...`);
+        const tx = await daoFacet.addItemTypes(finalItemTypes, gasConfig);
+        await tx.wait();
+        console.log("Item types added in tx:", tx.hash);
+      } catch (error) {
+        console.error("Error adding item types:", error);
+        throw error;
+      }
+
       // Upload sleeve svgs
       if (sleeveIds.length > 0) {
-        console.log("Uploading sleeve SVGs...");
-        const sleeveGroups = generateSleeveGroups(
-          sleeveIds.map((s) => Number(s.sleeveId))
+        const sleeveIdNumbers = sleeveIds.map((s) => Number(s.sleeveId));
+        console.log(
+          `👕 Uploading sleeve SVGs for sleeves: ${sleeveIdNumbers.join(", ")}`
         );
+        const sleeveGroups = generateSleeveGroups(sleeveIdNumbers);
         for (const svgGroup of Object.entries(sleeveGroups)) {
           const svgData = svgGroup[1];
           const svgType = svgGroup[0];
+          console.log(`📤 Processing ${svgType} SVGs...`);
           await uploadOrUpdateSvg(
             svgData,
             svgType,
-            sleeveIds.map((s) => Number(s.sleeveId)),
+            sleeveIdNumbers,
             svgFacet,
             hre.ethers,
             undefined,
             gasConfig
           );
         }
-
-        // Add item types
-        try {
-          console.log(`Adding ${finalItemTypes.length} item types...`);
-          const tx = await daoFacet.addItemTypes(finalItemTypes, gasConfig);
-          await tx.wait();
-          console.log("Item types added in tx:", tx.hash);
-        } catch (error) {
-          console.error("Error adding item types:", error);
-          throw error;
-        }
-
-        // Upload dimensions
-        console.log("Updating item side dimensions...");
-        await hre.run(
-          "updateItemSideDimensions",
-          convertSideDimensionsToTaskFormat(
-            sideViewDimensions,
-            c.aavegotchiDiamond!
-          )
-        );
 
         // Associate sleeves with body wearable svgs
         console.log("Associating sleeves with body wearable SVGs...");
@@ -157,9 +153,21 @@ task(
         );
       }
 
+      // Upload dimensions (must be done regardless of sleeves)
+      console.log("Updating item side dimensions...");
+      await hre.run(
+        "updateItemSideDimensions",
+        convertSideDimensionsToTaskFormat(
+          sideViewDimensions,
+          c.aavegotchiDiamond!
+        )
+      );
+
       // Mint wearables to forge diamond
-      console.log("Minting wearables to forge diamond...");
+      console.log("Minting wearables to recipient...");
       const quantities = itemTypesToAdd.map((item) => item.maxQuantity);
+      //do a table log of the item ids and quantities
+      console.table({ itemIds, quantities });
       const mintTx = await daoFacet.mintItems(
         recipient,
         itemIds,
@@ -167,12 +175,12 @@ task(
         gasConfig
       );
       await mintTx.wait();
-      console.log("Wearables minted to forge diamond");
+      console.log("Wearables minted to recipient");
 
       console.log("✅ All operations completed successfully!");
 
       // Post-deployment verification
-      await verifyDeploymentOnchain(itemIds, hre);
+      await verifyDeploymentOnchain(itemIds, hre, recipient);
 
       //Export SVG of Aavegotchi wearing the new wearables
       console.log("Exporting SVG of Aavegotchi wearing the new wearables...");
