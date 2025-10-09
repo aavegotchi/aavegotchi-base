@@ -784,12 +784,12 @@ export const wearablesRightSvgsOld = [
   wearableWithSleevesRight("418_BasedShirt"),
   wearable("419_BaseAppRight"),
   wearable("420_JessePollakHairRight"),
-  wearable("421_Base1BGRight"),
-  wearable("422_Base2BGRight"),
-  wearable("423_OgBeachBGRight"),
-  wearable("424_OgFarmerBGRight"),
-  wearable("425_OgVaporwaveBGRight"),
-  wearable("426_OgWizardBGRight"),
+  wearable("421_BasedBGRight"),
+  wearable("422_HyperBasedBGRight"),
+  wearable("423_OGBeachBGRight"),
+  wearable("424_OGFarmerBGRight"),
+  wearable("425_OGVaporwaveBGRight"),
+  wearable("426_OGWizardBGRight"),
 ];
 
 const wearablesBackSvgsOld = [
@@ -1214,12 +1214,12 @@ const wearablesBackSvgsOld = [
   wearableWithSleevesBack("418_BasedShirt"),
   wearable("419_BaseAppBack"),
   wearable("420_JessePollakHairBack"),
-  wearable("421_Base1BGBack"),
-  wearable("422_Base2BGBack"),
-  wearable("423_OgBeachBGBack"),
-  wearable("424_OgFarmerBGBack"),
-  wearable("425_OgVaporwaveBGBack"),
-  wearable("426_OgWizardBGBack"),
+  wearable("421_BasedBGBack"),
+  wearable("422_HyperBasedBGBack"),
+  wearable("423_OGBeachBGBack"),
+  wearable("424_OGFarmerBGBack"),
+  wearable("425_OGVaporwaveBGBack"),
+  wearable("426_OGWizardBGBack"),
 ];
 
 const wearablesLeftSvgsOld = [
@@ -1646,12 +1646,12 @@ const wearablesLeftSvgsOld = [
   wearableWithSleevesLeft("418_BasedShirt"),
   wearable("419_BaseAppLeft"),
   wearable("420_JessePollakHairLeft"),
-  wearable("421_Base1BGLeft"),
-  wearable("422_Base2BGLeft"),
-  wearable("423_OgBeachBGLeft"),
-  wearable("424_OgFarmerBGLeft"),
-  wearable("425_OgVaporwaveBGLeft"),
-  wearable("426_OgWizardBGLeft"),
+  wearable("421_BasedBGLeft"),
+  wearable("422_HyperBasedBGLeft"),
+  wearable("423_OGBeachBGLeft"),
+  wearable("424_OGFarmerBGLeft"),
+  wearable("425_OGVaporwaveBGLeft"),
+  wearable("426_OGWizardBGLeft"),
 ];
 
 const wearablesFrontSvgsOld = [
@@ -2080,12 +2080,12 @@ const wearablesFrontSvgsOld = [
   wearablesWithSleevesFront("418_BasedShirt"),
   wearable("419_BaseApp"),
   wearable("420_JessePollakHair"),
-  wearable("421_Base1BG"),
-  wearable("422_Base2BG"),
-  wearable("423_OgBeachBG"),
-  wearable("424_OgFarmerBG"),
-  wearable("425_OgVaporwaveBG"),
-  wearable("426_OgWizardBG"),
+  wearable("421_BasedBG"),
+  wearable("422_HyperBasedBG"),
+  wearable("423_OGBeachBG"),
+  wearable("424_OGFarmerBG"),
+  wearable("425_OGVaporwaveBG"),
+  wearable("426_OGWizardBG"),
 ];
 
 const sleeveFrontSvgsOld = [
