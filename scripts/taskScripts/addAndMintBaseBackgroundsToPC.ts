@@ -4,7 +4,7 @@ import { varsForNetwork } from "../../helpers/constants";
 import { ethers } from "hardhat";
 import { PC_WALLET } from "../geistBridge/paths";
 
-async function addAndMintBaseBackgroundsToPC() {
+export async function addAndMintBaseBackgroundsToPC() {
   const itemIdsArray = [421, 422, 423, 424, 425, 426];
   const itemIds = itemIdsArray.join(",");
 
@@ -23,11 +23,13 @@ async function addAndMintBaseBackgroundsToPC() {
   await run("addAndMintBaseWearables", args);
 }
 
-addAndMintBaseBackgroundsToPC()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+if (require.main === module) {
+  addAndMintBaseBackgroundsToPC()
+    .then(() => process.exit(0))
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
+}
 
 exports.addAndMintBaseBackgroundsToPC = addAndMintBaseBackgroundsToPC;

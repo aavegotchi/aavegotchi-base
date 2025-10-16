@@ -8,6 +8,8 @@ import { getRelayerSigner } from "./helperFunctions";
 import * as readline from "readline";
 import * as fs from "fs";
 import { mine } from "@nomicfoundation/hardhat-network-helpers";
+import { allBadges } from "../svgs/BadgeData";
+import { badge as getBadgeSvg } from "../svgs/allBadges";
 
 function askQuestion(query: string): Promise<string> {
   const rl = readline.createInterface({
@@ -102,8 +104,8 @@ async function verifySvgsOnchain(
       signer
     );
 
-    // Check all wearable side views: front, left, right, back
-    const sideViews = [
+    // For wearables we check 4 views; for badges, only front (wearables)
+    const wearableSideViews = [
       { name: "front", category: "wearables" },
       { name: "left", category: "wearables-left" },
       { name: "right", category: "wearables-right" },
@@ -113,7 +115,12 @@ async function verifySvgsOnchain(
     for (const itemId of itemIds) {
       let itemVerified = true;
 
-      for (const sideView of sideViews) {
+      const isBadge = allBadges.includes(itemId);
+      const sideViewsToCheck = isBadge
+        ? [{ name: "front", category: "wearables" }]
+        : wearableSideViews;
+
+      for (const sideView of sideViewsToCheck) {
         try {
           const svg = await svgFacet.getSvg(
             hre.ethers.utils.formatBytes32String(sideView.category),
@@ -360,7 +367,7 @@ async function verifyItemBalances(
   return { verified, missing };
 }
 
-async function generateWearablePreviews(
+export async function generateWearablePreviews(
   itemIds: number[],
   hre: any
 ): Promise<void> {
@@ -394,9 +401,13 @@ async function generateWearablePreviews(
     // Neutral traits for clean preview
     const numericTraits = [50, 50, 50, 50, 50, 50];
 
+    const badgeIdsForPreview: number[] = [];
+
     for (const itemId of itemIds) {
       try {
         const itemType = itemTypes[itemId];
+        const isBadge = allBadges.includes(itemId);
+
         if (!itemType) {
           console.log(
             `⚠️ Item ${itemId} not found in itemTypes, skipping preview`
@@ -404,49 +415,37 @@ async function generateWearablePreviews(
           continue;
         }
 
-        // Create equipped wearables array with only this item equipped
-        const equippedWearables = [
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        ]; // All slots empty
-
-        // Determine which slot this wearable goes in
-        const slotPosition = getSlotPosition(itemType.slotPositions);
-        if (slotPosition !== -1) {
-          equippedWearables[slotPosition] = itemId;
-        } else {
-          console.log(
-            `⚠️ Unknown slot position '${itemType.slotPositions}' for item ${itemId}, skipping preview`
-          );
+        if (isBadge) {
+          badgeIdsForPreview.push(itemId);
           continue;
         }
 
         console.log(
-          `🎨 Generating 4-view preview for item ${itemId} (${itemType.name}) in slot ${slotPosition}...`
+          `⏭️ Skipping wearable preview generation for item ${itemId} (${itemType.name})`
         );
-
-        // Generate all 4 side view SVGs: [front, left, right, back]
-        const sideViewSvgs = await svgViewsFacet.previewSideAavegotchi(
-          hauntId,
-          collateralType,
-          numericTraits,
-          equippedWearables
-        );
-
-        // Stitch the 4 views together in a 2x2 grid
-        const stitchedSvg = createFourViewPreview(
-          sideViewSvgs,
-          itemId,
-          itemType.name
-        );
-
-        // Write to preview file
-        const filename = `${previewDir}/preview_${itemId}.svg`;
-        fs.writeFileSync(filename, stitchedSvg);
-        console.log(`✅ 4-view preview saved to ${filename}`);
       } catch (error) {
         console.log(
           `❌ Failed to generate preview for item ${itemId}: ${error}`
         );
+      }
+    }
+
+    if (badgeIdsForPreview.length > 0) {
+      console.log(
+        `🎖️ Generating badge preview grid for IDs: ${badgeIdsForPreview.join(
+          ", "
+        )}`
+      );
+
+      const chunkSize = 16;
+      for (let i = 0; i < badgeIdsForPreview.length; i += chunkSize) {
+        const chunk = badgeIdsForPreview.slice(i, i + chunkSize);
+        const badgeGridSvg = createBadgeGridPreview(chunk);
+        const filename = `${previewDir}/preview_badges_${
+          Math.floor(i / chunkSize) + 1
+        }.svg`;
+        fs.writeFileSync(filename, badgeGridSvg);
+        console.log(`✅ Badge grid preview saved to ${filename}`);
       }
     }
   } catch (error) {
@@ -454,17 +453,54 @@ async function generateWearablePreviews(
   }
 }
 
+function extractInnerSvg(svgString: string): string {
+  const match = svgString.match(/<svg[^>]*>(.*)<\/svg>/s);
+  return match ? match[1] : svgString;
+}
+
+function parseBadgeSvg(badgeSvg: string): {
+  innerSvg: string;
+  width: number;
+  height: number;
+  translateX: number;
+  translateY: number;
+} {
+  const viewBoxMatch = badgeSvg.match(
+    /viewBox="([\d.+-]+)\s+([\d.+-]+)\s+([\d.+-]+)\s+([\d.+-]+)"/
+  );
+  const widthAttrMatch = badgeSvg.match(/width="([\d.+-]+)(?:px)?"/i);
+  const heightAttrMatch = badgeSvg.match(/height="([\d.+-]+)(?:px)?"/i);
+
+  const viewBoxX = viewBoxMatch ? parseFloat(viewBoxMatch[1]) : 0;
+  const viewBoxY = viewBoxMatch ? parseFloat(viewBoxMatch[2]) : 0;
+  const viewBoxWidth = viewBoxMatch ? parseFloat(viewBoxMatch[3]) : undefined;
+  const viewBoxHeight = viewBoxMatch ? parseFloat(viewBoxMatch[4]) : undefined;
+
+  const width = viewBoxWidth
+    ? viewBoxWidth
+    : widthAttrMatch
+    ? parseFloat(widthAttrMatch[1])
+    : 64;
+  const height = viewBoxHeight
+    ? viewBoxHeight
+    : heightAttrMatch
+    ? parseFloat(heightAttrMatch[1])
+    : 64;
+  const innerSvg = extractInnerSvg(badgeSvg);
+  return {
+    innerSvg,
+    width,
+    height,
+    translateX: viewBoxX,
+    translateY: viewBoxY,
+  };
+}
+
 function createFourViewPreview(
   sideViewSvgs: string[],
   itemId: number,
   itemName: string
 ): string {
-  // Extract the inner SVG content (remove the outer <svg> wrapper from each view)
-  const extractInnerSvg = (svgString: string): string => {
-    const match = svgString.match(/<svg[^>]*>(.*)<\/svg>/s);
-    return match ? match[1] : svgString;
-  };
-
   const frontSvg = extractInnerSvg(sideViewSvgs[0]);
   const leftSvg = extractInnerSvg(sideViewSvgs[1]);
   const rightSvg = extractInnerSvg(sideViewSvgs[2]);
@@ -502,6 +538,43 @@ function createFourViewPreview(
 </svg>`;
 
   return stitchedSvg;
+}
+
+function createBadgeGridPreview(badgeIds: number[]): string {
+  const columns = 4;
+  const cellSize = 80;
+  const rows = Math.ceil(badgeIds.length / columns) || 1;
+
+  const badgeGroups = badgeIds
+    .map((badgeId, index) => {
+      const badgeSvg = getBadgeSvg(badgeId);
+      if (!badgeSvg) {
+        console.log(`⚠️ Missing badge SVG for ID: ${badgeId}`);
+        return "";
+      }
+
+      const { innerSvg, width, height, translateX, translateY } =
+        parseBadgeSvg(badgeSvg);
+      const col = index % columns;
+      const row = Math.floor(index / columns);
+      const scale = cellSize / Math.max(width, height);
+
+      return `
+  <g transform="translate(${col * cellSize}, ${
+        row * cellSize
+      }) scale(${scale}) translate(${-translateX}, ${-translateY})">
+    ${innerSvg}
+  </g>`;
+    })
+    .join("");
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${
+    columns * cellSize
+  }" height="${rows * cellSize}" viewBox="0 0 ${columns * cellSize} ${
+    rows * cellSize
+  }">
+  ${badgeGroups}
+</svg>`;
 }
 
 function getSlotPosition(slotPositions: string): number {
@@ -637,24 +710,51 @@ export async function confirmChecklist(
     return false;
   }
 
-  // Validate SVG files exist
-  console.log("🔍 Validating wearable SVG files exist...");
-  const expectedWearableFiles = getExpectedWearableFilenames(itemIds);
-  const svgValidation = validateSvgFiles(expectedWearableFiles);
+  // Validate SVG files exist (wearables vs badges)
+  const badgeIds = itemIds.filter((id) => allBadges.includes(id));
+  const wearableIds = itemIds.filter((id) => !allBadges.includes(id));
 
-  if (svgValidation.missing.length > 0) {
-    console.log(`❌ Missing wearable SVG files:`);
-    svgValidation.missing.forEach((file) => console.log(`   - ${file}`));
+  if (wearableIds.length > 0) {
+    console.log("🔍 Validating wearable SVG files exist...");
+    const expectedWearableFiles = getExpectedWearableFilenames(wearableIds);
+    const svgValidation = validateSvgFiles(expectedWearableFiles);
+
+    if (svgValidation.missing.length > 0) {
+      console.log(`❌ Missing wearable SVG files:`);
+      svgValidation.missing.forEach((file) => console.log(`   - ${file}`));
+      console.log(
+        `\nPlease add these SVG files to ./svgs/svgItems/ before proceeding.`
+      );
+      return false;
+    }
+
     console.log(
-      `\nPlease add these SVG files to ./svgs/svgItems/ before proceeding.`
+      `✅ All wearable SVG files found (${svgValidation.found.length} files):`
     );
-    return false;
+    svgValidation.found.forEach((file) => console.log(`   ✓ ${file}`));
+  } else {
+    console.log("ℹ️ No wearable SVGs to validate.");
   }
 
-  console.log(
-    `✅ All wearable SVG files found (${svgValidation.found.length} files):`
-  );
-  svgValidation.found.forEach((file) => console.log(`   ✓ ${file}`));
+  if (badgeIds.length > 0) {
+    console.log("🔍 Validating badge SVG files exist...");
+    const missingBadges: number[] = [];
+    for (const id of badgeIds) {
+      const svg = getBadgeSvg(id);
+      if (!svg || svg.length === 0) {
+        missingBadges.push(id);
+      }
+    }
+    if (missingBadges.length > 0) {
+      console.log(
+        `❌ Missing badge SVGs for IDs: ${missingBadges.join(
+          ", "
+        )}. Ensure SVG files exist in the appropriate svgs/* folders.`
+      );
+      return false;
+    }
+    console.log(`✅ All badge SVGs resolved for IDs: ${badgeIds.join(", ")}`);
+  }
 
   // Step 4: Conditionally ask about sleeves if needed
   if (bodyWearablesWithSleeves.length > 0) {
