@@ -2,12 +2,14 @@ import { task } from "hardhat/config";
 import { Signer } from "@ethersproject/abstract-signer";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import {
-  maticDiamondAddress,
   getDiamondSigner,
   itemManagerAlt,
   gasPrice,
+  getRelayerSigner,
+  baseRelayerAddress,
 } from "../scripts/helperFunctions";
 import { ItemsTransferFacet } from "../typechain";
+import { varsForNetwork } from "../helpers/constants";
 
 export interface AirdropBaadgeTaskArgs {
   maxProcess: string;
@@ -45,6 +47,7 @@ task(
       _ids.push(Number(badgeIds));
       _values.push(1);
 
+      const c = await varsForNetwork(hre.ethers);
       if (Number(maxProcess) >= amountDropped) {
         for (let index = 0; index < awardsArray.length; index++) {
           tokenIds.push(Number(awardsArray[index]));
@@ -57,17 +60,17 @@ task(
       console.log("Batch Ids for airdrop: ", batchIds);
       console.log("tokenids:", tokenIds);
 
-      const signer: Signer = await getDiamondSigner(hre, itemManagerAlt, false);
+      const signer: Signer = await getRelayerSigner(hre);
 
       const itemsTransferFacet = (await hre.ethers.getContractAt(
         "ItemsTransferFacet",
-        maticDiamondAddress,
+        c.aavegotchiDiamond!,
         signer
       )) as ItemsTransferFacet;
 
       const tx = await itemsTransferFacet.batchBatchTransferToParent(
-        itemManagerAlt,
-        maticDiamondAddress,
+        baseRelayerAddress,
+        c.aavegotchiDiamond!,
         tokenIds,
         batchIds,
         batchValues,
