@@ -1,0 +1,3324 @@
+{
+  "diamondAddress": "0xA99c4B08201F2913Db8D28e71d020c4298F29dBF",
+  "chainId": "8453",
+  "network": "hardhat",
+  "blockNumber": 35950652,
+  "blockTimestamp": 1758690650,
+  "facets": [
+    {
+      "facetName": "DiamondCutFacet",
+      "facetAddress": "0xf9EE507d6295ed9A030aDF83DB15419F2d2Bb6B9",
+      "bytecodeHash": "0x8fce9764766994e3129227f022ccc907f116e7599b516214c3f32180b7014a17",
+      "abiHash": "0x102ca19457f131b0c3c4b8e376ddaf39b5951d73a4195928e543dc19a029b80b",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/shared/facets/DiamondCutFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x1f931c1c",
+          "signature": "function diamondCut(tuple(address facetAddress, uint8 action, bytes4[] functionSelectors)[] _diamondCut, address _init, bytes _calldata)",
+          "stateMutability": "nonpayable",
+          "functionName": "function diamondCut"
+        }
+      ],
+      "internalFunctions": [],
+      "events": [
+        {
+          "signature": "event DiamondCut(tuple(address facetAddress, uint8 action, bytes4[] functionSelectors)[] _diamondCut, address _init, bytes _calldata)"
+        }
+      ]
+    },
+    {
+      "facetName": "DiamondLoupeFacet",
+      "facetAddress": "0x413Bb1178b8E376A22A3E38573B65877e390C31e",
+      "bytecodeHash": "0xe035327f6c7a2b70d482ecee7a64312210c62b1b8f3570f618e54d49ad4e34ac",
+      "abiHash": "0xf62746b8f798feb17d45d720aa41b5d63a166b4594d2d2a84f82a6c71a267416",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/shared/facets/DiamondLoupeFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x7a0ed627",
+          "signature": "facets()",
+          "stateMutability": "view",
+          "implementationHash": "0x09bfb8fe196737e4cc235d315bcfb2e75afdf805b2cd42b7b7b4456ffb2fc105",
+          "sourceHash": "0x7823ab4a4daba8a7577d702590ff67641bd0ea83f92f1a50895ce1a9790f859a",
+          "functionName": "facets"
+        },
+        {
+          "selector": "0xadfca15e",
+          "signature": "facetFunctionSelectors(address)",
+          "stateMutability": "view",
+          "implementationHash": "0x3853613279ccb36ae847a17c6532d79bf7d78d41410587120558f3d23e0929d5",
+          "sourceHash": "0xa4a40d549a4321b9217473ce0b07329bdf65646c82cb4b088966bd644a931cb3",
+          "functionName": "facetFunctionSelectors"
+        },
+        {
+          "selector": "0x52ef6b2c",
+          "signature": "facetAddresses()",
+          "stateMutability": "view",
+          "implementationHash": "0x2297ebc3f17b21c134a1ea393c4353611b15b2bf46666c0ef5c8f57881ad353e",
+          "sourceHash": "0xd9bb7644f56f12cde7dfbdb9f28fef63bc253a61a6f49c9d4f296a827466c85b",
+          "functionName": "facetAddresses"
+        },
+        {
+          "selector": "0xcdffacc6",
+          "signature": "facetAddress(bytes4)",
+          "stateMutability": "view",
+          "implementationHash": "0x0ac2460c4708b61e59c7172d979a0a3056fe3a41f3addc73633c4adb7f813c05",
+          "sourceHash": "0xd18736012467e19968fd850fa5a95e32b336158a26dd4d190f664258b697f3b7",
+          "functionName": "facetAddress"
+        },
+        {
+          "selector": "0x01ffc9a7",
+          "signature": "supportsInterface(bytes4)",
+          "stateMutability": "view",
+          "implementationHash": "0x20999504878373149db8b9065076080adac40ec5ba8cdc6794342e1016bd31d8",
+          "sourceHash": "0xa3acdf2163c8e57d5e71b44f14f83baa07a781212a9be5c32a7fa147d7c8a4b6",
+          "functionName": "supportsInterface"
+        }
+      ],
+      "internalFunctions": [],
+      "events": []
+    },
+    {
+      "facetName": "OwnershipFacet",
+      "facetAddress": "0xD0f874eA80E58175BA4e1B171d947EB96165eD00",
+      "bytecodeHash": "0x3b6529143e61cba3d6c2c22bdda7ee21509226693ca8e7d94cb755f0207b0ed2",
+      "abiHash": "0x102ca19457f131b0c3c4b8e376ddaf39b5951d73a4195928e543dc19a029b80b",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/shared/facets/OwnershipFacet.sol",
+      "selectors": [
+        {
+          "selector": "0xf2fde38b",
+          "signature": "transferOwnership(address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xbdebf1ac78a6e4ea7a90f3428fef9dd79bab58c92db20ff51dd20611f261aca9",
+          "sourceHash": "0x8d826881a0e78365da683be959e78ad83f87e7787c3e585416004dda206cb005",
+          "functionName": "transferOwnership"
+        },
+        {
+          "selector": "0x8da5cb5b",
+          "signature": "owner()",
+          "stateMutability": "view",
+          "implementationHash": "0xdfbf897fe82e0087775a528a013ff506f3e8977dd02d9d15757d754512bdb2ab",
+          "sourceHash": "0xe40352c188fc072f2a96ba21da46e2f1be78b334e51dd0aef7a536512d7bfc00",
+          "functionName": "owner"
+        }
+      ],
+      "internalFunctions": [],
+      "events": []
+    },
+    {
+      "facetName": "AavegotchiFacet",
+      "facetAddress": "0x89165bCD984995FA5e5E0C23B1460bdc6102701B",
+      "bytecodeHash": "0x3d9f6ce3764a89975a1e8bd2cdd13ce2840776491486d0ee60d6e557e10e67f3",
+      "abiHash": "0x57a5f20a30d0cbf4e9b70998ceeaff2c6e3737f93c622818c1c4e798a2184eaa",
+      "buildInfoPath": "artifacts/build-info/08cc39c44dcca23fe195cedf24bfa797.json",
+      "sourceName": "contracts/Aavegotchi/facets/AavegotchiFacet.sol",
+      "selectors": [
+        {
+          "selector": "0xb50d6662",
+          "signature": "aavegotchiClaimTime(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x683bc394d29f38601ada0063376856ddee897bf9db5dc657232ffaa78ebb9c7e",
+          "sourceHash": "0xdf33686b40415a46ca638828ed48c0908676cdb9281c6c5028d581d22f4eee05",
+          "functionName": "aavegotchiClaimTime"
+        },
+        {
+          "selector": "0x33dc83b1",
+          "signature": "allAavegotchisOfOwner(address)",
+          "stateMutability": "view",
+          "implementationHash": "0xd101b29690b4469b32bc3eb2686aa3886f431a7ca2689174fa48f0728e5830aa",
+          "sourceHash": "0x64d5e7d2f9f4c9085694d20a1174314586169e7b605796d1a0fee3d3955ac725",
+          "functionName": "allAavegotchisOfOwner"
+        },
+        {
+          "selector": "0x095ea7b3",
+          "signature": "approve(address,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xf5935fb7a4231e1906a9ed4aa8c777eb1e973c8cb5b846fe3ec4fd2e3871aa5e",
+          "sourceHash": "0x9103834aed4dc31ecfa73e1ffaca7a7fec223c53fbfcc6f2022e25a8930c4e74",
+          "functionName": "approve"
+        },
+        {
+          "selector": "0x70a08231",
+          "signature": "balanceOf(address)",
+          "stateMutability": "view",
+          "implementationHash": "0xaf3dd56c5a3a45c32bbcea24b180a2b12fcfc53e4a9b17db796f5984803fe04a",
+          "sourceHash": "0xc7a0c671da2e019401831782bfeb05aa87c99066ba2460f48f9d9830b048d171",
+          "functionName": "balanceOf"
+        },
+        {
+          "selector": "0x47942c67",
+          "signature": "batchGetBridgedAavegotchi(uint256[])",
+          "stateMutability": "view",
+          "implementationHash": "0xed3aae4cfd40b399375db87d5d6c1ccb92a4ede7ca1df269b1183b8c92ecb9cd",
+          "sourceHash": "0xbd6c1d14105911184c337f17bd6110f60f5c9b484a065a6f4b607ffefd1532ae",
+          "functionName": "batchGetBridgedAavegotchi"
+        },
+        {
+          "selector": "0x186a58ca",
+          "signature": "batchOwnerOf(uint256[])",
+          "stateMutability": "view",
+          "implementationHash": "0x2eccec879472f40f54758218b4bf1bb8a1d11dacf60a4419cd8006c768792664",
+          "sourceHash": "0x977af9d2bc33482a33fc9de08b9127d18968e0ee0b00c574f6db1c51c7241d9a",
+          "functionName": "batchOwnerOf"
+        },
+        {
+          "selector": "0x37c1d569",
+          "signature": "getAavegotchi(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x0af97a3b7fa327ec7bcfe1a6a734141e72d4a4de6b01f263cad3af191b11c16f",
+          "sourceHash": "0x8d33f87aa84d37ee642cfd7fc82d65e53986104702d002197f7301237c37b348",
+          "functionName": "getAavegotchi"
+        },
+        {
+          "selector": "0x081812fc",
+          "signature": "getApproved(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0xf2865e0597cd2b402ffe1d48791700f28ee1a209f4a4187673b0ae0fe682ca29",
+          "sourceHash": "0xded173d8cb21ff02390d07fcb3ebf7616d1f82a1c9e194f5e95ec7e48d483fe3",
+          "functionName": "getApproved"
+        },
+        {
+          "selector": "0xe985e9c5",
+          "signature": "isApprovedForAll(address,address)",
+          "stateMutability": "view",
+          "implementationHash": "0xac840e9f2e04d9e9f269526550e09620276de01cdc955e7ad575063e56016fdb",
+          "sourceHash": "0x07f7f33bef92d6342fd893c7b82ac9328f42320a3951486411e5c1697f3f9c58",
+          "functionName": "isApprovedForAll"
+        },
+        {
+          "selector": "0xd7358fea",
+          "signature": "isPetOperatorForAll(address,address)",
+          "stateMutability": "view",
+          "implementationHash": "0x163c69932a11df386482c5a6c3083fe2b19688e09ceb31613bc8ebcddcaf14d8",
+          "sourceHash": "0x8c26dea6b1a89f602331fb68dc3ca94fa75094716fe200476021638f8459f260",
+          "functionName": "isPetOperatorForAll"
+        },
+        {
+          "selector": "0x06fdde03",
+          "signature": "name()",
+          "stateMutability": "pure",
+          "implementationHash": "0xf03e0910676f94ec70b9e5ae8f02c1b17a5362025a33f83995a72126cab2f6f2",
+          "sourceHash": "0xd6a1cbcdbd8d1289c8857c646c49b2f7dbb472b09afe18690c0735bb15781d30",
+          "functionName": "name"
+        },
+        {
+          "selector": "0x6352211e",
+          "signature": "ownerOf(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x571f786ef3125995580da9fd0b4b6eeca5918f6d038963046b3eb96317b830d2",
+          "sourceHash": "0x597f796948245efe97fe154ca061edab405f436ccc6b8b4c8b0b5a15570c6180",
+          "functionName": "ownerOf"
+        },
+        {
+          "selector": "0x28cfbd46",
+          "signature": "safeBatchTransferFrom(address,address,uint256[],bytes)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x8aa3804ca0e1ff45ba75a8de4beab6ae5529a0c8ee7774e38e97ac2f0f269b98",
+          "sourceHash": "0xbb65c3b7820338746c739c7e80d55374d7bed1a7beed6b79416b11fb050f7460",
+          "functionName": "safeBatchTransferFrom"
+        },
+        {
+          "selector": "0x42842e0e",
+          "signature": "safeTransferFrom(address,address,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xe4109629b18ed864c6ad4c5f300439ff58e65b9811e5f600e0feee545da9c0a9",
+          "sourceHash": "0x8ffad0e42a9ad5d66e78648c68099193b01100700665eadeadd41490a27cff32",
+          "functionName": "safeTransferFrom"
+        },
+        {
+          "selector": "0xb88d4fde",
+          "signature": "safeTransferFrom(address,address,uint256,bytes)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xfba66cf6ec7b9744eee7b147a6eac3161a13aa627ed63d19dde34abd378c49b8",
+          "sourceHash": "0x900b4e87a0d1193a65e1ebdd9ea12cd592c33a743772e1f6e44f61eea083cd0d",
+          "functionName": "safeTransferFrom"
+        },
+        {
+          "selector": "0xa22cb465",
+          "signature": "setApprovalForAll(address,bool)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xc603d42a91cb24ea54566030d0ad8924d43355a70bc31d8b9f8c54e8a0ba4522",
+          "sourceHash": "0x26e492354a12240fa183b5ddf9e3b66b30e4952e9064a6df5448420dc4d29657",
+          "functionName": "setApprovalForAll"
+        },
+        {
+          "selector": "0xcd675d57",
+          "signature": "setPetOperatorForAll(address,bool)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x205c6e5b1beab34746dcde99e3db45b486dd8f5b89c4fa0bd00d10890a65e6f2",
+          "sourceHash": "0xc18dfef94f69e756db3d36d8c97ddd8f9f5804a5e84f0321882bcff656c09121",
+          "functionName": "setPetOperatorForAll"
+        },
+        {
+          "selector": "0x95d89b41",
+          "signature": "symbol()",
+          "stateMutability": "pure",
+          "implementationHash": "0x9e0679cc4819356d599a947b6cd9c1a009df329820352486f6211f8589c26803",
+          "sourceHash": "0x3c16c6f6ae5342dc8ec5c302b643bb52d097acef66434cbdd88fabd2d348046b",
+          "functionName": "symbol"
+        },
+        {
+          "selector": "0x4f6ccce7",
+          "signature": "tokenByIndex(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x99e7726ce2d7cf338610d617af99dc03b8a1f4623d2b43a170268f69de68f945",
+          "sourceHash": "0xdb1364e9d88db0bfa1dd82a7c81bff8c9f1caad6b28b8a7d7291ca81a2cad630",
+          "functionName": "tokenByIndex"
+        },
+        {
+          "selector": "0x9e59e598",
+          "signature": "tokenIdsOfOwner(address)",
+          "stateMutability": "view",
+          "implementationHash": "0xf0ad1a3f9698910ee315dea9cfc3288fbe508153e6cb14ac2570fb5c7eaf3323",
+          "sourceHash": "0x2d7295eb80a659e91fa6ef2f0df91551bc0a9dc9c16e25b5ad153079883f442d",
+          "functionName": "tokenIdsOfOwner"
+        },
+        {
+          "selector": "0x2f745c59",
+          "signature": "tokenOfOwnerByIndex(address,uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x6ca68049702cf30229752b8d671b14fc801e97632009f47ac4970fc36aa144a9",
+          "sourceHash": "0xcc8ea9e7a40b8f01eaa81984bba4404b4bc9402574ea26bf9535ee219fe3f627",
+          "functionName": "tokenOfOwnerByIndex"
+        },
+        {
+          "selector": "0xc87b56dd",
+          "signature": "tokenURI(uint256)",
+          "stateMutability": "pure",
+          "implementationHash": "0xa1303892a9ff19b082d8ef7f651bfd6882098076cb3c2e964ea34694010de7f6",
+          "sourceHash": "0x2984e86355ff4a1b3b64db2951560bc91ec2e753841422f16e41e90f6dc2c576",
+          "functionName": "tokenURI"
+        },
+        {
+          "selector": "0x18160ddd",
+          "signature": "totalSupply()",
+          "stateMutability": "view",
+          "implementationHash": "0xa2dbc5ce079d66426dcc7021e06faadf60691d00af7df667555c8888e1f78322",
+          "sourceHash": "0xb57d69e6560065eac22eff868b658f16c011a5883cadaeb59a5d8ecb392703c4",
+          "functionName": "totalSupply"
+        },
+        {
+          "selector": "0x23b872dd",
+          "signature": "transferFrom(address,address,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xd8c60eeb101f06bf7e4b82ef39c6f3827dc990e579be702dc5ce3803fbbc2d75",
+          "sourceHash": "0xc2546875b411b4399d3f797c3014c72c93dcf8e7d0011e5a530a4df9edda27cc",
+          "functionName": "transferFrom"
+        }
+      ],
+      "internalFunctions": [
+        {
+          "name": "_enforceAavegotchiNotEquippedWithDelegatedItems",
+          "visibility": "internal",
+          "signature": "internal function _enforceAavegotchiNotEquippedWithDelegatedItems(uint256 _tokenId) view",
+          "contentHash": "0x6a6600ef47c6301fbaf12a6a2d95f12ed78f387813809990c06f7725b19aeb8d",
+          "sourceHash": "0x6573234b86f866eac894ce77db2613714b882b22d7ec88d93b0d08c4ad17e9db"
+        },
+        {
+          "name": "_enforceAavegotchiNotForging",
+          "visibility": "internal",
+          "signature": "internal function _enforceAavegotchiNotForging(uint256 _tokenId)",
+          "contentHash": "0xb38a77ec094c532bccad87896b364a3a6831488b3baba0a512a02f849ab05d1f",
+          "sourceHash": "0x9bf382051ecdecb47efe8428edf0004b062235159692656ad972a1e7347c35a2"
+        },
+        {
+          "name": "internalTransferFrom",
+          "visibility": "internal",
+          "signature": "internal function internalTransferFrom(address _sender, address _from, address _to, uint256 _tokenId)",
+          "contentHash": "0xf22d47ab0b6d2a8a81f26de5dbfdb3e957a4ad94379d758f53e9fbcea50d8a67",
+          "sourceHash": "0x3af7120b5fe2119dcc8615afa0e410a915ea8d55eed9143a1fab8e1d43d4c7ab"
+        }
+      ],
+      "events": [
+        {
+          "signature": "event PetOperatorApprovalForAll(address indexed _owner, address indexed _operator, bool _approved)"
+        }
+      ]
+    },
+    {
+      "facetName": "AavegotchiGameFacet",
+      "facetAddress": "0xb7ef8752398476977B924Acf5ef015c6cE71bA12",
+      "bytecodeHash": "0x093aa44147136a090a859262d6188faf683126ac2cb92d5bf530fa069fc4d0a1",
+      "abiHash": "0xa1a2e7927ee95123000a66e18c2b1e1b2a5e8448fc030aac3a5fe2ddb4874c60",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/AavegotchiGameFacet.sol",
+      "selectors": [
+        {
+          "selector": "0xf98dc1e0",
+          "signature": "aavegotchiLevel(uint256)",
+          "stateMutability": "pure",
+          "implementationHash": "0xffd53e9aca03a026ad6f3836bff3d410b199c58ffad682c2af0f55b1025e74ec",
+          "sourceHash": "0xc43a3599e110b7f7a8eefe12c703886e8f3a74ebf223740c57eac5143f9a3b6c",
+          "functionName": "aavegotchiLevel"
+        },
+        {
+          "selector": "0xf1567e24",
+          "signature": "aavegotchiNameAvailable(string)",
+          "stateMutability": "view",
+          "implementationHash": "0x3b274eb6b516666ad9ca226982b6bd0fd55a5de0f0de23b9840380a47d3b66ce",
+          "sourceHash": "0xfdaada4d1a85a7685075397eebcd30c97cf67aaf6c832812035c42f15d7a337e",
+          "functionName": "aavegotchiNameAvailable"
+        },
+        {
+          "selector": "0xa4c366fe",
+          "signature": "availableSkillPoints(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x4111fca75b05306fc5802360ac1fbb8121ea5be3cbae7964392980e1aa9062a6",
+          "sourceHash": "0x3b301e4016c8bbe753da6d919705704de3195b125b4cf67fc71b6930e06e17bc",
+          "functionName": "availableSkillPoints"
+        },
+        {
+          "selector": "0x9abf6c51",
+          "signature": "baseRarityScore(int16[6])",
+          "stateMutability": "pure",
+          "implementationHash": "0x6abddbc9491db14ba4048451d65e82758b25444a52ec0d229a5166a255832008",
+          "sourceHash": "0x64bbb791bf127a99d066795f3fe891757b01236edacc5077e341eb3535dd8cd9",
+          "functionName": "baseRarityScore"
+        },
+        {
+          "selector": "0x0b072da5",
+          "signature": "claimAavegotchi(uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xb8890983bfa99f9c8355543007769d9f0b3c3b6f9fbe70fd3e3c7cc9aff43460",
+          "sourceHash": "0x80547bc296643ca1654fe025eb357502bb88b50eb5a97a1ae48ffbc3f5fe07bd",
+          "functionName": "claimAavegotchi"
+        },
+        {
+          "selector": "0x1c2500ff",
+          "signature": "currentHaunt()",
+          "stateMutability": "view",
+          "implementationHash": "0x948481a749f176b766198aeab153a0c9e7660bf022d40abae8838794cf74500c",
+          "sourceHash": "0xf229bd80c32d6b5c8749533834d8f647b5d0849cb20f0cc58783eaa59bbd1a38",
+          "functionName": "currentHaunt"
+        },
+        {
+          "selector": "0xaed69215",
+          "signature": "getGotchiBaseNumericTraits(uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0xe4d2401eab22abb0d1f7d51ffbe059f036107aea7b1e0f56e4c3e6d70248d47d",
+          "sourceHash": "0x2f5ef89630e1fda861fa763d58e5b507a1104f99d06fd201c9feaa140bce3103",
+          "functionName": "getGotchiBaseNumericTraits"
+        },
+        {
+          "selector": "0xfa5f5295",
+          "signature": "getNumericTraits(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x798529be747cacf791470b50a1a13bead2f45c83ab58e361c5269223029aa0c5",
+          "sourceHash": "0x2f046886e355dd33d5692c19399afe7f38ba5adf909e339b3e4d0275529f60e8",
+          "functionName": "getNumericTraits"
+        },
+        {
+          "selector": "0xa70135c2",
+          "signature": "ghstAddress()",
+          "stateMutability": "view",
+          "implementationHash": "0x1c8f4471bf35ee105379efa9435f647b2eddddfcf24ac0c2147bac82a2421f17",
+          "sourceHash": "0x6aba4ae4e4b14405ee424738cd50e879b130b612a3b077e28cdf3bd8cd65f731",
+          "functionName": "ghstAddress"
+        },
+        {
+          "selector": "0x22c67519",
+          "signature": "interact(uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xd7b519b2b814bbc468e8907248f381dd2732ddb3aca42cef3c59c62f3a8d8d09",
+          "sourceHash": "0x576a787c1a35da643f41d9710410f22e65de06d2de13d93752293419bc83ad2c",
+          "functionName": "interact"
+        },
+        {
+          "selector": "0xe0fa4945",
+          "signature": "isAavegotchiLocked(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x58ac1feb1f00b6b33754e20d3a49a4e4b9f71c3cb1f924b190633e0dfad3eb3b",
+          "sourceHash": "0x5a8c20f284d5321fd76419de074f4a3d52a94ea4ebd56a30d5e923a9375c5a2b",
+          "functionName": "isAavegotchiLocked"
+        },
+        {
+          "selector": "0xf5b91852",
+          "signature": "kinship(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x71bb6091655125f62b18e02dc742b4f0b3449ec07dda4378e77807e79badcdc0",
+          "sourceHash": "0xd397b979b23cbf99fdfd8012579f4016a36b6f10d422beebfefececdedfc530c",
+          "functionName": "kinship"
+        },
+        {
+          "selector": "0xfffebb41",
+          "signature": "modifiedTraitsAndRarityScore(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0xe0442423e35b176772f16e3048d603a197267cc3552448db4b4e82f43b4de084",
+          "sourceHash": "0x27a2d5b0c99cfaf9bbf35d40b451d8b3ecc374e1d2943193c19b24036b05085d",
+          "functionName": "modifiedTraitsAndRarityScore"
+        },
+        {
+          "selector": "0x28e8c193",
+          "signature": "portalAavegotchiTraits(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0xc8471de8f8552311382995e14985119af0e967b3ffe60033f150670b08743d3d",
+          "sourceHash": "0x056d19e3df5bc3d160f9e7469f86584f44e65f555d71dcd2d1c55f80e6fa6199",
+          "functionName": "portalAavegotchiTraits"
+        },
+        {
+          "selector": "0x09cbaf06",
+          "signature": "rarityMultiplier(int16[6])",
+          "stateMutability": "pure",
+          "implementationHash": "0xedfcf1bf0be725a1d27a38d899514d82f99c53f872361b040c75d194af35f012",
+          "sourceHash": "0x4b1145158293ed2f1e8bc9ff5182bfe5e8ee679e386c10c8e8796e02f9cdfed4",
+          "functionName": "rarityMultiplier"
+        },
+        {
+          "selector": "0xaab6e056",
+          "signature": "reduceKinshipViaChanneling(uint32)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x02ba269cc7b9f88fa4ee57574b4929143bd6f40f5e6138b2a9de1182a9a3d967",
+          "sourceHash": "0xe93bd42678a4361f6f636454a9d6a42e5fa9c8ea8447af32827046d870c612d8",
+          "functionName": "reduceKinshipViaChanneling"
+        },
+        {
+          "selector": "0x4dbf60d2",
+          "signature": "resetSkillPoints(uint32)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x3bcc5aeafd6fb180bcf108e8695bd2d2f992ac9dbb2b036bd3f5b1205e75646d",
+          "sourceHash": "0x4bd375bf956b464b44aa84aa83b1e7ba84106d2ac66d0b7d52a884e32beee3a4",
+          "functionName": "resetSkillPoints"
+        },
+        {
+          "selector": "0xa6555cdf",
+          "signature": "respecCount(uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0xa72fcd63363e6843c55d88424955da48ddbdbc11204a7932bd9da1dbdb37dcab",
+          "sourceHash": "0x34c73ab8c271a6a08932d13674b9ae6a7278e826500b184417c4a040763fdbce",
+          "functionName": "respecCount"
+        },
+        {
+          "selector": "0xf6f518c6",
+          "signature": "revenueShares()",
+          "stateMutability": "view",
+          "implementationHash": "0x8a12e949247699a19609e62af6fa60e48c9db67c3feacb49603897d0929e0d3a",
+          "sourceHash": "0x27c0b51934377422321bf52c205cd83261bc0dbaa73ebbf2cdb7af364139bd4c",
+          "functionName": "revenueShares"
+        },
+        {
+          "selector": "0xea7dac7f",
+          "signature": "setAavegotchiName(uint256,string)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xbfbf7146b5e6044507c62fee23c53a7566b6173378c13f33bd3ea4cf2d559307",
+          "sourceHash": "0xf7de5f2324719517bc07a302ab34c2008f2a1aa1f22630d3fd47e3c9de9272fe",
+          "functionName": "setAavegotchiName"
+        },
+        {
+          "selector": "0xda0b0b67",
+          "signature": "setPixelCraft(address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xbf53263c30e17407d2dfce7c17a926b1be5bbc5f11871d2952935b8ac69d720d",
+          "sourceHash": "0xcbe4a8d8e03e5a1a9288959d9742b55c1a8947f83701bd05067bd8c47d284d82",
+          "functionName": "setPixelCraft"
+        },
+        {
+          "selector": "0x874ca042",
+          "signature": "setRealmAddress(address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xa3e3892cb071d40816746602c311c5a50aa09d1c5cd4db3e93d92ef71fb85c17",
+          "sourceHash": "0x0ab30b75f9ed5d917b954e0b3ac84bd31cab5576abc527b59a88dff8ef80ff2d",
+          "functionName": "setRealmAddress"
+        },
+        {
+          "selector": "0xb8107d7c",
+          "signature": "setRelayerPetter(address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x61f13e6ccda2b25b6c689938af372a4a88573169253bae7ea0b9e175879e678e",
+          "sourceHash": "0xaa39eb68d8e71cae106f425a9ad64ad76c2ecd2f83cd9e730f34435f8a1297e2",
+          "functionName": "setRelayerPetter"
+        },
+        {
+          "selector": "0xc889dfc4",
+          "signature": "spendSkillPoints(uint256,int16[4])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xd12c5a04c7e651e00508946164f752bae2279b7dc7d5de7d467f18e6f81ea241",
+          "sourceHash": "0x6e7beda59f62e685d68672bae40f6ac74db66b82c3091c63fa62b2b391d1e9bf",
+          "functionName": "spendSkillPoints"
+        },
+        {
+          "selector": "0x1436d4b1",
+          "signature": "tokenIdsWithKinship(address,uint256,uint256,bool)",
+          "stateMutability": "view",
+          "implementationHash": "0xd41d59481eaf975af1b780393657990f34830132c2baa84066a7297939a76ddc",
+          "sourceHash": "0x5f073394f0bbe6bc10d54892c6b69318ec60fd677dc06f729334372f04fc79ad",
+          "functionName": "tokenIdsWithKinship"
+        },
+        {
+          "selector": "0x82401ccd",
+          "signature": "xpUntilNextLevel(uint256)",
+          "stateMutability": "pure",
+          "implementationHash": "0xf7ab7da8a0652448d281edb52139fe304f7714ee96ac55ccef9efe0d5e95cb1d",
+          "sourceHash": "0xbbd608132a4be63ea90f8736715fde7dbf048f4ca0df2fd72bfe6ea16ae2874a",
+          "functionName": "xpUntilNextLevel"
+        }
+      ],
+      "internalFunctions": [
+        {
+          "name": "_calculateSkillPoints",
+          "visibility": "internal",
+          "signature": "internal function _calculateSkillPoints(uint256 _tokenId) view returns (uint256)",
+          "contentHash": "0x5554f62624ee53775e521548ef7441e677ca6f5812a4e2afa0fa97bad6f9540f",
+          "sourceHash": "0xea5a6b8bfd6ef66b3d98296aeeeb0aa2d75a2d84277c6de4069538a60dc2eaa7"
+        },
+        {
+          "name": "_skillPointsByAge",
+          "visibility": "internal",
+          "signature": "internal function _skillPointsByAge(uint256 _age) pure returns (uint256)",
+          "contentHash": "0x1ad9d977f386124af2b5ea26c0a4e0fb2ac4b399a74c950b6cd811becc9ccd13",
+          "sourceHash": "0xec10788e6aa6a33e71afab0b1e02a7cacfe66ed1463b6a082bd5ced8c69f76c5"
+        }
+      ],
+      "events": [
+        {
+          "signature": "event ClaimAavegotchi(uint256 indexed _tokenId)"
+        },
+        {
+          "signature": "event LockAavegotchi(uint256 indexed _tokenId, uint256 _time)"
+        },
+        {
+          "signature": "event ResetSkillpoints(uint256 indexed _tokenId)"
+        },
+        {
+          "signature": "event SetAavegotchiName(uint256 indexed _tokenId, string _oldName, string _newName)"
+        },
+        {
+          "signature": "event SetBatchId(uint256 indexed _batchId, uint256[] tokenIds)"
+        },
+        {
+          "signature": "event SpendSkillpoints(uint256 indexed _tokenId, int16[4] _values)"
+        },
+        {
+          "signature": "event UnLockAavegotchi(uint256 indexed _tokenId, uint256 _time)"
+        }
+      ]
+    },
+    {
+      "facetName": "SvgFacet",
+      "facetAddress": "0xF61C307a35852df02caBeE2034604C2193CF02A8",
+      "bytecodeHash": "0xee1463878793b6764e1229ce39bcd0c7f30749c7f956e837b63036bbe08222be",
+      "abiHash": "0x85d3805d49cd18916dd8091fde714040d6220976e807e28ffdc261fa433a05c9",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/SvgFacet.sol",
+      "selectors": [
+        {
+          "selector": "0xfd91838f",
+          "signature": "deleteLastSvgLayers(bytes32,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xab7a634d5b7e814331fa9c85cb1e017dc548701d158df87cec08261ef37b8113",
+          "sourceHash": "0xa7f8a4e5b2fc231cd8f92cd259a5f9fa8018fb5ffc8ee55edc11ad9478bd851f",
+          "functionName": "deleteLastSvgLayers"
+        },
+        {
+          "selector": "0x945f4e24",
+          "signature": "getAavegotchiSvg(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x933cbe93ea24251ae3474a1267eaceff005e11439e944f3773f6cc120550f5a3",
+          "sourceHash": "0x2b7056f12935b890412a210c5646536e9d7605fadeee739e7b3a6e03c5607ca1",
+          "functionName": "getAavegotchiSvg"
+        },
+        {
+          "selector": "0x17c50d2c",
+          "signature": "getItemSvg(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x4cc19ee760c6bf09278f6896cd2ca2562f1c2579305fc513585b355339905bd0",
+          "sourceHash": "0x1ccf5b08c65801ffbd6542f374e60beb1a8a55ec7a0f2e3e8798ce2998d61ba5",
+          "functionName": "getItemSvg"
+        },
+        {
+          "selector": "0x2c63a834",
+          "signature": "getNextSleeveId()",
+          "stateMutability": "view",
+          "implementationHash": "0x31147bbcd251f76c46090e611dc06caf4dd1b8deeb986905b536d851977dedde",
+          "sourceHash": "0x8f3b145d0fd438eed8b097fe3731886635bc07e88039da53a5d796abee931c29",
+          "functionName": "getNextSleeveId"
+        },
+        {
+          "selector": "0x1d6bdfee",
+          "signature": "getSleeveAssociations(uint256[])",
+          "stateMutability": "view",
+          "implementationHash": "0x8a18d51aae2d86b0cabf3caf8163150e54d9f80aca74388a25ca9d2dcef82f08",
+          "sourceHash": "0x64f7351e5f3656618f92c07c60d6ae9f72541cc5980060859e016ef05ef4b8f2",
+          "functionName": "getSleeveAssociations"
+        },
+        {
+          "selector": "0xf300633d",
+          "signature": "getSvg(bytes32,uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x09c206ad17f1e24058ca43bd4db9b676af96a401cb6c2adc2ce0ee075aa31eab",
+          "sourceHash": "0x688c5491a1334fdd46d3bcb32de6880788a3b7600b06f5085081ea074405122c",
+          "functionName": "getSvg"
+        },
+        {
+          "selector": "0x88254c7c",
+          "signature": "getSvgs(bytes32,uint256[])",
+          "stateMutability": "view",
+          "implementationHash": "0x46fd2505c2ccb7b6552b3b4cbff586ceca00daba3946245ad34cad50eb192864",
+          "sourceHash": "0x9ab4c2a0be1b4c951f39b8220529a55efac064ed738309eac1b045a11c0ac61d",
+          "functionName": "getSvgs"
+        },
+        {
+          "selector": "0x6a646f34",
+          "signature": "portalAavegotchisSvg(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x26dec80d42787fb619d9a29b49515a8b14783b99ecf9964dd24eda94ca0b2309",
+          "sourceHash": "0x3709a26a9120a1449d160471ecacff7505869f1e33dc731f9c729dc2f1d85aec",
+          "functionName": "portalAavegotchisSvg"
+        },
+        {
+          "selector": "0x295041f0",
+          "signature": "previewAavegotchi(uint256,address,int16[6],uint16[16])",
+          "stateMutability": "view",
+          "implementationHash": "0x88ad68f9a734434433cfe99275b91264c6c173e53cb28b0959263cdc0b53198b",
+          "sourceHash": "0xb8ace633ad03e5fea113e97c502e822cb48066bb5b7805dc1a209fbfd3e28ebf",
+          "functionName": "previewAavegotchi"
+        },
+        {
+          "selector": "0xea9fd8e8",
+          "signature": "function setItemsDimensions(uint256[] _itemIds, tuple(uint8 x, uint8 y, uint8 width, uint8 height)[] _dimensions)",
+          "stateMutability": "nonpayable",
+          "functionName": "function setItemsDimensions"
+        },
+        {
+          "selector": "0x082b571a",
+          "signature": "function setSleeves(tuple(uint256 sleeveId, uint256 wearableId)[] _sleeves)",
+          "stateMutability": "nonpayable",
+          "functionName": "function setSleeves"
+        },
+        {
+          "selector": "0x36f21983",
+          "signature": "function storeSvg(string _svg, tuple(bytes32 svgType, uint256[] sizes)[] _typesAndSizes)",
+          "stateMutability": "nonpayable",
+          "functionName": "function storeSvg"
+        },
+        {
+          "selector": "0x2f7f5bb1",
+          "signature": "function updateSvg(string _svg, tuple(bytes32 svgType, uint256[] ids, uint256[] sizes)[] _typesAndIdsAndSizes)",
+          "stateMutability": "nonpayable",
+          "functionName": "function updateSvg"
+        }
+      ],
+      "internalFunctions": [
+        {
+          "name": "addBodyAndWearableSvgLayers",
+          "visibility": "internal",
+          "signature": "internal function addBodyAndWearableSvgLayers(bytes memory _body, uint16[16] memory equippedWearables) view returns (bytes svg_)",
+          "contentHash": "0x6b5fbeb399bdbf3f3739649523a1280a057b1de64991db5ff10ed127704b1f9d",
+          "sourceHash": "0xbdd085778fe3651c6f4676603f98934da7c5eb3ce7152559bb4780b55aea419e"
+        },
+        {
+          "name": "applyFrontLayerExceptions",
+          "visibility": "internal",
+          "signature": "internal function applyFrontLayerExceptions(uint16[16] memory equippedWearables, struct SvgFacet.AavegotchiLayers memory layers, bytes memory _body) view returns (bytes svg_)",
+          "contentHash": "0x1f8697f022053e39ab58a0c86ccfe27e90ba0acf35700f1e888ca729d6b27cd5",
+          "sourceHash": "0x385ff577b32d2e273a6a326b6ca717bb9e7ee8ac7bbb230a6a5786715645bd3b"
+        },
+        {
+          "name": "applyStyles",
+          "visibility": "internal",
+          "signature": "internal function applyStyles(struct SvgFacet.SvgLayerDetails memory _details, uint256 _tokenId, uint16[16] memory equippedWearables) pure returns (bytes)",
+          "contentHash": "0xab06acd1d3b61137268fb157315c07a4def7e025fdcd40e04241e35f2e26279a",
+          "sourceHash": "0x3a396558943e13be2c6fde923eb7cd124b612cec36448951cd1495e611031466"
+        },
+        {
+          "name": "getAavegotchiSvgLayers",
+          "visibility": "internal",
+          "signature": "internal function getAavegotchiSvgLayers(address _collateralType, int16[6] memory _numericTraits, uint256 _tokenId, uint256 _hauntId) view returns (bytes svg_)",
+          "contentHash": "0xc124799f55b9b42930015a0f50753a86e237c2f66d7639f1290bd599dd4b42b3",
+          "sourceHash": "0x53e0f9f7ed2d57cc1e9d44076cd980635112b7e5e07da69c8d7ec48d0b267bff"
+        },
+        {
+          "name": "getBodyWearable",
+          "visibility": "internal",
+          "signature": "internal function getBodyWearable(uint256 _wearableId) view returns (bytes bodyWearable_, bytes sleeves_)",
+          "contentHash": "0x1b36d4a1938346ac0ab48c9e2ff74857b58503d36c47fd57617c925b8616b41f",
+          "sourceHash": "0x5f068857d76a6f7f705e5dc03870513557ad19269b3e045c51d29ae0e3ba0e22"
+        },
+        {
+          "name": "getWearable",
+          "visibility": "internal",
+          "signature": "internal function getWearable(uint256 _wearableId, uint256 _slotPosition) view returns (bytes svg_)",
+          "contentHash": "0x77516ce6b408ae98d92c869837783b87999cd20b2ce9b492712aa217aa6ef401",
+          "sourceHash": "0x4ac1a92db0b454a165cace1d28b409841ebaa5081e83da89debae3a177f8bf8d"
+        },
+        {
+          "name": "getWearableClass",
+          "visibility": "internal",
+          "signature": "internal function getWearableClass(uint256 _slotPosition) pure returns (string className_)",
+          "contentHash": "0x331ab28ee96ef139c4f4c1a90aff598c1a78a8994122552933daf93291d6db08",
+          "sourceHash": "0x8a3bd83da645d758c80440e281e6012d7f096d14261506d7a56f3ca79fba577a"
+        }
+      ],
+      "events": []
+    },
+    {
+      "facetName": "ItemsFacet",
+      "facetAddress": "0x15ca5E9CEF2286F448F28EDE88Ec2cA4311b416a",
+      "bytecodeHash": "0xd8444453394aef25875697077accf8bce8c44b49f51cb86a13ca0d5f4ca7ba67",
+      "abiHash": "0x5ad48905643d9999e1b2a4bec7f204c1f972a806e78269fda1a78174c7889c63",
+      "buildInfoPath": "artifacts/build-info/08cc39c44dcca23fe195cedf24bfa797.json",
+      "sourceName": "contracts/Aavegotchi/facets/ItemsFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x2e232e1e",
+          "signature": "batchEquipWearables(uint256[],uint16[16][])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x3c0a041de624623027a5f78e60f81e4c41ea0141766f85312852d3c02f924492",
+          "sourceHash": "0xd3adc1247cf09ec4e2dd30778090394523e51825f3cae1615a26380b90fcfb3f",
+          "functionName": "batchEquipWearables"
+        },
+        {
+          "selector": "0x83be9ba2",
+          "signature": "batchEquipDelegatedWearables(uint256[],uint16[16][],uint256[16][])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x3ae0da6313d08dc6f5821a115828e82c1a1e0a61d876ab348984c411dccb6000",
+          "sourceHash": "0x9e5fb30e8a55698578942d50646225de45b386855b75db48ba9c3018c6d9e884",
+          "functionName": "batchEquipDelegatedWearables"
+        },
+        {
+          "selector": "0x00fdd58e",
+          "signature": "balanceOf(address,uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x343136ca99c4c6dafd255d0cd9483a08bd65e44831b02854f13868352c051023",
+          "sourceHash": "0x15093d04a290ec9c29e02effb2555676ea1c5d90abc37ded59ca448702177fa9",
+          "functionName": "balanceOf"
+        },
+        {
+          "selector": "0x4e1273f4",
+          "signature": "balanceOfBatch(address[],uint256[])",
+          "stateMutability": "view",
+          "implementationHash": "0x214d41074c2c12a139ed3a6058d207af3d54a06072c0bf3fdcd05299be138cb6",
+          "sourceHash": "0xf89dee20167a17a7558217a62d0374a99909d8c808054d62c9e6ab263a15347b",
+          "functionName": "balanceOfBatch"
+        },
+        {
+          "selector": "0x39a209df",
+          "signature": "balanceOfToken(address,uint256,uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x9fa77a9d15019e65824bdae9b9e7a417c8818771a75eaa47f4154d97434cdb12",
+          "sourceHash": "0xb29254d9b146f135dde0bba0e0cf50caf3b36a6da28c5c06d42c142ca50a1597",
+          "functionName": "balanceOfToken"
+        },
+        {
+          "selector": "0xa7f9af98",
+          "signature": "equipDelegatedWearables(uint256,uint16[16],uint256[16])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x9e56bb7ec05e8e39c07cd4d6c9acb0caad1bb13982ef032fc1aebd5bae876b1e",
+          "sourceHash": "0xf1653d0f8155bbaf1fc81ded634644496887f7d95f7c5dbf43fb7b8140f86941",
+          "functionName": "equipDelegatedWearables"
+        },
+        {
+          "selector": "0x9f7b91c6",
+          "signature": "equipWearables(uint256,uint16[16])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xeec7a987d283b429f1e3405c1c5ae1f48d5a44273cf0de4756879713af06b378",
+          "sourceHash": "0x0e72faa7f7b7649bf955122234b4da3a21596418cf11d648f69dd72d0b331f92",
+          "functionName": "equipWearables"
+        },
+        {
+          "selector": "0x47f18c04",
+          "signature": "equippedWearables(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x78a10c36a214be8fa3be7259cd52c68a46f0da6eb93e71486f003e3e3aa70a71",
+          "sourceHash": "0x52103206cd351e4a663eb2da185598e2860a765e5c8c9ffe25ac2d1a176a7f88",
+          "functionName": "equippedWearables"
+        },
+        {
+          "selector": "0xc19a4ef5",
+          "signature": "getItemType(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x599d1ffe23effc9dc6c2a62cc54ae5c293f558faa33d418477b5bf2fe28c5804",
+          "sourceHash": "0xfd67ee82f94442983e42081004a0cd6f66f2716d1dd2bf698807f6d299b46269",
+          "functionName": "getItemType"
+        },
+        {
+          "selector": "0xea316ab2",
+          "signature": "getItemTypes(uint256[])",
+          "stateMutability": "view",
+          "implementationHash": "0x959a851e17e72765c50b046b296f60b1279805aa95ee3bff5977a87bb1c3c914",
+          "sourceHash": "0x3954ea68e2f155af42df049dd62cb9a0d34ce4677befd8d4c2351ef3cf4ff5cc",
+          "functionName": "getItemTypes"
+        },
+        {
+          "selector": "0xd72fecea",
+          "signature": "itemBalances(address)",
+          "stateMutability": "view",
+          "implementationHash": "0x837ec10975812cd1bbd62c58d7986526a41c23ff296216dfe9f5e499674993b1",
+          "sourceHash": "0x38a3511aff553c2b5de13dff84bc7a1b8d8db29cf5f0ad54536c4032b8522dce",
+          "functionName": "itemBalances"
+        },
+        {
+          "selector": "0x7e2cd18d",
+          "signature": "itemBalancesOfToken(address,uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x0879f39590d5f4a0edd47e14892e68979f8a303381d11a70423957aa46d859c0",
+          "sourceHash": "0x16556c91b1db778d6d77d33ba00bdac96d75df9d9fa1b0031f023f4da8883f45",
+          "functionName": "itemBalancesOfToken"
+        },
+        {
+          "selector": "0xea978432",
+          "signature": "itemBalancesOfTokenWithTypes(address,uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0xc401d4d0df76f6707920c6b65ae4e221ead3e6fb43b88ffda3b532b2b1583ef0",
+          "sourceHash": "0x66330456009f36b2856bd25519bfae09c26efefcd461c304a366aef9c3635206",
+          "functionName": "itemBalancesOfTokenWithTypes"
+        },
+        {
+          "selector": "0xfcdbbe1d",
+          "signature": "itemBalancesWithTypes(address)",
+          "stateMutability": "view",
+          "implementationHash": "0xef11763c8760fd332bee943ce7dcaa680eea493814600ea622acfad5ceb0905d",
+          "sourceHash": "0x9ae855f12b4530a1bd6075167d959a1c53b961da79a8afc4a25b326aaba322ae",
+          "functionName": "itemBalancesWithTypes"
+        },
+        {
+          "selector": "0x55f804b3",
+          "signature": "setBaseURI(string)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x32ee40fa948ec1fd8705466495da06cdb2f9361deeb91be15332c844f61aa80b",
+          "sourceHash": "0xa29c91fc4a65524817cfc689de3ed00a4ee3752dd9b7fd3b7614d16a0244d720",
+          "functionName": "setBaseURI"
+        },
+        {
+          "selector": "0x0e89341c",
+          "signature": "uri(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x705db6ad8643a567985bf80ecc99abe67ecb57afd2543d6f91a49eb58dd4abbb",
+          "sourceHash": "0x3f9cfc8210c2618f6a4edd12b3eab2afa96326ab51d1c309c29ca940a0d0eee4",
+          "functionName": "uri"
+        }
+      ],
+      "internalFunctions": [
+        {
+          "name": "_equipWearables",
+          "visibility": "internal",
+          "signature": "internal function _equipWearables(uint256 _tokenId, uint16[16] calldata _wearablesToEquip, uint256[16] memory _depositIdsToEquip)",
+          "contentHash": "0x636977974ae2927864def47774e7a2d39ddd6fd58af9298134e13113a9e58c16",
+          "sourceHash": "0x37ca6feff34773c6e5022203e48bc77f937f4b3e48afee838437c90c2b2718ef"
+        }
+      ],
+      "events": []
+    },
+    {
+      "facetName": "ItemsTransferFacet",
+      "facetAddress": "0x74e2051A9Cd994F83f2d789448dCa4a3e879964c",
+      "bytecodeHash": "0x10af0aa791bce4de5414fa62923e325af096bdd6cfc0e3f0e29fc41c905e96a9",
+      "abiHash": "0x92b6c11ba9f071f05bb86141743e6050acbbb2aa94c727e72c05177f2aa6c55c",
+      "buildInfoPath": "artifacts/build-info/3aa57adff86edc967aafcbd0bf9efe0c.json",
+      "sourceName": "contracts/Aavegotchi/facets/ItemsTransferFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x3c3b3c00",
+          "signature": "batchBatchTransferToParent(address,address,uint256[],uint256[][],uint256[][])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x3d87ba898325213ad870510590e9496da35cd2c35e6d377ab4939ae83873bbc5",
+          "sourceHash": "0xb08bc8beb5c432183c2cd49e45661206642c23c2badc0b738168f10fafabd494",
+          "functionName": "batchBatchTransferToParent"
+        },
+        {
+          "selector": "0x03724d75",
+          "signature": "batchExtractItemsFromDiamond(address[],uint256[][],uint256[][])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xae71b79115eef5cdc6a430122d0d7f6cceda6b273fc732f83b2ccc6e48bf903f",
+          "sourceHash": "0xd593b225228c6fa8daaeaf0f5f442a947cc5867aeaa40b0d1101668a2b7b4229",
+          "functionName": "batchExtractItemsFromDiamond"
+        },
+        {
+          "selector": "0x6a8926e8",
+          "signature": "batchTransferAsChild(address,uint256,address,uint256,uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x64472bbbcb6206bce0372a927a500f5122a9eb4de16380bb4b8c40e61a912ab1",
+          "sourceHash": "0xa64f5d0679315efca9ce5b66bf66ce3dc95ca8e67c3b930dbe6edf583a0d8099",
+          "functionName": "batchTransferAsChild"
+        },
+        {
+          "selector": "0x6c71c40b",
+          "signature": "batchTransferFromParent(address,uint256,address,uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x6bfdc2964fdb39033eda2422888afde36145d100d9aaaaf3b5287244060adac3",
+          "sourceHash": "0x50f441125300dac6497d3884d3322bafe2b898973ba0437b877bf6083d9cb7b3",
+          "functionName": "batchTransferFromParent"
+        },
+        {
+          "selector": "0xea69aae2",
+          "signature": "batchTransferToParent(address,address,uint256,uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x4036e3a3324b5372529424e85a867afdf2c7e2d031601c7e90b9d2a0d40cc924",
+          "sourceHash": "0x69abb8d064138e6c0e303abde1984d5ae8f0d90168b38207fbbe2924bd932cca",
+          "functionName": "batchTransferToParent"
+        },
+        {
+          "selector": "0x6f5fd014",
+          "signature": "extractItemsFromDiamond(address,uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xfa89498b030561c6f2fb6cabd2d871f51af076bcc1a8438318bf27aba1819390",
+          "sourceHash": "0x2b0e24ee2030f399c7d488b09846df0c437796c736d8dbcb4f53030ff7176741",
+          "functionName": "extractItemsFromDiamond"
+        },
+        {
+          "selector": "0x1e92e2f4",
+          "signature": "extractItemsFromSacrificedGotchi(address,uint256,uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x948ab651d133e06556e61c7e11d4036b2a38178c64bc8dae6b98b6ba02c2f5cf",
+          "sourceHash": "0xcf295b53e35a1222fa0a5f3d719ec2f574060e1b3555aaa34270c04e71079db1",
+          "functionName": "extractItemsFromSacrificedGotchi"
+        },
+        {
+          "selector": "0xbc197c81",
+          "signature": "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)",
+          "stateMutability": "pure",
+          "implementationHash": "0x6d6b0fab6f96352625d014b209d0231bb28f157ab8dd7b1c4f8be9b71bd60788",
+          "sourceHash": "0x6def476694a586b5eb725f21ea9a7906ac3797d6c3329462a91e961d4de520ef",
+          "functionName": "onERC1155BatchReceived"
+        },
+        {
+          "selector": "0xf23a6e61",
+          "signature": "onERC1155Received(address,address,uint256,uint256,bytes)",
+          "stateMutability": "pure",
+          "implementationHash": "0xa5faf619c574f17d306b5b146d95e6face998f7f1a8408d369d542c086e1d9e0",
+          "sourceHash": "0xd7710240d1f6a17359b814e16e0f3d0d0911d1b75bcd13a61d39d8fcf990bed8",
+          "functionName": "onERC1155Received"
+        },
+        {
+          "selector": "0x2eb2c2d6",
+          "signature": "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x4ace57a8e0aa69b51a2cce55192ff36f58ef34304092ebbadfa6c8dbf933355d",
+          "sourceHash": "0xc563f74565db83865743427fd20af81ea0a478764e5ab1654a76f6403d3aebc8",
+          "functionName": "safeBatchTransferFrom"
+        },
+        {
+          "selector": "0xf242432a",
+          "signature": "safeTransferFrom(address,address,uint256,uint256,bytes)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x8dd848627b0d8561b2ecfc591e14fe7739ba97af34f52e1db84a754bc1ba7d5b",
+          "sourceHash": "0x4ef6117db2f7dad09009b44f406d86eed34faae9045426ea03c6213c5b6d89af",
+          "functionName": "safeTransferFrom"
+        },
+        {
+          "selector": "0x4d11f02e",
+          "signature": "transferAsChild(address,uint256,address,uint256,uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x5840cdbdf46b0fdf3e3cef23f59b506587d41cfa1d83630bd423c15103fca90f",
+          "sourceHash": "0x72e64e5a18933219bc1352773911dd407921fcd824077b186ae164c7dddd4e63",
+          "functionName": "transferAsChild"
+        },
+        {
+          "selector": "0x271a6c59",
+          "signature": "transferFromParent(address,uint256,address,uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xf27b4113d0d1fb1105599aef577fc2189727dbfcf533fad8e28b1881356e8410",
+          "sourceHash": "0xc7b8e7b3988c9eabdcf786de27e98289892b72da3a45b6cef4fe69a4c39059d0",
+          "functionName": "transferFromParent"
+        },
+        {
+          "selector": "0x3936b8d2",
+          "signature": "transferToParent(address,address,uint256,uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x844472556d033b0bc867345bb9e1690ad5f114e040033e0fe3d5b60b49cf987f",
+          "sourceHash": "0x2dc46219cad4491aeb2c0ccee8d1758444dedb8b201d49e57ed3b925ea3c26bb",
+          "functionName": "transferToParent"
+        }
+      ],
+      "internalFunctions": [
+        {
+          "name": "transferFromTokenApproved",
+          "visibility": "internal",
+          "signature": "internal function transferFromTokenApproved(address _sender, address _fromContract, uint256 _fromTokenId) view",
+          "contentHash": "0x00e35492e4a3c55b4e5e5010ad116a0edf47a1fc7465cf6b9492898cf49042fa",
+          "sourceHash": "0xd5b32ee1383fc7e04ffe04492ab8e663e095274c790d5c7e580211ee72e178d7"
+        }
+      ],
+      "events": []
+    },
+    {
+      "facetName": "CollateralFacet",
+      "facetAddress": "0xc9D1e8D5550c2f04738f75B321B4D8608f1dF20D",
+      "bytecodeHash": "0x2937359fb63673d6e134ebd4cb8f0760f33bdd77311041996b76577fc70f62b0",
+      "abiHash": "0xa40fef93f08f3a31de7c44e843166dccfa091a708b1296a6f6414db0490c9edd",
+      "buildInfoPath": "artifacts/build-info/08cc39c44dcca23fe195cedf24bfa797.json",
+      "sourceName": "contracts/Aavegotchi/facets/CollateralFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x333ffdee",
+          "signature": "redeployTokenEscrows(uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x5d84d91841295bef26ff4f561ab9f6189c719d031922c860423e9c3189471d6f",
+          "sourceHash": "0x5afb93c0ba2ae5ee4801014c918cc5f322c4a7b8f7b2ed4775e68583ffc894dd",
+          "functionName": "redeployTokenEscrows"
+        },
+        {
+          "selector": "0x4d21f482",
+          "signature": "setBaseRelayer(address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x5be5d88424f976296d24117d34c2d45283aa63e6ef0d9bb870d7c57944b5ca75",
+          "sourceHash": "0x82cbbf41e42fe3bbcaf7ba4c999174408c2b7eb567f9da3c20aa429a8e5549c2",
+          "functionName": "setBaseRelayer"
+        },
+        {
+          "selector": "0x4cd5d1f7",
+          "signature": "collateralBalance(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x24e1ea5754a6286ef819266bf9d37f3a6994e6058b25e85a88fbb722c23c3c82",
+          "sourceHash": "0xa7a84f4fe350be808823d9619b9e4607fa3b3a1e3b45ca683f485958efafbff2",
+          "functionName": "collateralBalance"
+        },
+        {
+          "selector": "0x338d0a9a",
+          "signature": "collateralInfo(uint256,uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x9ed91d8811a035a42b2846f26a04f316839ab213406a402270f6c64ff25ce634",
+          "sourceHash": "0xfde6cd4a4fb4c69d84d8c9812bc980da67046ae2881fff69666d2f157e4d7696",
+          "functionName": "collateralInfo"
+        },
+        {
+          "selector": "0x24c1173b",
+          "signature": "collaterals(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0xf283dca8760353e7e20b3a8da82a14965597360fc6f766cc00f44efbe20ed9f6",
+          "sourceHash": "0x71038d526b81d965040fb3d6f5dba5ba0600799149744117f39cc2a73ff0c8de",
+          "functionName": "collaterals"
+        },
+        {
+          "selector": "0x49aa1f27",
+          "signature": "decreaseAndDestroy(uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x3f4868a5233be3f96dac7ae0fc49b90085917a55c7dea2c9a047d690bb04709f",
+          "sourceHash": "0x500efc2715a73b9f4e55d70cba5aab62c579c809e48bea94fda45e6d7a705330",
+          "functionName": "decreaseAndDestroy"
+        },
+        {
+          "selector": "0x24d86f00",
+          "signature": "decreaseStake(uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x61dbcae9a9186fe8f22e355a1c64ebb7f29227d3149785abff89cab75e2095d7",
+          "sourceHash": "0x2022989a5810c9684cc75cf98af6d7a623d43d4f96ab075079ac0d212787bfe2",
+          "functionName": "decreaseStake"
+        },
+        {
+          "selector": "0x294d499e",
+          "signature": "getAllCollateralTypes()",
+          "stateMutability": "view",
+          "implementationHash": "0x80e6dd0765360262bb48c912a26dbb75ab500f2dc200af84792a14370e397f0f",
+          "sourceHash": "0x103701ad8d616ab4123568860695f4a46230cc94eb43b55cfa193f22af537c76",
+          "functionName": "getAllCollateralTypes"
+        },
+        {
+          "selector": "0x934b5d13",
+          "signature": "getCollateralInfo(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0xd04d33e0544140e5a10189a3d282bd71ab6768bface4fb04a185117b50f7dfc4",
+          "sourceHash": "0x9709e1c47ab2aec7fedd4c088829b79982d9188afa610880d4db221332239ce0",
+          "functionName": "getCollateralInfo"
+        },
+        {
+          "selector": "0xbec10cde",
+          "signature": "increaseStake(uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x2ffbf1deaaab2401c291760cd30d663dfb4f8b46ac6d00a7a70929cc69583163",
+          "sourceHash": "0x8da2b344bc7e0d6684788a9cbf9edb5c413b943f3ce6ce1fc2866e91654b49ce",
+          "functionName": "increaseStake"
+        },
+        {
+          "selector": "0xa3ea00f1",
+          "signature": "setCollateralEyeShapeSvgId(address,uint8)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xba143fa23532b43e789dac97258a5fbb60ab7339926f79d6f0628b69427d8e88",
+          "sourceHash": "0xf88ffceed06b9afbbeefd09334548c9b49ea163f0822ce9e5e64782ae6779e17",
+          "functionName": "setCollateralEyeShapeSvgId"
+        }
+      ],
+      "internalFunctions": [],
+      "events": [
+        {
+          "signature": "event DecreaseStake(uint256 indexed _tokenId, uint256 _reduceAmount)"
+        },
+        {
+          "signature": "event EscrowUpdated(uint256 indexed _tokenId, address _newEscrow)"
+        },
+        {
+          "signature": "event ExperienceTransfer(uint256 indexed _fromTokenId, uint256 indexed _toTokenId, uint256 experience)"
+        },
+        {
+          "signature": "event IncreaseStake(uint256 indexed _tokenId, uint256 _stakeAmount)"
+        }
+      ]
+    },
+    {
+      "facetName": "DAOFacet",
+      "facetAddress": "0x5799b7b4DC5F7e192660dd4388D0e542A9E7Bc28",
+      "bytecodeHash": "0x1de5ebcb31e4a288f4f193d7a97f9d0430675437e04a8fdd841b8d27ab990cc4",
+      "abiHash": "0x69237b58d8846bf74ed5ff2b19ba56c492066ec38f614900b9ed9a7f93e3ad9b",
+      "buildInfoPath": "artifacts/build-info/215ec707939231266c6a6de61867b453.json",
+      "sourceName": "contracts/Aavegotchi/facets/DAOFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x3a4f0932",
+          "signature": "function addCollateralTypes(uint256 _hauntId, tuple(address collateralType, tuple(int16[6] modifiers, bytes3 primaryColor, bytes3 secondaryColor, bytes3 cheekColor, uint8 svgId, uint8 eyeShapeSvgId, uint16 conversionRate, bool delisted) collateralTypeInfo)[] _collateralTypes)",
+          "stateMutability": "nonpayable",
+          "functionName": "function addCollateralTypes"
+        },
+        {
+          "selector": "0x51e9dfb4",
+          "signature": "addGameManagers(address[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x3038a837ceba7680d24d9c86bb2f163843f3ab0de39918005c6d7dac7993fb60",
+          "sourceHash": "0x4a2c41040365127ef9539ff891b2fc39ecf1af15932a034b83fca75db932892d",
+          "functionName": "addGameManagers"
+        },
+        {
+          "selector": "0x15c2c5bc",
+          "signature": "addItemManagers(address[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xa50e49c7ce211a0f55c61aff18127895f0968f676a8fd4cfff28c00aa9f6bc84",
+          "sourceHash": "0x2ad1d807fe90c112a3f7fca8aed5f450d94d46f46cbe60d07be1fd1193564b80",
+          "functionName": "addItemManagers"
+        },
+        {
+          "selector": "0xe8cba9bd",
+          "signature": "function addItemTypes(tuple(string name, string description, string author, int8[6] traitModifiers, bool[16] slotPositions, uint8[] allowedCollaterals, tuple(uint8 x, uint8 y, uint8 width, uint8 height) dimensions, uint256 ghstPrice, uint256 maxQuantity, uint256 totalQuantity, uint32 svgId, uint8 rarityScoreModifier, bool canPurchaseWithGhst, uint16 minLevel, bool canBeTransferred, uint8 category, int16 kinshipBonus, uint32 experienceBonus)[] _itemTypes)",
+          "stateMutability": "nonpayable",
+          "functionName": "function addItemTypes"
+        },
+        {
+          "selector": "0xe9418d9f",
+          "signature": "function addItemTypesAndSvgs(tuple(string name, string description, string author, int8[6] traitModifiers, bool[16] slotPositions, uint8[] allowedCollaterals, tuple(uint8 x, uint8 y, uint8 width, uint8 height) dimensions, uint256 ghstPrice, uint256 maxQuantity, uint256 totalQuantity, uint32 svgId, uint8 rarityScoreModifier, bool canPurchaseWithGhst, uint16 minLevel, bool canBeTransferred, uint8 category, int16 kinshipBonus, uint32 experienceBonus)[] _itemTypes, string _svg, tuple(bytes32 svgType, uint256[] sizes)[] _typesAndSizes)",
+          "stateMutability": "nonpayable",
+          "functionName": "function addItemTypesAndSvgs"
+        },
+        {
+          "selector": "0x319f7955",
+          "signature": "function addWearableSets(tuple(string name, uint8[] allowedCollaterals, uint16[] wearableIds, int8[5] traitsBonuses)[] _wearableSets)",
+          "stateMutability": "nonpayable",
+          "functionName": "function addWearableSets"
+        },
+        {
+          "selector": "0xcabe8aad",
+          "signature": "batchUpdateItemsPrice(uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x22ffe3f0ab3366bbbdbc7f5851e298d3c549401b842095d6b815668916c602e9",
+          "sourceHash": "0x961d015a7c245c7626906726167be855117d302e46bc2d6354f5ca5c26bedee5",
+          "functionName": "batchUpdateItemsPrice"
+        },
+        {
+          "selector": "0x126d1503",
+          "signature": "createHaunt(uint24,uint96,bytes3)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x67ba82d019c5fd62b65ed4cc8b749d9160c4b505067d3ab367bcbc27f3b3f463",
+          "sourceHash": "0x4a10dd183049f1532022a08c12fa516360aabd7fedaabc14f546282a4de26137",
+          "functionName": "createHaunt"
+        },
+        {
+          "selector": "0x1414b669",
+          "signature": "function createHauntWithPayload(tuple(uint24 _hauntMaxSize, uint96 _portalPrice, bytes3 _bodyColor, tuple(address collateralType, tuple(int16[6] modifiers, bytes3 primaryColor, bytes3 secondaryColor, bytes3 cheekColor, uint8 svgId, uint8 eyeShapeSvgId, uint16 conversionRate, bool delisted) collateralTypeInfo)[] _collateralTypes, string _collateralSvg, tuple(bytes32 svgType, uint256[] sizes)[] _collateralTypesAndSizes, string _eyeShapeSvg, tuple(bytes32 svgType, uint256[] sizes)[] _eyeShapeTypesAndSizes) _payload) returns (uint256 hauntId_)",
+          "stateMutability": "nonpayable",
+          "functionName": "function createHauntWithPayload"
+        },
+        {
+          "selector": "0x9a494da0",
+          "signature": "gameManagerBalance(address)",
+          "stateMutability": "view",
+          "implementationHash": "0xc2715fdd44cd555829e638cc604cbf69f1aae8f851f162dbd337f4dbd8303dc5",
+          "sourceHash": "0x8fcceba767140a36eec3dea07318e7eb72b6513cf89babe42a7b9823fbbc4011",
+          "functionName": "gameManagerBalance"
+        },
+        {
+          "selector": "0xfa1a0b21",
+          "signature": "gameManagerRefreshTime(address)",
+          "stateMutability": "view",
+          "implementationHash": "0x7d3b4b8e0f4af6229a4f3787ea4a4ea89ef22b3447af6db5c91309965cd78de2",
+          "sourceHash": "0xe19f905c085c3e3c82a33dc641369c73bb0b7aa4011e75d31d208bd23e802793",
+          "functionName": "gameManagerRefreshTime"
+        },
+        {
+          "selector": "0xa6ae09fe",
+          "signature": "getBaazaarTradingAllowlist(address)",
+          "stateMutability": "view",
+          "implementationHash": "0xab42ef7fe17f84862a8d06d972f44965131399186f32d1f9a6fe1c84fef53d2b",
+          "sourceHash": "0x3b0568996628d506d84009d2944b4ede2175e299a36e34ba762f7cc232a5c9dd",
+          "functionName": "getBaazaarTradingAllowlist"
+        },
+        {
+          "selector": "0xf9d8fa4e",
+          "signature": "getDaoDirectorTreasury()",
+          "stateMutability": "view",
+          "implementationHash": "0xe40e05800ebb05c509d4e9a04a0f842331d823e778c328239ef9423a5c3a81da",
+          "sourceHash": "0x929c0a0253576c37aee837a02226fcacd1604c87d5eef0de32f5143ab0cbc098",
+          "functionName": "getDaoDirectorTreasury"
+        },
+        {
+          "selector": "0x038adf52",
+          "signature": "getForgeDiamond()",
+          "stateMutability": "view",
+          "implementationHash": "0x8da86ce9ab9a11454dd4fe9e671ea6f99f2c17a470eed840bb1596a5a79bbab3",
+          "sourceHash": "0x21daecef6334c0becf4c77168b5a8680da93567d68f7ca475333cce33415650b",
+          "functionName": "getForgeDiamond"
+        },
+        {
+          "selector": "0x4f43c89f",
+          "signature": "getGHSTContract()",
+          "stateMutability": "view",
+          "implementationHash": "0xe53eddd4038859d2e17c653ee20510fa19cf516f51fb178697f3f3b248ca4baa",
+          "sourceHash": "0xded857631be66f8e47a8660f03a700e2cb8c7a0f60cb701a16606fd353e23935",
+          "functionName": "getGHSTContract"
+        },
+        {
+          "selector": "0x939f3aeb",
+          "signature": "getWearableDiamond()",
+          "stateMutability": "view",
+          "implementationHash": "0x6f8112776da373b393a29dffd2344c7f32da39d5a4e80b41921836c0591ecfd3",
+          "sourceHash": "0xd1ad90ffba9a4cea19ac1b6ff7960f3d8b7e1566cc2c5210748124f0cc1bfde9",
+          "functionName": "getWearableDiamond"
+        },
+        {
+          "selector": "0xf2413ef4",
+          "signature": "grantExperience(uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xc79875c01ff238061343257e825d4233b9682dadb016b299a3d294ae620785c4",
+          "sourceHash": "0xabb2aeed75e16783375f2eaa7a3e54e3a5a855c7a61ede464fdf2f2bc147cc75",
+          "functionName": "grantExperience"
+        },
+        {
+          "selector": "0xe045fd04",
+          "signature": "isGameManager(address)",
+          "stateMutability": "view",
+          "implementationHash": "0x0840ad891f0ca443734fb68da17191b2945812e886cfd629d870ab7791784616",
+          "sourceHash": "0x505ba968ab2576b495f451fc4224168643f2466ccf5659361139cc5f5782ba51",
+          "functionName": "isGameManager"
+        },
+        {
+          "selector": "0x8d85c96f",
+          "signature": "mintItems(address,uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xdf019c7ad8c1c02b651c4b81c41b6c07c5ae9b2a2df081adf7c8b8f47fdb25ee",
+          "sourceHash": "0x5203d06c93dabb75d2ed421dce77e303b63c4be1f747f433ec67739d5f852989",
+          "functionName": "mintItems"
+        },
+        {
+          "selector": "0x508335a5",
+          "signature": "removeExperience(uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x65885db9a40553b0ae981313ddc1d44ea290f51e0bf7eeb2af849f87f282ad44",
+          "sourceHash": "0x791e37adcb75fec2969ca2ae483db46358c66893f37fa6a6101c074311e222fd",
+          "functionName": "removeExperience"
+        },
+        {
+          "selector": "0x1f3d842f",
+          "signature": "removeGameManagers(address[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x8d9265c5644ffa2f312018bb740a52334ed06e74c4f5240ae6394889b8858745",
+          "sourceHash": "0x9d5d672fb8286826fb1be5a8d9536bf9ee75c9df6057d30c8fdfddf58d12d998",
+          "functionName": "removeGameManagers"
+        },
+        {
+          "selector": "0x6826a415",
+          "signature": "removeItemManagers(address[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x57b69fc3e7a15cec60099b45609feaa9decd8513601d359e49710f16f07576b8",
+          "sourceHash": "0xb9c9331a044a526c574ba2e81a831742211720a763ccc1008c1e66dbc6d7f37a",
+          "functionName": "removeItemManagers"
+        },
+        {
+          "selector": "0x3e166aa8",
+          "signature": "setBaazaarTradingAllowlists(address[],bool[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xa77a2561845572f7759bb44972cd562855b7ee026efdde1aee9da54abfeb0cf2",
+          "sourceHash": "0xeb06c4bf82d80bed078e1cb8ce7b8ca713a3fd10013bc6afc490b23e77504a2a",
+          "functionName": "setBaazaarTradingAllowlists"
+        },
+        {
+          "selector": "0x773c17aa",
+          "signature": "setDao(address,address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x806f6358e86af4e255d7ec64e72d493046822fbfc16448571283df6d310422f5",
+          "sourceHash": "0xe95a0ebe1920b3c0cbfa19b3579d103e018ab61539a3772a35c71f5039b927d8",
+          "functionName": "setDao"
+        },
+        {
+          "selector": "0xd49fc473",
+          "signature": "setDaoDirectorTreasury(address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x75d99851690d89f86c4bc727b7b9b82a6e74e419af5ad19a59e93a61c0c5c71f",
+          "sourceHash": "0xdcc5cb74bb3af5d162c58a59152f46383083ee1ea073285f1bc95411401e8828",
+          "functionName": "setDaoDirectorTreasury"
+        },
+        {
+          "selector": "0x6f24d68c",
+          "signature": "setERC1155ListingExclusions(address,uint256[],bool[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xb378f8e2bb3b2afa9162d9537390cf57b4ae95f49ee6165301b92d351800bbd8",
+          "sourceHash": "0x16e13d7b0a5033cb648be10d13d882e1c330e47f8537d76720a1d56846cfe55b",
+          "functionName": "setERC1155ListingExclusions"
+        },
+        {
+          "selector": "0x97010ae9",
+          "signature": "setForge(address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x8122c37fa8c1373448ee7062f5b86d1a3f5b7b30e74302df2e6007274faf1375",
+          "sourceHash": "0x8e5e13c34e9d18554f8a88742582638d566b0046f7ad1a415509b6c7665df100",
+          "functionName": "setForge"
+        },
+        {
+          "selector": "0x3fc26b08",
+          "signature": "setForgeDiamond(address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x81706a7524d1989175fa575644f238c163dcf211a01991c3d5402d1e9c4fba9a",
+          "sourceHash": "0x27cb6c1221305053ca6ff70e3ce321e65aa443721da7ef9f6ecfa4c0e668133c",
+          "functionName": "setForgeDiamond"
+        },
+        {
+          "selector": "0x447ff97d",
+          "signature": "setGHSTContract(address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x3e959ec2276a5692772ecf088d66724f8c1d1d9161ac6f7baf295bf7e6954fed",
+          "sourceHash": "0x7288ffbef80707d0038d81fcfdddcaed312c938ab806e1afa7cd662f785931ae",
+          "functionName": "setGHSTContract"
+        },
+        {
+          "selector": "0xdc2fc08d",
+          "signature": "setItemTraitModifiersAndRarityModifier(uint256,int8[6],uint8)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x1e592d63ef243fa3f976c9cd340dee37b45579220ebb89559c7078797467275f",
+          "sourceHash": "0x7cbc555a345d583cca22224fc0180aa5a2e80bc333ea0ebd8f5c4f86341cc8bd",
+          "functionName": "setItemTraitModifiersAndRarityModifier"
+        },
+        {
+          "selector": "0x5609e5eb",
+          "signature": "setWearableDiamond(address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x984fab9b5fb4978342178ca4622613fac8a8c94a88dabb639619c45f288135ec",
+          "sourceHash": "0x2e1a0ff38a2a215e5e7dccc0d11e7d8a9ef17419b39764cfcb487ed8399770a5",
+          "functionName": "setWearableDiamond"
+        },
+        {
+          "selector": "0xc547f8e2",
+          "signature": "setWearableSlotPositions(uint256,bool[16])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x9ec0ce303f398139dc6042c0326dd955a9a84e06227b289786ba66acd2fe0d4c",
+          "sourceHash": "0xfedf02231860574f1a018264bc4ae3b9baa6ae9481f57bcdf5a37f48dd84e617",
+          "functionName": "setWearableSlotPositions"
+        },
+        {
+          "selector": "0xdfd9e3ef",
+          "signature": "toggleDiamondPaused(bool)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xac1ae1a55046672db7b57f137a9bbfd5f1afccf391c281d2915672a9b20b23ea",
+          "sourceHash": "0xfe4bb07420fd46de56998d0c4eee507850273f01d0de1310e4a15a2739d4cad3",
+          "functionName": "toggleDiamondPaused"
+        },
+        {
+          "selector": "0x9cc9b7a9",
+          "signature": "updateCollateralModifiers(address,int16[6])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x92bcfbabc673a06d1dc2d32b3b08a895b30e4fcebe85e3301f6b74a9f57677c2",
+          "sourceHash": "0xe9c2d43ad45139350ffdba2c36dbd0dd2f0ba00a92855c01d9c3fa47f7d71b2e",
+          "functionName": "updateCollateralModifiers"
+        },
+        {
+          "selector": "0x639bafab",
+          "signature": "updateItemTypeMaxQuantity(uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xc4146b14d8634eb6a962f616752b7a07e914c25e947951a1658ffa6dffd5e568",
+          "sourceHash": "0xc5c451fc1c8b9940c5569e1cb07eb49b35124b3f61b42161b1ae07297a791e84",
+          "functionName": "updateItemTypeMaxQuantity"
+        },
+        {
+          "selector": "0xdb0ff95b",
+          "signature": "function updateItemTypes(uint256[] _indices, tuple(string name, string description, string author, int8[6] traitModifiers, bool[16] slotPositions, uint8[] allowedCollaterals, tuple(uint8 x, uint8 y, uint8 width, uint8 height) dimensions, uint256 ghstPrice, uint256 maxQuantity, uint256 totalQuantity, uint32 svgId, uint8 rarityScoreModifier, bool canPurchaseWithGhst, uint16 minLevel, bool canBeTransferred, uint8 category, int16 kinshipBonus, uint32 experienceBonus)[] _itemTypes)",
+          "stateMutability": "nonpayable",
+          "functionName": "function updateItemTypes"
+        },
+        {
+          "selector": "0x26d503b1",
+          "signature": "function updateWearableSets(uint256[] _setIds, tuple(string name, uint8[] allowedCollaterals, uint16[] wearableIds, int8[5] traitsBonuses)[] _wearableSets)",
+          "stateMutability": "nonpayable",
+          "functionName": "function updateWearableSets"
+        }
+      ],
+      "internalFunctions": [
+        {
+          "name": "insertItemTypes",
+          "visibility": "internal",
+          "signature": "internal function insertItemTypes(struct ItemType[] memory _itemTypes)",
+          "contentHash": "0xfb60069dd876afedcc48432093809dc6681237056234f10496d67d5b5ba7442e",
+          "sourceHash": "0xfb4f6c1a14ddfe0fcebd7ab16074a3cacbd0da0cbf783e4f1af708ad6482ea60"
+        }
+      ],
+      "events": [
+        {
+          "signature": "event AddCollateralType(tuple(address collateralType, tuple(int16[6] modifiers, bytes3 primaryColor, bytes3 secondaryColor, bytes3 cheekColor, uint8 svgId, uint8 eyeShapeSvgId, uint16 conversionRate, bool delisted) collateralTypeInfo) _collateralType)"
+        },
+        {
+          "signature": "event AddItemType(tuple(string name, string description, string author, int8[6] traitModifiers, bool[16] slotPositions, uint8[] allowedCollaterals, tuple(uint8 x, uint8 y, uint8 width, uint8 height) dimensions, uint256 ghstPrice, uint256 maxQuantity, uint256 totalQuantity, uint32 svgId, uint8 rarityScoreModifier, bool canPurchaseWithGhst, uint16 minLevel, bool canBeTransferred, uint8 category, int16 kinshipBonus, uint32 experienceBonus) _itemType)"
+        },
+        {
+          "signature": "event AddWearableSet(tuple(string name, uint8[] allowedCollaterals, uint16[] wearableIds, int8[5] traitsBonuses) _wearableSet)"
+        },
+        {
+          "signature": "event BaazaarTradingAllowlistUpdate(address _contract, bool _allow)"
+        },
+        {
+          "signature": "event CreateHaunt(uint256 indexed _hauntId, uint256 _hauntMaxSize, uint256 _portalPrice, bytes32 _bodyColor)"
+        },
+        {
+          "signature": "event DaoTransferred(address indexed previousDao, address indexed newDao)"
+        },
+        {
+          "signature": "event DaoTreasuryTransferred(address indexed previousDaoTreasury, address indexed newDaoTreasury)"
+        },
+        {
+          "signature": "event DiamondPaused(bool _paused)"
+        },
+        {
+          "signature": "event ERC1155ListingExclusionUpdate(address indexed token, uint256 indexed id, bool excluded)"
+        },
+        {
+          "signature": "event ForgeDiamondUpdate(address _forgeDiamond)"
+        },
+        {
+          "signature": "event ForgeTransferred(address indexed previousForge, address indexed newForge)"
+        },
+        {
+          "signature": "event GameManagerAdded(address indexed gameManager_, uint256 indexed limit_, uint256 refreshTime_)"
+        },
+        {
+          "signature": "event GameManagerRemoved(address indexed gameManager_)"
+        },
+        {
+          "signature": "event GHSTContractUpdate(address _newGHSTContract)"
+        },
+        {
+          "signature": "event GotchiGeistBridgeUpdate(address _newBridge)"
+        },
+        {
+          "signature": "event ItemGeistBridgeUpdate(address _newBridge)"
+        },
+        {
+          "signature": "event ItemManagerAdded(address indexed newItemManager_)"
+        },
+        {
+          "signature": "event ItemManagerRemoved(address indexed itemManager_)"
+        },
+        {
+          "signature": "event ItemModifiersSet(uint256 _wearableId, int8[6] _traitModifiers, uint8 _rarityScoreModifier)"
+        },
+        {
+          "signature": "event ItemTypeMaxQuantity(uint256[] _itemIds, uint256[] _maxQuanities)"
+        },
+        {
+          "signature": "event RemoveExperience(uint256[] _tokenIds, uint256[] _xpValues)"
+        },
+        {
+          "signature": "event UpdateCollateralModifiers(int16[6] _oldModifiers, int16[6] _newModifiers)"
+        },
+        {
+          "signature": "event UpdateItemPrice(uint256 _itemId, uint256 _priceInWei)"
+        },
+        {
+          "signature": "event UpdateItemType(uint256 indexed _itemId, tuple(string name, string description, string author, int8[6] traitModifiers, bool[16] slotPositions, uint8[] allowedCollaterals, tuple(uint8 x, uint8 y, uint8 width, uint8 height) dimensions, uint256 ghstPrice, uint256 maxQuantity, uint256 totalQuantity, uint32 svgId, uint8 rarityScoreModifier, bool canPurchaseWithGhst, uint16 minLevel, bool canBeTransferred, uint8 category, int16 kinshipBonus, uint32 experienceBonus) _itemType)"
+        },
+        {
+          "signature": "event UpdateWearableSet(uint256 _setId, tuple(string name, uint8[] allowedCollaterals, uint16[] wearableIds, int8[5] traitsBonuses) _wearableSet)"
+        },
+        {
+          "signature": "event WearableDiamondUpdate(address _wearableDiamond)"
+        },
+        {
+          "signature": "event WearableSlotPositionsSet(uint256 _wearableId, bool[16] _slotPositions)"
+        }
+      ]
+    },
+    {
+      "facetName": "VrfFacet",
+      "facetAddress": "0x357cb7aF915BFe16D9291C16D2D4cC8a599b6972",
+      "bytecodeHash": "0x328c57956db2c9798bcb85efb00cb102e7ea61e7bd4525dd20a5a1b713bc4f44",
+      "abiHash": "0x6b8ff938bf1f18b5421e58c5522a84ece789abb204eae7591395be891ae46fa8",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/VRFFacet.sol",
+      "selectors": [
+        {
+          "selector": "0xfc2479d5",
+          "signature": "getBaseRandomNumber(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x93c8f58fd1a1c242ecbc071f9d626232aad3229f4daef61908d7c4ef31a6fe30",
+          "sourceHash": "0xe74cb722aa53ecd1c1ce8176182ea1734323c64bd7c47acb63b6c19d94e92ecf",
+          "functionName": "getBaseRandomNumber"
+        },
+        {
+          "selector": "0x247b30fb",
+          "signature": "openPortals(uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x3a9d2a18ff038392bb282e31975f1858a24cfabc00332503655474295ebfa318",
+          "sourceHash": "0x2a94aacd2ddac77db9768b1ae06784c98d7cafecf571e02f40103baf2d4b6f37",
+          "functionName": "openPortals"
+        },
+        {
+          "selector": "0x8f561acc",
+          "signature": "randomNumberCallback(uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xc7e2b983cfcd53bea65ec3a59f4f3ee98d88d019e8345c22425fc948a5132251",
+          "sourceHash": "0xe603923a6c887e603fd9170c6e21c89c5c6328243d52872be60454b4092953b2",
+          "functionName": "randomNumberCallback"
+        },
+        {
+          "selector": "0xae3611f2",
+          "signature": "setVRFSystem(address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x1263052b9e5b61d6e824ee46472bb186a63143b79abb515dc77255103c6711bc",
+          "sourceHash": "0xb327152a117335faa7759a2bd3e1e90093b59735e92a969537b66f158ceb7763",
+          "functionName": "setVRFSystem"
+        },
+        {
+          "selector": "0xf436aa66",
+          "signature": "vrfSystem()",
+          "stateMutability": "view",
+          "implementationHash": "0x0d097496e6cc4d7ec951f1ee539e4ddb8dc23ce47213348f4bb11b9e38419503",
+          "sourceHash": "0x93fcc8132461d0a91d584d6874a094cd27edfae1608a04771fc672136ff9bd5e",
+          "functionName": "vrfSystem"
+        }
+      ],
+      "internalFunctions": [
+        {
+          "name": "drawRandomNumber",
+          "visibility": "internal",
+          "signature": "internal function drawRandomNumber(uint256 _tokenId) returns (uint256 requestId_)",
+          "contentHash": "0x51403b1c136eaebe46135f23b2863d7d84ff9c2f06ee29b97fbf25176048c06e",
+          "sourceHash": "0x066e7abfcadf55b2662d6101d38fa015ad732ab5c7c9781382ad7f8d70370f6b"
+        },
+        {
+          "name": "tempFulfillRandomness",
+          "visibility": "internal",
+          "signature": "internal function tempFulfillRandomness(uint256 _requestId, uint256 _randomNumber)",
+          "contentHash": "0x848dd00286c97c7abc4bcd999994f90965b23dfea54b9340593bd0b9d8d3b39e",
+          "sourceHash": "0xd3dd6acd04d45dbe74a283638eaa70b78e9ef2f94515991057869340a3c91cfe"
+        }
+      ],
+      "events": [
+        {
+          "signature": "event OpenPortals(uint256[] _tokenIds)"
+        },
+        {
+          "signature": "event PortalOpened(uint256 indexed tokenId)"
+        },
+        {
+          "signature": "event VrfRandomNumber(uint256 indexed tokenId, uint256 randomNumber, uint256 _vrfTimeSet)"
+        }
+      ]
+    },
+    {
+      "facetName": "ShopFacet",
+      "facetAddress": "0x73F9bF1982d2e63b0DEBCDBC43b22B8d45A569cD",
+      "bytecodeHash": "0x897714983a716c76ffa559baa4eb0fa4f52e4dc84cb3ee4416bad209d0e5bd5d",
+      "abiHash": "0xad93470598b56b1b72125ff7489181d01db3805befc93a83b7f2cfe94d3c63d6",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/ShopFacet.sol",
+      "selectors": [
+        {
+          "selector": "0xe0a76947",
+          "signature": "buyPortals(address,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x14f576095fa37df078c3de57b8507594c78044e0b41b4272a7f536c6fd5df5ff",
+          "sourceHash": "0xf437fb4abb9b03ec728826b34c8b177bcd9d84bddd67d9564009f9d4e28afec2",
+          "functionName": "buyPortals"
+        },
+        {
+          "selector": "0x43866f18",
+          "signature": "mintPortals(address,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x4dc4276f5b89cc0661cda543f7137d41b68499ddaf4c7115bdaa0693a9ced79f",
+          "sourceHash": "0xada052f8b2d9c6fdd32c30ce66ec1e97cfc7f45a41742941a4f81a53826a6b36",
+          "functionName": "mintPortals"
+        },
+        {
+          "selector": "0xebdc3b58",
+          "signature": "purchaseItemsWithGhst(address,uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xdfd693e0ee733cc616e6d2a1a8a6d90d10457f1b1ca13ffced839c7c60110659",
+          "sourceHash": "0xc8deb944554f7a8e3c8a1cc4570fdcd99c9ec5473b211ad3228820affd49fde1",
+          "functionName": "purchaseItemsWithGhst"
+        },
+        {
+          "selector": "0x432788ec",
+          "signature": "purchaseTransferItemsWithGhst(address,uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xe1056534f2b686c4f2270cbb2a6c80b9b5ce1b8b223ad0aca644c9bd47dd43e6",
+          "sourceHash": "0x4da1f30c8b0fedd7436eaae0104c62a9e0a95b7c3f8084a4d251782ade35299f",
+          "functionName": "purchaseTransferItemsWithGhst"
+        }
+      ],
+      "internalFunctions": [],
+      "events": [
+        {
+          "signature": "event BuyPortals(address indexed _from, address indexed _to, uint256 _tokenId, uint256 _numAavegotchisToPurchase, uint256 _totalPrice)"
+        },
+        {
+          "signature": "event MintPortals(address indexed _from, address indexed _to, uint256 _tokenId, uint256 _numAavegotchisToPurchase, uint256 _hauntId)"
+        },
+        {
+          "signature": "event PurchaseItemsWithGhst(address indexed _buyer, address indexed _to, uint256[] _itemIds, uint256[] _quantities, uint256 _totalPrice)"
+        },
+        {
+          "signature": "event PurchaseItemsWithVouchers(address indexed _buyer, address indexed _to, uint256[] _itemIds, uint256[] _quantities)"
+        },
+        {
+          "signature": "event PurchaseTransferItemsWithGhst(address indexed _buyer, address indexed _to, uint256[] _itemIds, uint256[] _quantities, uint256 _totalPrice)"
+        }
+      ]
+    },
+    {
+      "facetName": "MetaTransactionsFacet",
+      "facetAddress": "0x9EBCFe24792aABdccc93AD907229EB90B6F66CD8",
+      "bytecodeHash": "0xbae13d09d67f0d47e7a89d44e52683de582cadbd1ea7431415932bad609bf74d",
+      "abiHash": "0x7a66afd563c68a045c5cc093d259c2bc5fd954844b9909f1db2d9128e0fd222d",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/MetaTransactionsFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x0c53c51c",
+          "signature": "executeMetaTransaction(address,bytes,bytes32,bytes32,uint8)",
+          "stateMutability": "payable",
+          "implementationHash": "0x3bf719d591c42cff1b44d72a57470d44140fba3611ec7c267f8cf277b76a3ff3",
+          "sourceHash": "0x663b2368f3d05d0ae272a0ca6fb21bb9e01c72a75fd646ca8fe5a4be4a885b98",
+          "functionName": "executeMetaTransaction"
+        },
+        {
+          "selector": "0x2d0335ab",
+          "signature": "getNonce(address)",
+          "stateMutability": "view",
+          "implementationHash": "0x9a5f22d837f657a470d92b8bc74e0981317381daa8e2c51431c667fcf056bda9",
+          "sourceHash": "0xed10f36f915382be2419f3eebdde4445ac134bf665f1a09412603550f73cecbb",
+          "functionName": "getNonce"
+        }
+      ],
+      "internalFunctions": [
+        {
+          "name": "convertBytesToBytes4",
+          "visibility": "internal",
+          "signature": "internal function convertBytesToBytes4(bytes memory inBytes) pure returns (bytes4 outBytes4)",
+          "contentHash": "0xf9009421de8b29b1b4b7d57c894c3a2730ddce8ddf78cd0f321d3e4a961625a9",
+          "sourceHash": "0xee9a76a0edc135d8ce8b211b65a48ffa5373cc9391d41dac70e8edc98bf63c76"
+        },
+        {
+          "name": "getDomainSeparator",
+          "visibility": "private",
+          "signature": "private function getDomainSeparator() view returns (bytes32)",
+          "contentHash": "0x8dbac5e7738849faa87680e9bf260736f09b0474b2c2f82dac47bdceca24c26b",
+          "sourceHash": "0xf5c302b0f3adc0a4911c240f50159fcdf482352747e1ed0a833b3a9554741d24"
+        },
+        {
+          "name": "hashMetaTransaction",
+          "visibility": "internal",
+          "signature": "internal function hashMetaTransaction(struct MetaTransactionsFacet.MetaTransaction memory metaTx) pure returns (bytes32)",
+          "contentHash": "0x4c619060dd5f81f2e258c21bb9a981128f4bd7002e85fe4ccdc1e842ec21e162",
+          "sourceHash": "0x22775f937c90f399403b3ccc56227dd7f118a1138bac1ffe76ab6568e01453b7"
+        },
+        {
+          "name": "toTypedMessageHash",
+          "visibility": "internal",
+          "signature": "internal function toTypedMessageHash(bytes32 messageHash) view returns (bytes32)",
+          "contentHash": "0xb2b33972146389d9719a772707c8916ef0d9dafbd031cdaa9c7f463a4720d059",
+          "sourceHash": "0xf19c8dda6244bde535c1b26bb2599dd6678f59ef96aad169821428366abda45b"
+        },
+        {
+          "name": "verify",
+          "visibility": "internal",
+          "signature": "internal function verify(address user, struct MetaTransactionsFacet.MetaTransaction memory metaTx, bytes32 sigR, bytes32 sigS, uint8 sigV) view returns (bool)",
+          "contentHash": "0xcaedafba68b6202ef7220ef2aed55ee2821e7c6f3b9c0f2a8005c19752155361",
+          "sourceHash": "0xf68f07baeaa9a80a46e939bec747c873396de59b73574931ab5f5169e231d3fa"
+        }
+      ],
+      "events": [
+        {
+          "signature": "event MetaTransactionExecuted(address userAddress, address relayerAddress, bytes functionSignature)"
+        }
+      ]
+    },
+    {
+      "facetName": "ERC1155MarketplaceFacet",
+      "facetAddress": "0x2dEE35a4615D8e7655Ac17668aDbaB013Aa05a58",
+      "bytecodeHash": "0x250833611cddd6dc98b34d036d6fcd9b98aea84394ec72e1b91da04ce5c618c0",
+      "abiHash": "0x7049cb5ba3e877df17fe2027c4a5c3bc0fd30353a134b0a5d09a8e8b3dc42174",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/ERC1155MarketplaceFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x0c417fa0",
+          "signature": "function batchExecuteERC1155Listing(tuple(uint256 listingId, address contractAddress, uint256 itemId, uint256 quantity, uint256 priceInWei, address recipient)[] listings)",
+          "stateMutability": "nonpayable",
+          "functionName": "function batchExecuteERC1155Listing"
+        },
+        {
+          "selector": "0x9150eea4",
+          "signature": "batchUpdateERC1155ListingPriceAndQuantity(uint256[],uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x2f12b8a3627153357c9c31ec77d3cd34806eb05b6899c3dd7577ebcc6837053d",
+          "sourceHash": "0xaa515d4fc442118eaac7f4df8ea4e80ca277734a5d3815782d7f9da7ba13eac9",
+          "functionName": "batchUpdateERC1155ListingPriceAndQuantity"
+        },
+        {
+          "selector": "0x08642e24",
+          "signature": "cancelERC1155Listing(uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x617246905b874e6ded14e654b681a8321b735733fae96dc79805d4a0a2d01bee",
+          "sourceHash": "0xdb067cb7375c6e1560a97f7a770a588314bc9695331ce92f344334b5b8fc99b1",
+          "functionName": "cancelERC1155Listing"
+        },
+        {
+          "selector": "0x17ca3681",
+          "signature": "cancelERC1155Listings(uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xc2e950e735de7b65e4f1ef6943a3d3c1a7f8b2f964619d14643fd61772c6d3ac",
+          "sourceHash": "0xeb4ae361580dffa3fc1315e4a82dc5e78616867d3fefe161e22a566288fe02fe",
+          "functionName": "cancelERC1155Listings"
+        },
+        {
+          "selector": "0x575ae876",
+          "signature": "executeERC1155Listing(uint256,uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xb848aa29ac97e78cd754cfa1a82caf4c63a2073d3c991053d6de111d225f4c86",
+          "sourceHash": "0x90b96382cab3a6136e5412628dde098a9e03bd2b89d4b0cb07cf56605ddc2c23",
+          "functionName": "executeERC1155Listing"
+        },
+        {
+          "selector": "0x68edd211",
+          "signature": "executeERC1155ListingToRecipient(uint256,address,uint256,uint256,uint256,address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xaf18354bcec3b802027c5b40c2edbf0940ee2aaf567691b4828116d01ba0234b",
+          "sourceHash": "0xa734a689554acbf689ee7615ef4eb9791f6aa23e7892c9820269ef99ac635c65",
+          "functionName": "executeERC1155ListingToRecipient"
+        },
+        {
+          "selector": "0x71bdabc3",
+          "signature": "setERC1155Listing(address,uint256,uint256,uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x70a8c13531211efc81755ee8eb26e2d965762b9e0ed7674048eaab21c814235b",
+          "sourceHash": "0x3919451c95463de0c0498969db9883503fe5828eb44428f61cc17f4e9f2ea872",
+          "functionName": "setERC1155Listing"
+        },
+        {
+          "selector": "0x0c21a7f9",
+          "signature": "setERC1155ListingWithSplit(address,uint256,uint256,uint256,uint256,uint16[2],address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x0935ab3de1412c10dcb884933c7fe71b79fc1b9a2ccf12b0323b091ccf49f343",
+          "sourceHash": "0x1c13c5e781de45b259f56f4a0cd2074184237d627c0018a6a37b5cf232cbe114",
+          "functionName": "setERC1155ListingWithSplit"
+        },
+        {
+          "selector": "0x15d03a9c",
+          "signature": "setERC1155ListingWithWhitelist(address,uint256,uint256,uint256,uint256,uint16[2],address,uint32)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x37fa68fc83e3fbdc849279c3a3f6b17b92436f0aba9982ea6ab4b9e09558b989",
+          "sourceHash": "0xe1973f1e9d9b3afe2c657811d400a06b0f469af8eae2a13d8e43a7f6936140f8",
+          "functionName": "setERC1155ListingWithWhitelist"
+        },
+        {
+          "selector": "0x131dbd09",
+          "signature": "setListingFee(uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x133d38047be604caf48e1230c84be6423fa9139a8b830bf9a09cda5f605bee76",
+          "sourceHash": "0x4fc2a147dd26cd009c6dedc5c0d7bc6558813fc04ec2fb5926aa5f0c296dab05",
+          "functionName": "setListingFee"
+        },
+        {
+          "selector": "0xfac43c85",
+          "signature": "updateBatchERC1155Listing(address,uint256[],address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xfa5eb246cf009c682b90fc4bbbecd795c419f5828836ab6a480c0f4dac69c1d5",
+          "sourceHash": "0x748fd02369eb4340697d06dc287dec87ea5529eba347f8fe8db7feb0f67f8609",
+          "functionName": "updateBatchERC1155Listing"
+        },
+        {
+          "selector": "0xe9a8887f",
+          "signature": "updateERC1155Listing(address,uint256,address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x2001d442ad87c18d176fdb09b415d46a02572fdcd0fe3c45c29b411d5a05f94b",
+          "sourceHash": "0xfa6743d55a396f6aa7da3170e3c4d1b01c086a2e9bb4dbda84f488dc96108ad0",
+          "functionName": "updateERC1155Listing"
+        },
+        {
+          "selector": "0x8e68b369",
+          "signature": "updateERC1155ListingPriceAndQuantity(uint256,uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xf1e4c8632e284873e4c8db2b1a996a7357fab4713144e0b1fb82001dce38d8d6",
+          "sourceHash": "0xec122e481f178379b76665086230026213b464067683f427d9bb03d0fdb189a7",
+          "functionName": "updateERC1155ListingPriceAndQuantity"
+        }
+      ],
+      "internalFunctions": [
+        {
+          "name": "createERC1155Listing",
+          "visibility": "internal",
+          "signature": "internal function createERC1155Listing(address _erc1155TokenAddress, uint256 _erc1155TypeId, uint256 _quantity, uint256 _priceInWei, uint256 _category, uint16[2] memory _principalSplit, address _affiliate, uint32 _whitelistId)",
+          "contentHash": "0x712fa63ea6d89a3ca8dcf2f5d75243f7d4155ec9d741f80243567461bd315ee0",
+          "sourceHash": "0xce42def760b62d2436333441e0e33fffff96555a106e88a49205e7c071a273d5"
+        }
+      ],
+      "events": [
+        {
+          "signature": "event ChangedListingFee(uint256 listingFeeInWei)"
+        },
+        {
+          "signature": "event ERC1155ExecutedListing(uint256 indexed listingId, address indexed seller, address buyer, address erc1155TokenAddress, uint256 erc1155TypeId, uint256 indexed category, uint256 _quantity, uint256 priceInWei, uint256 time)"
+        },
+        {
+          "signature": "event ERC1155ExecutedToRecipient(uint256 indexed listingId, address indexed buyer, address indexed recipient)"
+        },
+        {
+          "signature": "event ERC1155ListingAdd(uint256 indexed listingId, address indexed seller, address erc1155TokenAddress, uint256 erc1155TypeId, uint256 indexed category, uint256 quantity, uint256 priceInWei, uint256 time)"
+        },
+        {
+          "signature": "event ERC1155ListingSplit(uint256 indexed listingId, uint16[2] principalSplit, address affiliate)"
+        },
+        {
+          "signature": "event ERC1155ListingWhitelistSet(uint256 indexed listingId, uint32 whitelistId)"
+        }
+      ]
+    },
+    {
+      "facetName": "ERC721MarketplaceFacet",
+      "facetAddress": "0x4d81341296d6B884C94bFB76dB43fa12E65e510F",
+      "bytecodeHash": "0x51160c45e10a7cd01bfa5a32504106ea8471dce9c48d78b7b1c0696e1bd4b0ff",
+      "abiHash": "0x5ad48905643d9999e1b2a4bec7f204c1f972a806e78269fda1a78174c7889c63",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/ERC721MarketplaceFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x4146c10f",
+          "signature": "addERC721Listing(address,uint256,uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x87a8658f53124acdf78603e6e23c97bf675d8c36f877374b4a72819e468d3257",
+          "sourceHash": "0xa0ba276004b5e5a9ceab7b7c3ff2f6801bd284002470725b7f5679ffaca8c579",
+          "functionName": "addERC721Listing"
+        },
+        {
+          "selector": "0x450cfedf",
+          "signature": "addERC721ListingWithSplit(address,uint256,uint256,uint256,uint16[2],address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xfe50a04ddbc6cd51c92e1c70973faa65a1f4b0674bd2aaf1dc2b6a8310984591",
+          "sourceHash": "0x748a0d895a63d5ff58d8651ad82f3fc6b40f3a20610a5845fc2acbab9c5f3395",
+          "functionName": "addERC721ListingWithSplit"
+        },
+        {
+          "selector": "0xc5a74fe9",
+          "signature": "addERC721ListingWithWhitelist(address,uint256,uint256,uint256,uint16[2],address,uint32)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x55932d056fa0b26e852f8308efad7e39fb2d76c7b9f33393eead3737f0fff85b",
+          "sourceHash": "0xa96aaeac54e1df76f8922f0db67f6e015c3828942187c0fb777452653716b117",
+          "functionName": "addERC721ListingWithWhitelist"
+        },
+        {
+          "selector": "0x36d40187",
+          "signature": "function batchExecuteERC721Listing(tuple(uint256 listingId, address contractAddress, uint256 priceInWei, uint256 tokenId, address recipient)[] listings)",
+          "stateMutability": "nonpayable",
+          "functionName": "function batchExecuteERC721Listing"
+        },
+        {
+          "selector": "0xc382e679",
+          "signature": "batchUpdateERC721ListingPrice(uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x9fe1d0e7b6029ae1656f717d38013f4a5b9b63d9f542570dab3d3c80454737dd",
+          "sourceHash": "0x47cb92ee720dac179a197d69b8220e1f590fe0a7b99941a117ca051e7bbaee07",
+          "functionName": "batchUpdateERC721ListingPrice"
+        },
+        {
+          "selector": "0xdf3ad6d1",
+          "signature": "cancelERC721Listing(uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xb45871d396c4427edfdb74b896de5a58a6fbafe949d18cbd973354ae30fa9a8c",
+          "sourceHash": "0x8e80f1cc7d8185b5939b53a71f61faca349012da491aa825087340b881eafcc5",
+          "functionName": "cancelERC721Listing"
+        },
+        {
+          "selector": "0xba726be4",
+          "signature": "cancelERC721ListingByToken(address,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xf1ca5844bf2da00e392d065cd45709cb79e656141e1604512e3f54b0acb23345",
+          "sourceHash": "0x898b650d31538f5082a59f8c88f7340a0d7002f3dbb8840b792a7ecb917af835",
+          "functionName": "cancelERC721ListingByToken"
+        },
+        {
+          "selector": "0x0adfab17",
+          "signature": "cancelERC721Listings(uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x2f1d6fdb75763c1a8025bf58f8eeac98799f4d3d6eed7ae0753e6a6bffeb804c",
+          "sourceHash": "0x8b919fadddf705317244a9bf6e0828b5aaa3da0e07bd3d4a50f6847136d1fcaf",
+          "functionName": "cancelERC721Listings"
+        },
+        {
+          "selector": "0x66609c88",
+          "signature": "executeERC721ListingToRecipient(uint256,address,uint256,uint256,address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xddd1b3779686741e64820625b4d34740e1805d5adec8c83be554d886789594d5",
+          "sourceHash": "0x040e8a048cd71320c9001e6671069a425c3b3913c96c92b29129d7cf269f954d",
+          "functionName": "executeERC721ListingToRecipient"
+        },
+        {
+          "selector": "0x3eed635a",
+          "signature": "updateERC721Listing(address,uint256,address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x992cda9de0e43ba3cbcbd072cc1ee5e113783c2177ee6769a8be33aac6a077b2",
+          "sourceHash": "0x8be990d53f4daa460e5b4883a0c3169f6f867f559798037a402c6ba7bbecdcb2",
+          "functionName": "updateERC721Listing"
+        },
+        {
+          "selector": "0x1f1bd7de",
+          "signature": "updateERC721ListingPrice(uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xbf11ef33392de501f329bf31de50e20260ddfa1ec02cd81c185825eb297198c9",
+          "sourceHash": "0xa47d953d6e4aac8d90932a94a0dde49f86f03646ef202fb66391229d9abdff7f",
+          "functionName": "updateERC721ListingPrice"
+        }
+      ],
+      "internalFunctions": [
+        {
+          "name": "createERC721Listing",
+          "visibility": "internal",
+          "signature": "internal function createERC721Listing(address _erc721TokenAddress, uint256 _erc721TokenId, uint256 _category, uint256 _priceInWei, uint16[2] memory _principalSplit, address _affiliate, uint32 _whitelistId)",
+          "contentHash": "0xc83f26c4d17423476aa455f5ad21764b226a7a1911f04efecb35c40091221f0a",
+          "sourceHash": "0x8f0c012a7b75ac34f8a7afbcd31165e74718c774fd6644d70bd47147e32a03bd"
+        }
+      ],
+      "events": [
+        {
+          "signature": "event ERC721ExecutedListing(uint256 indexed listingId, address indexed seller, address buyer, address erc721TokenAddress, uint256 erc721TokenId, uint256 indexed category, uint256 priceInWei, uint256 time)"
+        },
+        {
+          "signature": "event ERC721ExecutedToRecipient(uint256 indexed listingId, address indexed buyer, address indexed recipient)"
+        },
+        {
+          "signature": "event ERC721ListingAdd(uint256 indexed listingId, address indexed seller, address erc721TokenAddress, uint256 erc721TokenId, uint256 indexed category, uint256 time)"
+        },
+        {
+          "signature": "event ERC721ListingSplit(uint256 indexed listingId, uint16[2] principalSplit, address affiliate)"
+        },
+        {
+          "signature": "event ERC721ListingWhitelistSet(uint256 indexed listingId, uint32 whitelistId)"
+        }
+      ]
+    },
+    {
+      "facetAddress": "0xFC8DA8fCb656F6D3924be886871F41A294dDe3Fc",
+      "bytecodeHash": "0xb2f1c9efa4e2eab3c08c586a738c39118be53efe4f1e67f8d15878186669abc4",
+      "selectors": [
+        {
+          "selector": "0x586684ac",
+          "functionName": "0x586684ac"
+        },
+        {
+          "selector": "0x467ab5cf",
+          "functionName": "0x467ab5cf"
+        },
+        {
+          "selector": "0xea20c3c6",
+          "functionName": "0xea20c3c6"
+        },
+        {
+          "selector": "0x2a206f11",
+          "functionName": "0x2a206f11"
+        },
+        {
+          "selector": "0xb0facab3",
+          "functionName": "0xb0facab3"
+        },
+        {
+          "selector": "0xdb87db52",
+          "functionName": "0xdb87db52"
+        },
+        {
+          "selector": "0xa8e39da0",
+          "functionName": "0xa8e39da0"
+        },
+        {
+          "selector": "0xab0fcabf",
+          "functionName": "0xab0fcabf"
+        }
+      ]
+    },
+    {
+      "facetName": "GotchiLendingFacet",
+      "facetAddress": "0x08b1598C261A04258c2FbBe74400a82B9Cc91eB3",
+      "bytecodeHash": "0xe0e9ab815d10158334dbe85e5f2c02e13f127afc6a2d55a64bd17e2983eaee09",
+      "abiHash": "0x5ad48905643d9999e1b2a4bec7f204c1f972a806e78269fda1a78174c7889c63",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/GotchiLendingFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x2b4caab7",
+          "signature": "addGotchiLending(uint32,uint96,uint32,uint8[3],address,address,uint32,address[],uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x2e4e68f77d8b6023b5606928e3b70bdf06c6266baa727e35bcb1526d39f8d111",
+          "sourceHash": "0x11213a262e23dcd9ad652f53435bd770c6d7c40bd5286357ebdd4e5ce9ce5ac3",
+          "functionName": "addGotchiLending"
+        },
+        {
+          "selector": "0x8be5dcbe",
+          "signature": "function addGotchiListing(tuple(uint32 tokenId, uint96 initialCost, uint32 period, uint8[3] revenueSplit, address originalOwner, address thirdParty, uint32 whitelistId, address[] revenueTokens, uint256 permissions) p)",
+          "stateMutability": "nonpayable",
+          "functionName": "function addGotchiListing"
+        },
+        {
+          "selector": "0x85c3c3cf",
+          "signature": "agreeGotchiLending(uint32,uint32,uint96,uint32,uint8[3])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xb4c7591a8621582974c47cf611e66e753db4e903297851a033ef3d136961d432",
+          "sourceHash": "0xe30a4e1ff70d5233b97395ee31e63fa3f1cf558a7a458713b6550614a5bdf617",
+          "functionName": "agreeGotchiLending"
+        },
+        {
+          "selector": "0x8311e041",
+          "signature": "function batchAddGotchiListing(tuple(uint32 tokenId, uint96 initialCost, uint32 period, uint8[3] revenueSplit, address originalOwner, address thirdParty, uint32 whitelistId, address[] revenueTokens, uint256 permissions)[] listings)",
+          "stateMutability": "nonpayable",
+          "functionName": "function batchAddGotchiListing"
+        },
+        {
+          "selector": "0xca11e5e8",
+          "signature": "batchCancelGotchiLending(uint32[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x7661d4022eb44e0e6e7d07c3dc2f1c9814cf12702a309ba9661b37fa4b5cedb6",
+          "sourceHash": "0xe72d58a0446824bd0f4dbeb2daccfd4b0821cc674715b287e3607546c523c7b7",
+          "functionName": "batchCancelGotchiLending"
+        },
+        {
+          "selector": "0xb59ffa06",
+          "signature": "batchCancelGotchiLendingByToken(uint32[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x0e5737ec8dc8637633a1f9921f34c4b18ae639f6022b2d29540dc453c6c78beb",
+          "sourceHash": "0xce2ee2732b792cecc4b2f401b8f15a0b1705ace17f2e7253f0f422d831d4429f",
+          "functionName": "batchCancelGotchiLendingByToken"
+        },
+        {
+          "selector": "0x96e18391",
+          "signature": "batchClaimAndEndAndRelistGotchiLending(uint32[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x9e3f25bf7821254a33da5aeaa26db3a7c3c0ff2b72cabc8dc6891219e04354cc",
+          "sourceHash": "0xbce99e03eb06acf833a0b0490748d1a8ca0f9ff9c4cd5cfc12aa3f97254a2f07",
+          "functionName": "batchClaimAndEndAndRelistGotchiLending"
+        },
+        {
+          "selector": "0xb815a1ed",
+          "signature": "batchClaimAndEndGotchiLending(uint32[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x4011f42a3cbb0f7f2ddf77fadec026a7d306673cb8761a892b735711ab6f8f5d",
+          "sourceHash": "0xc179f07b1bcca26596ff96d295d4f0aa4a82d2b1e8cb13b42a27620e0bcddfc1",
+          "functionName": "batchClaimAndEndGotchiLending"
+        },
+        {
+          "selector": "0x9379f260",
+          "signature": "batchClaimGotchiLending(uint32[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xcbba6a00861e7c2d19e126abef345f6db73659375e023015b7c28839410f11bf",
+          "sourceHash": "0x5fa7b2eac1ad5112dc47cf583076d9d6bea5c345fac5bc8a6a23b6f52c0e7993",
+          "functionName": "batchClaimGotchiLending"
+        },
+        {
+          "selector": "0x7497a61c",
+          "signature": "function batchExtendGotchiLending(tuple(uint32 tokenId, uint32 extension)[] _batchRenewParams)",
+          "stateMutability": "nonpayable",
+          "functionName": "function batchExtendGotchiLending"
+        },
+        {
+          "selector": "0xf0b09e3b",
+          "signature": "cancelGotchiLending(uint32)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x70251a079fc82bd6772dbb63816860965687af9f0bd949295e9f6bdaefc85cfd",
+          "sourceHash": "0x6afd560457932e6254d6bd5dc5a6bcd79d2b804ffa4638f333eac5f1ca6c905b",
+          "functionName": "cancelGotchiLending"
+        },
+        {
+          "selector": "0xf7b4edda",
+          "signature": "cancelGotchiLendingByToken(uint32)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x951a2c44113a5d1006a15937d2ef08ebdbe62f66dae1b84f0f384a77c6a991a6",
+          "sourceHash": "0x219aab310141326b172436b5401f08aa9d3cbb6bf8145f3ffff9d1f19a6e5fbf",
+          "functionName": "cancelGotchiLendingByToken"
+        },
+        {
+          "selector": "0x4277a16e",
+          "signature": "claimAndEndAndRelistGotchiLending(uint32)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x793a2cfe000c4a664a78305ea8faec39de9aa173e605bd287985ac22a1d442dc",
+          "sourceHash": "0x0c965852b60b389cd5338f142c4ebd30da233e5ca1aa60a1118b0356a46a7f8a",
+          "functionName": "claimAndEndAndRelistGotchiLending"
+        },
+        {
+          "selector": "0xae0c8bd8",
+          "signature": "claimAndEndGotchiLending(uint32)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x444b13d3bc342ad64a88d01bc6196c84ba4ec59c19bf26822bddaf27e26af074",
+          "sourceHash": "0x9f6868c6c8f7fe94f8fc32a89edf1cb2e4d37836d6d7a171b9226b531c521dce",
+          "functionName": "claimAndEndGotchiLending"
+        },
+        {
+          "selector": "0xffa7802d",
+          "signature": "claimGotchiLending(uint32)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x65afd9d3e3be020835e06f05c13804e42a1645323bc447f208f0c5f590d8574d",
+          "sourceHash": "0x427d84b220b0ff390d8cce72f8a709524256f14eb4f947b61518a0a5d07c4588",
+          "functionName": "claimGotchiLending"
+        },
+        {
+          "selector": "0x80825c6e",
+          "signature": "extendGotchiLending(uint32,uint32)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x922c9ce1657532b5310d014809ee939d9b8422d650262ed16f440934f3be85a1",
+          "sourceHash": "0x29c45f0eed8fff7d1cb41ef9128f6927d64c3b11ec4e6a0d0e4bce29ae89cc37",
+          "functionName": "extendGotchiLending"
+        }
+      ],
+      "internalFunctions": [],
+      "events": []
+    },
+    {
+      "facetName": "LendingGetterAndSetterFacet",
+      "facetAddress": "0x7E43693107515509F66371325EA904bfB4DE0eb4",
+      "bytecodeHash": "0xb1e261404ac714c3f3f0bb258532c56b5af1abb3ee78187a19869beb874f14b3",
+      "abiHash": "0x7049cb5ba3e877df17fe2027c4a5c3bc0fd30353a134b0a5d09a8e8b3dc42174",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/LendingGetterAndSetterFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x5b8368d8",
+          "signature": "allowRevenueTokens(address[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xb48c60802d6e1687cdf5c6af3c9c6fab4b9047a36d0b108de000c9fa0eb0ea4d",
+          "sourceHash": "0xb9243578a5778f9dbae0964e908463f7890bb1c80eba8f8fe6742de25695a806",
+          "functionName": "allowRevenueTokens"
+        },
+        {
+          "selector": "0x33f012ce",
+          "signature": "function batchSetLendingOperator(address _lendingOperator, tuple(uint32 _tokenId, bool _isLendingOperator)[] _inputs)",
+          "stateMutability": "nonpayable",
+          "functionName": "function batchSetLendingOperator"
+        },
+        {
+          "selector": "0xa4df11a8",
+          "signature": "disallowRevenueTokens(address[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x10d03d989c0a6c136d0d18f33e2a5db3a37eac1f930695e5674290246e28c380",
+          "sourceHash": "0x4ae8b8e8e294b57f08459f060ca0853e0bb1fa58c7c5a5d125e814aae66b7b52",
+          "functionName": "disallowRevenueTokens"
+        },
+        {
+          "selector": "0x66590b16",
+          "signature": "getAllLendingPermissions(uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0x60fa85e07219170d539599a507e010babc4be439bd969f2cf7d840719737ef1c",
+          "sourceHash": "0x96a238cf1ea82d450e5e7645925a2cf5dffd4fcc270621a63c518f5555a61516",
+          "functionName": "getAllLendingPermissions"
+        },
+        {
+          "selector": "0x113df564",
+          "signature": "getGotchiLendingFromToken(uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0x05053a92e9a8f25460652e37ac304afedc3f6936d57321afe309bc0b7042ce9a",
+          "sourceHash": "0xfe3bb1605235ddb6223780b5f1ed9feb9bf78d944981a82ed096864a1602c773",
+          "functionName": "getGotchiLendingFromToken"
+        },
+        {
+          "selector": "0xfc02e4ee",
+          "signature": "getGotchiLendingIdByToken(uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0x40b385b7aab985691b3a59d6b53ce24c2d2d5d9b27876797eac9dec3f6aa9d22",
+          "sourceHash": "0x21db409bffe4a2a2e854a2880336dda4426f0c6955656ca6290b58d48683b2eb",
+          "functionName": "getGotchiLendingIdByToken"
+        },
+        {
+          "selector": "0x6368cb21",
+          "signature": "getGotchiLendingListingInfo(uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0x95355362db32e27ea311938626e40f567dfd5a337e6b9d8c2d1b7d64978f4316",
+          "sourceHash": "0xdc6290a489850803c9c5d2e65dac45978a59fd5d90a0446811f811d37c5c4d36",
+          "functionName": "getGotchiLendingListingInfo"
+        },
+        {
+          "selector": "0x0cf0676e",
+          "signature": "getGotchiLendingsLength()",
+          "stateMutability": "view",
+          "implementationHash": "0xa093e2319cf1019873c0fe29b14da6a1a929ffe7a16114c0aae237cbf2e3eaf7",
+          "sourceHash": "0x84bb8c9cd6bb782299eb9690689d3889c8bda4a86b883db97b8eeeddf2cb719f",
+          "functionName": "getGotchiLendingsLength"
+        },
+        {
+          "selector": "0xdf4a0912",
+          "signature": "getLendingListingInfo(uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0x4714f3199fa5d602acbdf83289b9507d8bde27030691ab5fadf668f14434d28f",
+          "sourceHash": "0x9d529c2adcb2bab166284c3f778d8375a25e19364ee9cc267b291621f74044e7",
+          "functionName": "getLendingListingInfo"
+        },
+        {
+          "selector": "0xbc2086ca",
+          "signature": "getLendingPermissionBitmap(uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0x1504e37b1ae8e28bfa7b38f56bbb81921d3bf4019e8380db4b9f78fe5e791358",
+          "sourceHash": "0x9ea732ef295d13e42ee42b209d82ee115911e812bc48e2266cae3f0047223a35",
+          "functionName": "getLendingPermissionBitmap"
+        },
+        {
+          "selector": "0x8fe15364",
+          "signature": "getLendingPermissionModifier(uint32,uint8)",
+          "stateMutability": "view",
+          "implementationHash": "0xf96daffb059687e07748e3728b5188fc805158dbf8db3f51920932f47e643b17",
+          "sourceHash": "0xce832cb4942761fcc333c51b63552f21091ab14a044dd3f3c466c7afee71ac50",
+          "functionName": "getLendingPermissionModifier"
+        },
+        {
+          "selector": "0x0bc5c17a",
+          "signature": "getTokenBalancesInEscrow(uint32,address[])",
+          "stateMutability": "view",
+          "implementationHash": "0x72d291fcaa8945eef782bf5a592e373d684916ed8f49ba42c8852423a1a4c032",
+          "sourceHash": "0xdb68ef17c3a5e4adcf3c12b96989fb50270f800c3d10b592fa118bcc3a496e57",
+          "functionName": "getTokenBalancesInEscrow"
+        },
+        {
+          "selector": "0xd731d44e",
+          "signature": "isAavegotchiLent(uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0x53ae4e6137eedf510a1cfddac3c1481502544f1ecde581758c1d1bddf0f30fa3",
+          "sourceHash": "0x1480402fa8f37aa0ba79801e983a234babe03c2fb1eefe435312a07d727c89eb",
+          "functionName": "isAavegotchiLent"
+        },
+        {
+          "selector": "0xb11deb29",
+          "signature": "isAavegotchiListed(uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0xe326ec5e829e87feb556185b27054a676ad847b88494eff1a205b27f2c88cf89",
+          "sourceHash": "0xe801bba31f35af6930787c0cd11ddfbe8e26a8bab6c3cd115457c12e0c11cad9",
+          "functionName": "isAavegotchiListed"
+        },
+        {
+          "selector": "0x24213779",
+          "signature": "isLendingOperator(address,address,uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0xacda4f5b4ffc7868c1b735be4c5533d3fc3718b4f0dc008c2674b2a8cf5b7ebd",
+          "sourceHash": "0x0163fc92c8b9c1a82db4d681835670dd4a0447442954e3575c11a0748735b53a",
+          "functionName": "isLendingOperator"
+        },
+        {
+          "selector": "0x8731ee4e",
+          "signature": "lendingPermissionSetToNone(uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0x5e43e6263309d7cb12829616f717879a99c2c74907d52114ead0890faccc8a5b",
+          "sourceHash": "0x901aa12c0d8d525804b9cba3fdd135a183c4d8a82c253fa0b081bf47c0070223",
+          "functionName": "lendingPermissionSetToNone"
+        },
+        {
+          "selector": "0x773c3736",
+          "signature": "revenueTokenAllowed(address)",
+          "stateMutability": "view",
+          "implementationHash": "0x2111e15d1bfdff36c2cbc607f673488ad77be84c432be27f49aeb1e61ade013b",
+          "sourceHash": "0xf96002779788a15cec9e9c228f2a3d9be0da060c8fa2c1be441469d5685b9a87",
+          "functionName": "revenueTokenAllowed"
+        },
+        {
+          "selector": "0x5a5fb2c5",
+          "signature": "setLendingOperator(address,uint32,bool)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x64af4db8abeee8f7a216f8a787bd385ea9c5b06b988474421106b22689e9d0ea",
+          "sourceHash": "0x2b6122c03cdf319ffe9cadacd6e620ea6396d184e36302610c8790c0b303698d",
+          "functionName": "setLendingOperator"
+        }
+      ],
+      "internalFunctions": [],
+      "events": [
+        {
+          "signature": "event LendingOperatorSet(address indexed lender, address indexed lendingOperator, uint32 indexed tokenId, bool isLendingOperator)"
+        }
+      ]
+    },
+    {
+      "facetName": "MarketplaceGetterFacet",
+      "facetAddress": "0x4cdaC1ea432B9bb1A6ca686aB965903Af45E1a15",
+      "bytecodeHash": "0x5a9be69682175ad12b867704223ce9ff8e8c8d48f118f97a97a06920bf4b078e",
+      "abiHash": "0x2780f0a70c76ea8704e303e01001b2238eb507867fb223c4a5fec45a4a784efc",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/MarketplaceGetterFacet.sol",
+      "selectors": [
+        {
+          "selector": "0xfb8b1c56",
+          "signature": "getAavegotchiListing(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x3134f1df1648f9f455051518767cc5b5dc62422704022f7e0d5ccbafba2623f8",
+          "sourceHash": "0xe06c8e7a994e740948046cc1c0747339e76899c52a7b43b4761b7cf2a7e28fd4",
+          "functionName": "getAavegotchiListing"
+        },
+        {
+          "selector": "0x09c415af",
+          "signature": "getERC1155Listing(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0xbaaceb40aaa0a003803437623872a61b356635a4d5744eb970d2c95cbc6faa26",
+          "sourceHash": "0x21e468d0289c6c2c880aa607be2a9274122351d61113c96120f2c54c00b4270b",
+          "functionName": "getERC1155Listing"
+        },
+        {
+          "selector": "0x519f62ed",
+          "signature": "getERC1155ListingFromToken(address,uint256,address)",
+          "stateMutability": "view",
+          "implementationHash": "0x993e736ca17cc1c747df9ba3ba29a5f50e3c15aaf83d3b51652fc33cf3d4ff7b",
+          "sourceHash": "0xa43b348708808423395942db5919a3852a7953b61d3c81a0bac5eab4f33a0ecb",
+          "functionName": "getERC1155ListingFromToken"
+        },
+        {
+          "selector": "0x4eff5a3e",
+          "signature": "getERC721Listing(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x93a3f9b6550c7b9eaa5f2ebeead4650901b75f861778826f78382235ba4013fb",
+          "sourceHash": "0x6ace4ada691d86becf3d809a419553c6bc1f8e58f28aab1f53cc49d9ab79329a",
+          "functionName": "getERC721Listing"
+        },
+        {
+          "selector": "0xd33a32df",
+          "signature": "getERC721ListingFromToken(address,uint256,address)",
+          "stateMutability": "view",
+          "implementationHash": "0x349f2421b914c458c5c80e85cc666e78e21ef73157108c0281a524a585dc5892",
+          "sourceHash": "0x4f29867542a6cb4c43b554f811bbd160fb16e1afb632a67b7f63068ce645a391",
+          "functionName": "getERC721ListingFromToken"
+        },
+        {
+          "selector": "0x962095a1",
+          "signature": "getListingFeeInWei()",
+          "stateMutability": "view",
+          "implementationHash": "0xa5735b06ea752cb87b78ca5ff476f7cb0aeaa6f7b1f89ef9871fbb84339c5b65",
+          "sourceHash": "0x63be676d86029e1cf0c59b6372ce149cf0812b0ab73fe6ff92b31cc7d06d610f",
+          "functionName": "getListingFeeInWei"
+        }
+      ],
+      "internalFunctions": [],
+      "events": []
+    },
+    {
+      "facetName": "SvgViewsFacet",
+      "facetAddress": "0xB906591E9e60557ff0615b006F63FA9b2eCA5085",
+      "bytecodeHash": "0xfab9ea72e4d599d5acac30977dda1bf3e4ba2a13595361e137cf38ae96977392",
+      "abiHash": "0x2780f0a70c76ea8704e303e01001b2238eb507867fb223c4a5fec45a4a784efc",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/SvgViewsFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x6e9507ea",
+          "signature": "getAavegotchiSideSvgs(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0xa043324f39fedffd21a5a852b0e5e7841400ac0cd0c9f64e1a3bd80d89a441d6",
+          "sourceHash": "0x3eed3e54fdf2d8edeca4a4a21ebecde36e903c6016ab2c79762fa00fc3b942cd",
+          "functionName": "getAavegotchiSideSvgs"
+        },
+        {
+          "selector": "0xfd4e21a2",
+          "signature": "getItemSvgs(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x5a5f29643809d68b4d877c63550e961937d375c678c79e7e15427e6eaae085b8",
+          "sourceHash": "0xc554ccc9394b03a96fb04827ee7e88e66cf1a0f2593fd9a91d58060d69475487",
+          "functionName": "getItemSvgs"
+        },
+        {
+          "selector": "0xf5a456ea",
+          "signature": "getItemsSvgs(uint256[])",
+          "stateMutability": "view",
+          "implementationHash": "0xba27ed1ec09c363645888bfc1c87e8cf1a5b18daf20243587c16b9ae211ef7ef",
+          "sourceHash": "0x5966dffd3ad595922e542ed70596935b62ed60ce6cb398ceba89d15977faaa10",
+          "functionName": "getItemsSvgs"
+        },
+        {
+          "selector": "0x74750d18",
+          "signature": "previewSideAavegotchi(uint256,address,int16[6],uint16[16])",
+          "stateMutability": "view",
+          "implementationHash": "0xf63b8366ddbacc1247f6d925e43c6d46b1cc81eb6ed2b8d8e5609980621cdec0",
+          "sourceHash": "0xdeeafc2e91bc828f20e14ca851f65d3cab488f377a410a3bc70f18af87d0d20c",
+          "functionName": "previewSideAavegotchi"
+        },
+        {
+          "selector": "0xde6b93d9",
+          "signature": "function setSideViewDimensions(tuple(uint256 itemId, string side, tuple(uint8 x, uint8 y, uint8 width, uint8 height) dimensions)[] _sideViewDimensions)",
+          "stateMutability": "nonpayable",
+          "functionName": "function setSideViewDimensions"
+        },
+        {
+          "selector": "0x53214ba4",
+          "signature": "function setSideViewExceptions(tuple(uint256 itemId, uint256 slotPosition, bytes32 side, bool exceptionBool)[] _sideViewExceptions)",
+          "stateMutability": "nonpayable",
+          "functionName": "function setSideViewExceptions"
+        }
+      ],
+      "internalFunctions": [
+        {
+          "name": "addBodyAndWearableSideSvgLayers",
+          "visibility": "internal",
+          "signature": "internal function addBodyAndWearableSideSvgLayers(bytes memory _sideView, bytes memory _body, uint16[16] memory equippedWearables) view returns (bytes svg_)",
+          "contentHash": "0x9c25b559a30de89e5f3f41780f0ff5d41f04461989a1b7d32fdfd8bc9ad0c25d",
+          "sourceHash": "0x9f30bef9a7fef34cd4049ac8dee6d22b4475a79645246eb9dcab47ff1fd1a7c9"
+        },
+        {
+          "name": "adjustSleeveXY",
+          "visibility": "internal",
+          "signature": "internal function adjustSleeveXY(uint8 _x, uint8 _y, bytes memory _sideView, uint256 _wearableId) pure returns (uint8 newX, uint8 newY)",
+          "contentHash": "0x4a2accac8684179c2d185e4b6a0c838d82768985be453036b77041044fc152ee",
+          "sourceHash": "0x5795fed996f808bfd87dac4f059ff6eb8331425e87968fb02cecfaf3ca1f7486"
+        },
+        {
+          "name": "applyLayerExceptions",
+          "visibility": "internal",
+          "signature": "internal function applyLayerExceptions(uint16[16] memory equippedWearables, struct SvgViewsFacet.AavegotchiLayers memory layers, bytes memory _body, bytes memory _sideView) view returns (bytes svg_)",
+          "contentHash": "0x0018ae49309a0152378e959f0fdb5dd89d8f88e1e34dea1c22b387ad1538ab9b",
+          "sourceHash": "0x824a458fc49069bd7a39d155cb3aa9abda26130c3238e8787fcb3886b766ae9c"
+        },
+        {
+          "name": "applySideStyles",
+          "visibility": "internal",
+          "signature": "internal function applySideStyles(struct SvgViewsFacet.SvgLayerDetails memory _details, uint256 _tokenId, uint16[16] memory equippedWearables) pure returns (bytes)",
+          "contentHash": "0x6dd6731ea9c58d19121b823156b33983c85fbd9bd69644b7b8eee0c42d0ae3b2",
+          "sourceHash": "0xabef5fe035ac7eae1549e700195d3d8aff42f3eaa3e53b7971f57b4286c6156c"
+        },
+        {
+          "name": "backExceptions",
+          "visibility": "internal",
+          "signature": "internal function backExceptions(uint16[16] memory equippedWearables, struct SvgViewsFacet.AavegotchiLayers memory layers, bytes memory _body, bytes memory _sideView) view returns (bytes svg_)",
+          "contentHash": "0x7b48185d905d59fdbf9bcb078297aef6165bf8b8c145a1b9506c48a48accb558",
+          "sourceHash": "0xf81375ca317a5a4585f8e702b25b387cda3f2a1c6e2195e3db93358c75516d43"
+        },
+        {
+          "name": "getAavegotchiSideSvgLayers",
+          "visibility": "internal",
+          "signature": "internal function getAavegotchiSideSvgLayers(bytes memory _sideView, address _collateralType, int16[6] memory _numericTraits, uint256 _tokenId, uint256 _hauntId, uint16[16] memory equippedWearables) view returns (bytes svg_)",
+          "contentHash": "0xd25a52d083fbb6727ba312d88910e5446fd3d89cee414857dbfd5dd2f4641d47",
+          "sourceHash": "0xc715833531c6f28108b5204d199a97a31df64199490a8c8f549824866d2c2c92"
+        },
+        {
+          "name": "getBodySideWearable",
+          "visibility": "internal",
+          "signature": "internal function getBodySideWearable(bytes memory _sideView, uint256 _wearableId) view returns (bytes bodyWearable_, bytes sleeves_)",
+          "contentHash": "0x0ad6661d04f233b311eb3257799bb2723cf8fa54d3f4950db299e3b28e316b6e",
+          "sourceHash": "0xe9b82feecdeaa91a407af2246073454a09bb11a2ddac19fdb24e27c5c55c5e09"
+        },
+        {
+          "name": "getSideWearableClass",
+          "visibility": "internal",
+          "signature": "internal function getSideWearableClass(uint256 _slotPosition) pure returns (string className_)",
+          "contentHash": "0x3019bfd79c85a37cfbf55356dab04a1764d649eafdf98b38abdb3f33665ed2fc",
+          "sourceHash": "0x3f3ed075d9460f1fe799529218cee944e6ba85a8a736dc3a0b1535824b0ffce5"
+        },
+        {
+          "name": "getWearableSideView",
+          "visibility": "internal",
+          "signature": "internal function getWearableSideView(bytes memory _sideView, uint256 _wearableId, uint256 _slotPosition) view returns (bytes svg_)",
+          "contentHash": "0x9cf7e682eb7de725c30d8c86b4931851f92aa25859229150be2d5f19c05688aa",
+          "sourceHash": "0xfdbe825433e3471239411a41ef662c727749c07ae70d6bf2fb55660ff615e66d"
+        },
+        {
+          "name": "leftAndRightSideExceptions",
+          "visibility": "internal",
+          "signature": "internal function leftAndRightSideExceptions(uint16[16] memory equippedWearables, struct SvgViewsFacet.AavegotchiLayers memory layers, bytes memory _body, bytes memory _sideView) view returns (bytes svg_)",
+          "contentHash": "0xaf2e0a8463a65f00ddfc007b990988323a3d55a385fe0837c420da5e971de4bb",
+          "sourceHash": "0x7bf10e2b4a8dd9399e71782d279fd540802f51eeed99610a75f654f0d9dc2759"
+        },
+        {
+          "name": "prepareItemSvg",
+          "visibility": "internal",
+          "signature": "internal function prepareItemSvg(struct Dimensions storage _dimensions, bytes memory _svg) view returns (string svg_)",
+          "contentHash": "0x3e997c7ec4fd3b8757cfd81c27137f1f32992166b538caf4f19f3e344800d399",
+          "sourceHash": "0xb763bd6a8861f3635783826267ed89fbd7a5dc64292142f6434cd0099ea3dff3"
+        }
+      ],
+      "events": []
+    },
+    {
+      "facetName": "WearableSetsFacet",
+      "facetAddress": "0x9364dbfe23a2d74F346D93Dd184ae944F2fdE0d5",
+      "bytecodeHash": "0xff9f938c75cbaa8a227ec6a7fd4ec62d16fe2bb55783233a01625d6f4857aa3d",
+      "abiHash": "0x778540dcf83ebe34fcbf22d6e036fe1a868a11bf115d46c8600b20992c1162b3",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/WearableSetsFacet.sol",
+      "selectors": [
+        {
+          "selector": "0xab6f446d",
+          "signature": "findWearableSets(uint256[])",
+          "stateMutability": "view",
+          "implementationHash": "0xfb699a778fe98c9381cf588113247f221597debf8604423ae575432c2b205bcb",
+          "sourceHash": "0xb82718144b8e35ba77aad847fdeb9526484dd1713d7bc7818a39765ba291fe0c",
+          "functionName": "findWearableSets"
+        },
+        {
+          "selector": "0xefa787e0",
+          "signature": "getWearableSet(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x10942007df8c0ba342317af82509f4fcb8fee6585fef2266059221cf7cda0faf",
+          "sourceHash": "0x26307359b3d23b27c48a0f859e04455f2617e29efde777a668f05e6249c85004",
+          "functionName": "getWearableSet"
+        },
+        {
+          "selector": "0x6ce624ed",
+          "signature": "getWearableSets()",
+          "stateMutability": "view",
+          "implementationHash": "0x8264cb2be24d5219cee283475857be3baac0ae621bf683bc72cddfd6ee44b21a",
+          "sourceHash": "0x999de68e9e0eb45d1c43724b1c13fc67bb6b48c001409818900e3154c5ace16e",
+          "functionName": "getWearableSets"
+        },
+        {
+          "selector": "0x49f7edd2",
+          "signature": "totalWearableSets()",
+          "stateMutability": "view",
+          "implementationHash": "0x4f1bb833ee4aa03d2b7948ad51b61b1130e3963d9c9ad29ec314b1ab913087a2",
+          "sourceHash": "0x5283b97aecc4273af36f353b2408b5fa22df64f3e7e0792419a871fb2a3cc341",
+          "functionName": "totalWearableSets"
+        }
+      ],
+      "internalFunctions": [],
+      "events": []
+    },
+    {
+      "facetName": "WhitelistFacet",
+      "facetAddress": "0x523A59534fdfd79005e11D943B752acbCf7320ce",
+      "bytecodeHash": "0x54d07f0897c387668b70e604ec7f2fde20759fa249bfdaa79deed1b23ccf5286",
+      "abiHash": "0x5ad48905643d9999e1b2a4bec7f204c1f972a806e78269fda1a78174c7889c63",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/WhitelistFacet.sol",
+      "selectors": [
+        {
+          "selector": "0xd508d9a8",
+          "signature": "createWhitelist(string,address[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x465b6b16fc804e08b15e5f7ccd096c129846faa9168664770e84e63e500493cb",
+          "sourceHash": "0x9a1674e1047d6745db2fb15a6149d8b48b3b25456277ecaf523b5269502ffc41",
+          "functionName": "createWhitelist"
+        },
+        {
+          "selector": "0x7ade6a95",
+          "signature": "getBorrowLimit(uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0xdcbb435381268beb810daa0ef636e74e54e65aeaecfdbc450ed3c0f9b559b42f",
+          "sourceHash": "0x83f64e18332678cc8035b464993031c23e77e89be5ee3c61126722f4ca26f649",
+          "functionName": "getBorrowLimit"
+        },
+        {
+          "selector": "0x243ce171",
+          "signature": "getWhitelist(uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0x5add7ab1285474a5bd8fac54782c6804317ab607823b03876ae240b42e7fdf27",
+          "sourceHash": "0x1ef59b8aa1afdf09e4ae03b2b9f98be2a63077a6ceff1801b8634738ff6cd788",
+          "functionName": "getWhitelist"
+        },
+        {
+          "selector": "0x66e07540",
+          "signature": "getWhitelistAccessRight(uint32,uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x1b63019a9987972013be6706b5042cec89608633fd79190e245c51e85ba278d4",
+          "sourceHash": "0x9e0fb6fa7c7734ff7e1859108d4371c5d0f5e607343710294e3f82b7f36b9266",
+          "functionName": "getWhitelistAccessRight"
+        },
+        {
+          "selector": "0x7c208cb7",
+          "signature": "getWhitelistsLength()",
+          "stateMutability": "view",
+          "implementationHash": "0x28e24847c8f56727efc0d811f6ac99f08c206b38a0c2bca29487e2a83ecdb792",
+          "sourceHash": "0x3c35f7a39cbdee77bd9d2fd1166d4793c12d9c85a4f433a6b9c0b603174579ab",
+          "functionName": "getWhitelistsLength"
+        },
+        {
+          "selector": "0xe67e9908",
+          "signature": "isWhitelisted(uint32,address)",
+          "stateMutability": "view",
+          "implementationHash": "0xaaacaf4af9124f273cd3d1ebd2a5cfea3e25d07820310f15fccf7bb0a7bf3ac6",
+          "sourceHash": "0xa1a59d9761f074b2f8eccaec248290ad149efaba46f49c0467d596f00caaafd9",
+          "functionName": "isWhitelisted"
+        },
+        {
+          "selector": "0x1dd6fdab",
+          "signature": "removeAddressesFromWhitelist(uint32,address[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x1f72c57e4ce794e4dab70fe46bcc4f4ecdc569d7f42c9d882ecd188e154c79c9",
+          "sourceHash": "0x8ed0f96ff0086907c51f506562bbfdb658bd64068775a199b96a728120707dc5",
+          "functionName": "removeAddressesFromWhitelist"
+        },
+        {
+          "selector": "0xb7131d02",
+          "signature": "setBorrowLimit(uint32,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x76336601a3e114afdbf0f17f9527b0f9793553be67014193fa322a61473c7e4e",
+          "sourceHash": "0xf8e66aeb6ffef203c55da4d98fcdf0b93a59a45271978ae90d855fb153b2d47c",
+          "functionName": "setBorrowLimit"
+        },
+        {
+          "selector": "0xa51793ac",
+          "signature": "setWhitelistAccessRight(uint32,uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xb9af460002895041fc8e7fcf2a913ba26c0d4f0518790e902f1bbb037e1b91a4",
+          "sourceHash": "0x56284025cc22165fddfcf7091f280860165c58bdc7455fdeb5b861752aff325e",
+          "functionName": "setWhitelistAccessRight"
+        },
+        {
+          "selector": "0x09f0dd09",
+          "signature": "transferOwnershipOfWhitelist(uint32,address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xde16e93ecb17518b86630e5146bfe3f367e2ac369866ae956591706fbf40a408",
+          "sourceHash": "0x525100c923b1febfb276eb2bec0b1cc8a524b7998b90a2ecade6b0da373b50bc",
+          "functionName": "transferOwnershipOfWhitelist"
+        },
+        {
+          "selector": "0xecf5f991",
+          "signature": "updateWhitelist(uint32,address[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xe07a13979445dffec2723d792df0a594a3b5bbefba9cf39b276c110a0ee89f93",
+          "sourceHash": "0xda8759f9f84bd473da0da0d026579ea7128c7c0ef8b9aefb79cb7d02d0a6e8a4",
+          "functionName": "updateWhitelist"
+        },
+        {
+          "selector": "0x6491601d",
+          "signature": "whitelistExists(uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0x6dcf3a07c1e3d1ffb18d8ababb757092707a00846b87786815ff4821314f5608",
+          "sourceHash": "0x5683baed4253623d17a6951dfa46098f7fe8b194f4b1fa2ced95a160b3e911dd",
+          "functionName": "whitelistExists"
+        },
+        {
+          "selector": "0x6d4962e5",
+          "signature": "whitelistOwner(uint32)",
+          "stateMutability": "view",
+          "implementationHash": "0xc05e622c589142e86f602d0b211a8876197f3184d7bb0f0f6af9b06de26c56fc",
+          "sourceHash": "0xa96e77f98c3a304aae22fcdfb09f1500ef91c4a9e6c8454a2ab43cfda34e6e78",
+          "functionName": "whitelistOwner"
+        }
+      ],
+      "internalFunctions": [],
+      "events": [
+        {
+          "signature": "event WhitelistCreated(uint32 indexed whitelistId)"
+        },
+        {
+          "signature": "event WhitelistOwnershipTransferred(uint32 indexed whitelistId, address indexed newOwner)"
+        },
+        {
+          "signature": "event WhitelistUpdated(uint32 indexed whitelistId)"
+        }
+      ]
+    },
+    {
+      "facetName": "PeripheryFacet",
+      "facetAddress": "0xdED2AbAC0a02845c9746C7B020077a527c17717e",
+      "bytecodeHash": "0xb6f0fd9c5071a9ddf698f53a1318a8fae27dcdbc5a0a8527706cf91459c6fa25",
+      "abiHash": "0x6b8ff938bf1f18b5421e58c5522a84ece789abb204eae7591395be891ae46fa8",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/PeripheryFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x680d5608",
+          "signature": "peripheryBridgeBurn(address,uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x9532752225639fe59866c3b98596e75c7738aa58ae5ff046397475da27bd592b",
+          "sourceHash": "0x9feb431ab8ffbc75de16a40d42dfc4d5e8ea3fb24d371eac524f2177fcc6db82",
+          "functionName": "peripheryBridgeBurn"
+        },
+        {
+          "selector": "0x6bf5458c",
+          "signature": "peripheryBridgeMint(address,uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x5976405800948978882da6b3d1a2d8cdfab20c77e8e70d2b6a27d8527d47de8d",
+          "sourceHash": "0x8dc8890cbfb7f3381b95df41ba03d01a8fcd23436ca3f699a955534b63aa820a",
+          "functionName": "peripheryBridgeMint"
+        },
+        {
+          "selector": "0x28a6ddc7",
+          "signature": "peripherySafeBatchTransferFrom(address,address,address,uint256[],uint256[],bytes)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x991b3a8baf90b7869716a6d33854bd0da156b0fc1952e5227e33f661ce1f4262",
+          "sourceHash": "0x9e43813445ab717b6fbbabe73d44910ddd107f18c8544b1439b0dfae14c9e96f",
+          "functionName": "peripherySafeBatchTransferFrom"
+        },
+        {
+          "selector": "0x474f32f7",
+          "signature": "peripherySafeTransferFrom(address,address,address,uint256,uint256,bytes)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x6db26ba316b993251870dc319c785b3c2b6dbc6fbd3c6f88f32b7cdeb2446e5b",
+          "sourceHash": "0x28454d27417fe18d242aba71b9f9505c4b81276bc09f48fea95a878cb016eac1",
+          "functionName": "peripherySafeTransferFrom"
+        },
+        {
+          "selector": "0xd0cd350f",
+          "signature": "peripherySetApprovalForAll(address,bool,address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x72c331fef563ebe62ae1ba0f4c4629b8c0ad839c96a10e5e9647af13f05b6991",
+          "sourceHash": "0xd2ee633e5c6d0368ef30b8d2622fcc745dba516e866f1f2c0623124cf1bf6412",
+          "functionName": "peripherySetApprovalForAll"
+        },
+        {
+          "selector": "0x92d5716f",
+          "signature": "peripherySetBaseURI(string)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x739aa64d0da3ebd67baaf5472ace86a63e3e58cbd9cd79b628e630104010c287",
+          "sourceHash": "0xdd8cb108beac5100a2800deddda56b1bef5ee4c0a6524058599fa1acb303870d",
+          "functionName": "peripherySetBaseURI"
+        },
+        {
+          "selector": "0xcf2a46da",
+          "signature": "removeInterface()",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x31fce4f9713180669eac2f321e978b920093ba9c0a6bbbd3010e15736087842c",
+          "sourceHash": "0x13aea4f88e22933f5aa274be68000bb054a618c03f6a19fd8fde06331ae1055c",
+          "functionName": "removeInterface"
+        },
+        {
+          "selector": "0xaeb22934",
+          "signature": "setPeriphery(address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xfee45c65a05d50b8cd15ddffb7bfe7283fa7c55c275f4f780e6a3c3edbca83e4",
+          "sourceHash": "0x628d97ede9c686e9c31b147c479b3d254f48f0fd3965c395297fabfa3df717d9",
+          "functionName": "setPeriphery"
+        }
+      ],
+      "internalFunctions": [],
+      "events": []
+    },
+    {
+      "facetName": "MerkleDropFacet",
+      "facetAddress": "0x79CbF4d613967D41c1E36D3a7611954da30aA152",
+      "bytecodeHash": "0x4e4790d97ba8c2d5edec23563d831ae2406f768a5d08307bb657937842102db6",
+      "abiHash": "0xfdef11f0e1c97cb3503380a4c2896fb7bd2e85a5b1a5c77d363b5e8f1826e077",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/MerkleDropFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x34e389f9",
+          "signature": "batchCreateXPDrop(bytes32[],bytes32[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x8076c0db1eb92bd184ba8dd220c11fbd4825d23eefd0f471d82338928e25f35c",
+          "sourceHash": "0x8d8ee33305e6af99cdea0c12e3f372b9b99480d74ab3ab89e7db9c2d7c084662",
+          "functionName": "batchCreateXPDrop"
+        },
+        {
+          "selector": "0x6f5e0ae3",
+          "signature": "batchDropClaimXPDrop(bytes32[],address[],uint256[][],bytes32[][],uint256[][],uint256[][])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xca49a422489d1d36e65f42a5bcc2d015f4e3aacf7545ca246750a1ecfccbae6c",
+          "sourceHash": "0xa9203b53ccb41a2bafc9bfd6034476d50cc213af8dfa99f7feae78d6abd73803",
+          "functionName": "batchDropClaimXPDrop"
+        },
+        {
+          "selector": "0xbfbedb1e",
+          "signature": "batchGotchiClaimXPDrop(bytes32,address[],uint256[][],bytes32[][],uint256[][],uint256[][])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xcd8ec41c690042b094841c3b6a39c92598e74b64fc34bcd7f06fa52a2d8ec57d",
+          "sourceHash": "0x9561e88d63d812f610ded60efb0062ea1448832c1ccee35ceda2dfb5dbd192c0",
+          "functionName": "batchGotchiClaimXPDrop"
+        },
+        {
+          "selector": "0x9f568ddd",
+          "signature": "claimXPDrop(bytes32,address,uint256[],bytes32[],uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x3fb61656490dd816d4eb99dc6187bbd20bff2960e3b30bc0c046ea081329c973",
+          "sourceHash": "0x7a72bbfccf8ad2d60bae599e8d5601dd3bebd6c882e7ec97f82182749b41e4d0",
+          "functionName": "claimXPDrop"
+        },
+        {
+          "selector": "0xb0ce1562",
+          "signature": "createXPDrop(bytes32,bytes32,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x34d5df6e3c6d6166b9c28b332b25844b71cbc7793be51b969c578e58771c11fa",
+          "sourceHash": "0xa645d3b1e47e181f011329317568a08517ce5baad3236f5c149ed3b4f31f77e7",
+          "functionName": "createXPDrop"
+        },
+        {
+          "selector": "0x85f5276f",
+          "signature": "isClaimed(bytes32,uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x8e6234c4b448dd11fb7f932d17b0ba30ac11568f5c22b0fc9fc2ddcf568fc954",
+          "sourceHash": "0xa06408109fdb509a605b3f98f6012176dfc8041c83fcd83f14b2fbef9824a0c2",
+          "functionName": "isClaimed"
+        },
+        {
+          "selector": "0xde3fd39c",
+          "signature": "viewXPDrop(bytes32)",
+          "stateMutability": "view",
+          "implementationHash": "0x6defa52c0634d7d151f0bd253ab00fa936bdbcb03d3928ea3152aee0158ebdae",
+          "sourceHash": "0x288d79e75d9efb034e851d295c677e4e38b9d15d1a7fc1223900409fe777c41c",
+          "functionName": "viewXPDrop"
+        }
+      ],
+      "internalFunctions": [],
+      "events": []
+    },
+    {
+      "facetName": "ERC721BuyOrderFacet",
+      "facetAddress": "0x81b129DA3c4456534B140402956039146c85a378",
+      "bytecodeHash": "0xcab1ba41bb6efbcc464f14eaad5c960f67af2afda41fd03372f7f9b28439e787",
+      "abiHash": "0x2780f0a70c76ea8704e303e01001b2238eb507867fb223c4a5fec45a4a784efc",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/ERC721BuyOrderFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x6a1ff534",
+          "signature": "cancelERC721BuyOrder(uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xddcd8411c1c480fc73a6155a60c8cf66acf68cbed4e63855961e737096c7df4a",
+          "sourceHash": "0xb8d8bd170b14815d9675ed538c9b1b314c1c6a524c694c9308cc73d1cda4d2dd",
+          "functionName": "cancelERC721BuyOrder"
+        },
+        {
+          "selector": "0x6bb206be",
+          "signature": "executeERC721BuyOrder(uint256,address,uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x44cdff03fba848d75eaf4d148f66f486ef921a6f50ddd8f1c7cb55f7915545f8",
+          "sourceHash": "0x1eda3e673e0dfec93dc1e9b494e37bc5ea5a967b56df17d36a5b835f3ce983ea",
+          "functionName": "executeERC721BuyOrder"
+        },
+        {
+          "selector": "0x52196bf5",
+          "signature": "getERC721BuyOrder(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x0d1a9c42962c66d90e1fbab4dacf2314bb0c48d7feef2590c96b5e86754e09c7",
+          "sourceHash": "0x04d21f4ebf6104bd83f38adf09e0c9672ab93c91e95b9c39ea8cf507a662b7d9",
+          "functionName": "getERC721BuyOrder"
+        },
+        {
+          "selector": "0x96492299",
+          "signature": "getERC721BuyOrderStatuses(uint256[])",
+          "stateMutability": "view",
+          "implementationHash": "0x49071cbee8f1e387b75a3a7c5ed0c9cc696fecc2610f8aefb486fe2abe3f1026",
+          "sourceHash": "0x05b518d469c332c6c1d3485f8f791634e483cc9bfd6d93ab799e68c43d0e6db4",
+          "functionName": "getERC721BuyOrderStatuses"
+        },
+        {
+          "selector": "0x6feecbb5",
+          "signature": "placeERC721BuyOrder(address,uint256,uint256,uint256,uint256,bool[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x155075a4a8412d78e63ff7a744d3f60470a72f615e3b1dd1707de0c164559af9",
+          "sourceHash": "0xdf63b5364b573b7c17585fe4c0ed4a5c694fabc92a1ecb5fd006b0dd308e944a",
+          "functionName": "placeERC721BuyOrder"
+        }
+      ],
+      "internalFunctions": [],
+      "events": [
+        {
+          "signature": "event ERC721BuyOrderExecuted(uint256 indexed buyOrderId, address indexed buyer, address seller, address erc721TokenAddress, uint256 erc721TokenId, uint256 priceInWei, uint256 time)"
+        }
+      ]
+    },
+    {
+      "facetName": "ItemsRolesRegistryFacet",
+      "facetAddress": "0x17A519aBA9D53Ab5691b8aBABF3FC90790Db13e0",
+      "bytecodeHash": "0x3a417fb7fc0e1b8df4350b3ea05d6014d6672017539967d88feba5938320a5d9",
+      "abiHash": "0xe3bca1600a10f3ecc051c93038c31256a0d48031ef0cbb92d3316e80d7647d28",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/ItemsRolesRegistryFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x0efa23dd",
+          "signature": "function MAX_EXPIRATION_DATE() view returns (uint256)",
+          "stateMutability": "view",
+          "functionName": "function MAX_EXPIRATION_DATE"
+        },
+        {
+          "selector": "0xf76e366f",
+          "signature": "function UNIQUE_ROLE() view returns (bytes32)",
+          "stateMutability": "view",
+          "functionName": "function UNIQUE_ROLE"
+        },
+        {
+          "selector": "0x6df52ea7",
+          "signature": "commitTokens(address,address,uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x7ac300655ed9235b321d1182dc28b7d9d131eaf7d498bffbb149d5e07c5ed36f",
+          "sourceHash": "0x257b02c30f769540390c70d4d7fb43a9437a9c4a96cd2a13910ec5af46c5a31c",
+          "functionName": "commitTokens"
+        },
+        {
+          "selector": "0xb7b637d9",
+          "signature": "grantRole(uint256,bytes32,address,uint64,bool,bytes)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x1ce8bf78b06117beed7e34cb49ec6f45e71642ecc2ca6e0d72cb8aa1d560ae7e",
+          "sourceHash": "0xc66086e8cf1acbd4a8e6c2cfc4a83a7124508b01ea53a076d343e18f7623ff82",
+          "functionName": "grantRole"
+        },
+        {
+          "selector": "0x4155a2f8",
+          "signature": "grantorOf(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x88c27f47b347d5a967e219612688d28f1d4e07bf87978962693bd82451e7425b",
+          "sourceHash": "0xb87af30b152fd36135ad639cb7a9ac147bc3483fe9daafd0a751bfa9da423087",
+          "functionName": "grantorOf"
+        },
+        {
+          "selector": "0xd5ced376",
+          "signature": "isRoleApprovedForAll(address,address,address)",
+          "stateMutability": "view",
+          "implementationHash": "0x8f38ce67a2c7090a9dfef2f33803120686838d4715609997cc2559527a716ff2",
+          "sourceHash": "0x36681e529e9e22e7938d00925ee9b7b9ad263b393f88cd2d8566d92aa0e183ec",
+          "functionName": "isRoleApprovedForAll"
+        },
+        {
+          "selector": "0xe6d8e12a",
+          "signature": "isRoleRevocable(uint256,bytes32,address)",
+          "stateMutability": "view",
+          "implementationHash": "0x16c813c8f8b506b5af5c9c5ae379a770e9ed5f72e5dde0a6728e9d51fdd5e2df",
+          "sourceHash": "0xed733a0daddb1dc641a060ab5b29710f132e0fc982c2b98203f110fec9fa01fb",
+          "functionName": "isRoleRevocable"
+        },
+        {
+          "selector": "0x4b0babdd",
+          "signature": "releaseTokens(uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x9dedfbb80caa1ec900c7508d76db90f531a6d8751e6fa90d53ad4992460926d9",
+          "sourceHash": "0x63dcd493a030eb18bc758d58e39e3a51b11d86496e8f04a10bc0ab5aea4d3571",
+          "functionName": "releaseTokens"
+        },
+        {
+          "selector": "0x4a120dd7",
+          "signature": "revokeRole(uint256,bytes32,address)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x4e30e875cacc0006bb1502b079cec93aa197796b30451c30667ce29e03a29f49",
+          "sourceHash": "0xc01a3dabfd9a294d78b037b0f3af370980b0fc9f78fd425d9e7c456812fab817",
+          "functionName": "revokeRole"
+        },
+        {
+          "selector": "0x33a502e4",
+          "signature": "roleData(uint256,bytes32,address)",
+          "stateMutability": "view",
+          "implementationHash": "0x44b8a3451801901b1a0756be0815c0be4f6378f740ebbae52d01ac284db4fa12",
+          "sourceHash": "0x783046255a6bd54de92f6c1357161ce484557df48a68068212392adf32f7452d",
+          "functionName": "roleData"
+        },
+        {
+          "selector": "0x5c98ea6d",
+          "signature": "roleExpirationDate(uint256,bytes32,address)",
+          "stateMutability": "view",
+          "implementationHash": "0x3cd09f9eff274df5e74ea7ec60c95399fa8b827005ccd36e847fe10e249c231e",
+          "sourceHash": "0x24bb4e8b79dc8d494033ff052bed1220065a77cb0527643622cdc7ac81b215dc",
+          "functionName": "roleExpirationDate"
+        },
+        {
+          "selector": "0xa34adf0a",
+          "signature": "setRoleApprovalForAll(address,address,bool)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x51918774ba13387ca27db18aca07213ae4372f8f6b609663a5f63ea655435e9d",
+          "sourceHash": "0x63454ccefc3034080f83d8c22c67f7bc7ba3606afea1f69fb6013eb9a2e57588",
+          "functionName": "setRoleApprovalForAll"
+        },
+        {
+          "selector": "0xd989a2b7",
+          "signature": "tokenAddressOf(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0x7b8a4721c8c69eac57270148187abe3d2067591ec6a88c85e730ca0b685f5259",
+          "sourceHash": "0xcce4e897287f3fc63d82bb6ba581eb8b694048229e64d9feac298c8aca92c4d5",
+          "functionName": "tokenAddressOf"
+        },
+        {
+          "selector": "0x7e6850eb",
+          "signature": "tokenAmountOf(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0xceca4e53e1ac57370713ecbe76ccb2db770d9bb28c0d04d4b83ade4ba77578a1",
+          "sourceHash": "0x2b30deb9f726955d1327c0ff4f7c6cb152edb4fd66e77fea7835085524369147",
+          "functionName": "tokenAmountOf"
+        },
+        {
+          "selector": "0x06474d12",
+          "signature": "tokenIdOf(uint256)",
+          "stateMutability": "view",
+          "implementationHash": "0xd661ae2e10a4c6a0aee5aa99e5899062e2fcdbe107627673c00725c9a001808d",
+          "sourceHash": "0xddc95556f635513615ca779e6602ecab155ad91792dde911537acf6200c3510d",
+          "functionName": "tokenIdOf"
+        }
+      ],
+      "internalFunctions": [
+        {
+          "name": "_createDeposit",
+          "visibility": "internal",
+          "signature": "internal function _createDeposit(address _grantor, address _tokenAddress, uint256 _tokenId, uint256 _tokenAmount) returns (uint256 depositId_)",
+          "contentHash": "0xe1b910e2357105275de0388437e821ad01cad784ddda7521bee8cb3f185508ea",
+          "sourceHash": "0x0e466c18dd1467f066e07d980e40edf012acabc2620c8de66376cb5d7117d105"
+        },
+        {
+          "name": "_findCaller",
+          "visibility": "internal",
+          "signature": "internal function _findCaller(address _grantor, address _grantee, address _tokenAddress) view returns (address)",
+          "contentHash": "0x89f1ae96c54e973887742464902faf68e6e4ca55c401456a9a48fe84fbc9520a",
+          "sourceHash": "0x45ef6a4fb4699ba3f474e49aa5f3ab945928bc24a3633fc5fde0bb5c23efdaf2"
+        },
+        {
+          "name": "_grantOrUpdateRole",
+          "visibility": "internal",
+          "signature": "internal function _grantOrUpdateRole(uint256 _depositId, bytes32 _role, address _grantee, uint64 _expirationDate, bool _revocable, bytes calldata _data)",
+          "contentHash": "0xfb66d58048d8dee991ee3a0b407072dd26d85291e28027ce4a93be2f7deb428d",
+          "sourceHash": "0x07ac6b9ec82654f1b6f114375a978815f8ae0ccd3a8e5a2a9bcfc1631ca3958c"
+        },
+        {
+          "name": "_isValidRoleAndGrantee",
+          "visibility": "internal",
+          "signature": "internal function _isValidRoleAndGrantee(uint256 _depositId, bytes32 _role, address _grantee) view returns (bool)",
+          "contentHash": "0x1b5254e367d50850f2b526e62a290b1f6b1d6571b6536d0f8bb8c51a707e6708",
+          "sourceHash": "0xb741f010755e6c568270810b5a2e114bd33a69c357a03035bfc1ed7dea2cad5b"
+        },
+        {
+          "name": "_transferFrom",
+          "visibility": "internal",
+          "signature": "internal function _transferFrom(address _from, address _to, address _tokenAddress, uint256 _tokenId, uint256 _tokenAmount)",
+          "contentHash": "0x7de8372a2f139658a75d36f402f9ff7e17e0f48ef85eeccdcd5591ade8fc7fb1",
+          "sourceHash": "0x8019a1000128b18f65ab0fdb224af638cb9ef72aa91b2eb59b74c4fdae6d497a"
+        },
+        {
+          "name": "_unequipAllDelegatedWearables",
+          "visibility": "internal",
+          "signature": "internal function _unequipAllDelegatedWearables(uint256 _depositId, uint256 _tokenIdToUnequip)",
+          "contentHash": "0x5bd9a9bac5cf1a00b57a32039dbbf8279b1a2abcf157b6f63d8d9d1fa5940924",
+          "sourceHash": "0x099798336ff35245aec29daf526acf1cd13be5a34f85f634fd9d62588616f2ef"
+        },
+        {
+          "name": "_unequipDelegatedWearable",
+          "visibility": "internal",
+          "signature": "internal function _unequipDelegatedWearable(uint256 _gotchiId, uint256 _tokenIdToUnequip, uint256 _depositId)",
+          "contentHash": "0xae3c4a0cd1bc55f3e45c8beeefd3d1e50ba209080a70fe3f795b4ddfe35870ed",
+          "sourceHash": "0x193322667cfe44c4dedec605116a1ac5bfc52ffb1938431ad2e122e2e8699e2a"
+        }
+      ],
+      "events": [
+        {
+          "signature": "event RoleApprovalForAll(address indexed _tokenAddress, address indexed _operator, bool _isApproved)"
+        },
+        {
+          "signature": "event RoleGranted(uint256 indexed _commitmentId, bytes32 indexed _role, address indexed _grantee, uint64 _expirationDate, bool _revocable, bytes _data)"
+        },
+        {
+          "signature": "event RoleRevoked(uint256 indexed _commitmentId, bytes32 indexed _role, address indexed _grantee)"
+        },
+        {
+          "signature": "event TokensCommitted(address indexed _grantor, uint256 indexed _commitmentId, address indexed _tokenAddress, uint256 _tokenId, uint256 _tokenAmount)"
+        },
+        {
+          "signature": "event TokensReleased(uint256 indexed _commitmentId)"
+        }
+      ]
+    },
+    {
+      "facetName": "ERC1155BuyOrderFacet",
+      "facetAddress": "0xc46a7ADcfcd756EeB96332B8D38e21cE39C82cAe",
+      "bytecodeHash": "0xf2752cfd922f2579606d6faae0afdaac35b7d1b6f0d557420fd9adb103b0d1bb",
+      "abiHash": "0xf62746b8f798feb17d45d720aa41b5d63a166b4594d2d2a84f82a6c71a267416",
+      "buildInfoPath": "artifacts/build-info/41bad3db21fb9d5c521cde5693451b8a.json",
+      "sourceName": "contracts/Aavegotchi/facets/ERC1155BuyOrderFacet.sol",
+      "selectors": [
+        {
+          "selector": "0xe10675bd",
+          "signature": "cancelERC1155BuyOrder(uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x8a414591188694f9a82e659de2c5fc62b86b17d5099d486da2710cc9359b4fe7",
+          "sourceHash": "0xae0b99fff7ba7b0561478fcd997ae00c565e6b580e533b5f1e2d3bc815c2d7fe",
+          "functionName": "cancelERC1155BuyOrder"
+        },
+        {
+          "selector": "0x0a724639",
+          "signature": "executeERC1155BuyOrder(uint256,address,uint256,uint256,uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x46d48361ea0199cffdbd4a5ce519e3135dd19d24866ea8f8ff726535846ae0fb",
+          "sourceHash": "0x9a5f87f93a581f1bed323006871b85ee6d6f034d36f9b7fb09939ec544921d06",
+          "functionName": "executeERC1155BuyOrder"
+        },
+        {
+          "selector": "0x4cc4a386",
+          "signature": "placeERC1155BuyOrder(address,uint256,uint256,uint256,uint256,uint256)",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xe533231188473972f27a2ccd8ae902de05bc75b36fda5c694727ed24fbf39d1e",
+          "sourceHash": "0x0aa1af682086bb151e5b7848048bfbf4f0b29d8f8affbfc6ccfe915c84dd973c",
+          "functionName": "placeERC1155BuyOrder"
+        }
+      ],
+      "internalFunctions": [],
+      "events": [
+        {
+          "signature": "event ERC1155BuyOrderCancel(uint256 indexed buyOrderId, uint256 time)"
+        },
+        {
+          "signature": "event ERC1155BuyOrderExecute(uint256 indexed buyOrderId, address indexed buyer, address seller, address erc1155TokenAddress, uint256 erc1155TokenId, uint256 indexed category, uint256 priceInWei, uint256 quantity, uint256 time)"
+        }
+      ]
+    },
+    {
+      "facetName": "AavegotchiBridgeFacet",
+      "facetAddress": "0x2E0165Eac4D02C2E828CB26C7B6cd089B7Be1b0E",
+      "bytecodeHash": "0x9bbd5a283d7c66424123176953b560e876f724bda309baf5abf5d723adf03394",
+      "abiHash": "0xcc08a4fe7b73b7f411e0998cee555e51c743fcd6eaab7369ceb69c72b52ccd23",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/AavegotchiBridgeFacet.sol",
+      "selectors": [
+        {
+          "selector": "0xfd7499bd",
+          "signature": "function batchMintItems(tuple(address to, tuple(uint256 itemId, uint256 quantity)[] itemBalances)[] _mintItemsBridged)",
+          "stateMutability": "nonpayable",
+          "functionName": "function batchMintItems"
+        },
+        {
+          "selector": "0xc40cf4d0",
+          "signature": "emitClaimedEvent(uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xb7d30aff88f8287e8dd7666be491057de87ca0776d02e6a0f0915f4b0f8e7dd1",
+          "sourceHash": "0x0051df5c598327d0fa7ac53133d9aeaccb4bfddacec0575dcaeedf76767b3da3",
+          "functionName": "emitClaimedEvent"
+        },
+        {
+          "selector": "0xf55b061c",
+          "signature": "function mintAavegotchiBridged(tuple(address owner, uint256[] tokenIds)[] _params)",
+          "stateMutability": "nonpayable",
+          "functionName": "function mintAavegotchiBridged"
+        },
+        {
+          "selector": "0x8c982224",
+          "signature": "function processHistoricalAavegotchiData(tuple(uint256 gotchiId, string name, uint256 createdAtBlock, uint256[] historicalPrices, uint256 timesTraded, uint256 activeListing)[] _records)",
+          "stateMutability": "nonpayable",
+          "functionName": "function processHistoricalAavegotchiData"
+        },
+        {
+          "selector": "0x30f98dc1",
+          "signature": "function processSubgraphData(tuple(uint256 gotchiId, address buyer, uint256 hauntId, address owner, tuple(uint8 portalOptionId, uint256 randomNumber, int16[6] numericTraits, address collateralType, uint256 minimumStake, uint16 baseRarityScore)[] options, string status, uint256 boughtAtBlock, uint256 openedAtBlock, uint256 claimedAtBlock, uint256 claimedTimestamp, uint256 timesTraded, uint256[] historicalPrices, uint256 activeListingId)[] _dataEntries)",
+          "stateMutability": "nonpayable",
+          "functionName": "function processSubgraphData"
+        },
+        {
+          "selector": "0x136b4bae",
+          "signature": "resyncAavegotchis(uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0x4e0fe3b01b7af07f1865f3c2e34e89f97e08c45beec598bf4a49ec60a290d7b3",
+          "sourceHash": "0x0a64b70aff2228dbb9f58624771b7fff1c28c2647550fa85834fc7bda98ff389",
+          "functionName": "resyncAavegotchis"
+        },
+        {
+          "selector": "0xfa2191b1",
+          "signature": "function setAavegotchi998Data(tuple(uint256 tokenId, tuple(uint256 itemid, uint256 balance)[] balances)[] _data)",
+          "stateMutability": "nonpayable",
+          "functionName": "function setAavegotchi998Data"
+        },
+        {
+          "selector": "0x4c7cad2d",
+          "signature": "function setMetadata(uint256[] _tokenIds, tuple(uint16[16] equippedWearables, int8[6] temporaryTraitBoosts, int16[6] numericTraits, string name, uint256 randomNumber, uint256 experience, uint256 minimumStake, uint256 usedSkillPoints, uint256 interactionCount, address collateralType, uint40 claimTime, uint40 lastTemporaryBoost, uint16 hauntId, address owner, uint8 status, uint40 lastInteracted, bool locked, address escrow, uint256 respecCount, uint256 baseRandomNumber)[] _aavegotchis)",
+          "stateMutability": "nonpayable",
+          "functionName": "function setMetadata"
+        }
+      ],
+      "internalFunctions": [
+        {
+          "name": "_setMetadata",
+          "visibility": "internal",
+          "signature": "internal function _setMetadata(uint256 _tokenId, struct AavegotchiBridgeFacet.AavegotchiBridgedIO memory _aavegotchi)",
+          "contentHash": "0x33c15b48a7031e25d8ff130ee70c489f7bfc1af4cdbef281bfe11e3c40992bcd",
+          "sourceHash": "0x6c32fbd3888585a68d5af0d3950764f3567dc3097abcdafcade1808fa04bdba6"
+        }
+      ],
+      "events": [
+        {
+          "signature": "event AavegotchiHistory(tuple(uint256 gotchiId, string name, uint256 createdAtBlock, uint256[] historicalPrices, uint256 timesTraded, uint256 activeListing) data)"
+        },
+        {
+          "signature": "event ClaimedAt(uint256 _tokenId, uint256 _claimedAt)"
+        },
+        {
+          "signature": "event PortalData(tuple(uint256 gotchiId, address buyer, uint256 hauntId, address owner, tuple(uint8 portalOptionId, uint256 randomNumber, int16[6] numericTraits, address collateralType, uint256 minimumStake, uint16 baseRarityScore)[] options, string status, uint256 boughtAtBlock, uint256 openedAtBlock, uint256 claimedAtBlock, uint256 claimedTimestamp, uint256 timesTraded, uint256[] historicalPrices, uint256 activeListingId) data)"
+        },
+        {
+          "signature": "event ResyncAavegotchis(uint256 _tokenId)"
+        }
+      ]
+    },
+    {
+      "facetName": "ItemsExtensibleFacet",
+      "facetAddress": "0x5ec373B3803bcf2f354409a20d45BA0f0877e767",
+      "bytecodeHash": "0x81d8b568fc0998cd7c6934655e8bb61b156c25a2be86fd24224b6b334a11106a",
+      "abiHash": "0x102ca19457f131b0c3c4b8e376ddaf39b5951d73a4195928e543dc19a029b80b",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/ItemsExtensibleFacet.sol",
+      "selectors": [
+        {
+          "selector": "0xed446601",
+          "signature": "useConsumables(uint256,uint256[],uint256[])",
+          "stateMutability": "nonpayable",
+          "implementationHash": "0xf00b77b61b08b479ff355696e9ade5f0dbfdb8d2476647eefa93d6dca3496544",
+          "sourceHash": "0x4d98727195ad929701deb3a53f5177058ab8c3b50102f3e41d9a0dc45ee44d42",
+          "functionName": "useConsumables"
+        }
+      ],
+      "internalFunctions": [],
+      "events": [
+        {
+          "signature": "event UseConsumables(uint256 indexed _tokenId, uint256[] _itemIds, uint256[] _quantities)"
+        }
+      ]
+    },
+    {
+      "facetAddress": "0x78860E9be983caBCdA2C101cbc185B23Efd1F4Cc",
+      "bytecodeHash": "0x89e436cb079a5d5a275ce804342524045feb6dee0773c5d87640e8a71c74bcb1",
+      "selectors": [
+        {
+          "selector": "0xfe1df14c",
+          "functionName": "0xfe1df14c"
+        },
+        {
+          "selector": "0xcbb5c0ab",
+          "functionName": "0xcbb5c0ab"
+        },
+        {
+          "selector": "0xcfdd5986",
+          "functionName": "0xcfdd5986"
+        },
+        {
+          "selector": "0xd9740286",
+          "functionName": "0xd9740286"
+        },
+        {
+          "selector": "0xa50b0b0c",
+          "functionName": "0xa50b0b0c"
+        },
+        {
+          "selector": "0x9c5cb377",
+          "functionName": "0x9c5cb377"
+        },
+        {
+          "selector": "0xd179f6e0",
+          "functionName": "0xd179f6e0"
+        }
+      ]
+    },
+    {
+      "facetName": "ERC721MarketplaceSwapFacet",
+      "facetAddress": "0xe0ADFAfB02B9De24D249fdACe47128dAFb7aA79B",
+      "bytecodeHash": "0xf5f0f72c5193bd5e5e5b513f10a6b657efe37750f1f202fa7e3ac4a4ef7a33f0",
+      "abiHash": "0x102ca19457f131b0c3c4b8e376ddaf39b5951d73a4195928e543dc19a029b80b",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/ERC721MarketplaceSwapFacet.sol",
+      "selectors": [
+        {
+          "selector": "0xfc45790c",
+          "signature": "swapAndBuyERC721(address,uint256,uint256,uint256,uint256,address,uint256,uint256,address)",
+          "stateMutability": "payable",
+          "implementationHash": "0x7e6ce72e8d583a906e2e6dbe446a2585f7858b19f04427c4108b87c49a108363",
+          "sourceHash": "0x05a13cf6183ef662377ebef1e8ac53328995276146075e0dd0c375993c70de8e",
+          "functionName": "swapAndBuyERC721"
+        }
+      ],
+      "internalFunctions": [],
+      "events": [
+        {
+          "signature": "event SwapAndPurchase(address indexed recipient, address indexed tokenIn, uint256 swapAmount, uint256 ghstReceived, uint256 listingId, uint256 tokenId, address indexed nftContract)"
+        }
+      ]
+    },
+    {
+      "facetName": "ERC1155MarketplaceSwapFacet",
+      "facetAddress": "0x90fAE9E48274459917E8d98EE259Ed45B80E97a5",
+      "bytecodeHash": "0xbc6ba089869e9ec76a8c52f94f5f30979834958c7a366ff3eb954d2f17768541",
+      "abiHash": "0x102ca19457f131b0c3c4b8e376ddaf39b5951d73a4195928e543dc19a029b80b",
+      "buildInfoPath": "artifacts/build-info/33b8cdaedab0dbb4c03e460fd925228f.json",
+      "sourceName": "contracts/Aavegotchi/facets/ERC1155MarketplaceSwapFacet.sol",
+      "selectors": [
+        {
+          "selector": "0x0df1c37a",
+          "signature": "swapAndBuyERC1155(address,uint256,uint256,uint256,uint256,address,uint256,uint256,uint256,address)",
+          "stateMutability": "payable",
+          "implementationHash": "0x0ab7f8e2ce315c7536396a904bfe32b5f739187cb1b602579afdfbd8582f0ccc",
+          "sourceHash": "0xf5c3bc993578d54a76c3c8743996d111c7e4fd459c96efd94c978144f7e5fd60",
+          "functionName": "swapAndBuyERC1155"
+        }
+      ],
+      "internalFunctions": [],
+      "events": [
+        {
+          "signature": "event SwapAndPurchaseERC1155(address indexed buyer, address indexed tokenIn, uint256 ghstReceived, uint256 indexed listingId)"
+        }
+      ]
+    }
+  ],
+  "commit": "564b8eab74c300b536d40949b53df383c3ab83fd"
+}
