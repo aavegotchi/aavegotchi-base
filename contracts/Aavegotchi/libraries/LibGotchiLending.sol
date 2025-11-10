@@ -212,10 +212,6 @@ library LibGotchiLending {
         verifyAgreeGotchiLendingParams(_borrower, _listingId, _erc721TokenId, _initialCost, _period, _revenueSplit);
         // gas savings
         address lender = lending.lender;
-
-        if (lending.initialCost > 0) {
-            LibERC20.transferFrom(s.ghstContract, _borrower, lender, _initialCost);
-        }
         lending.borrower = _borrower;
         uint40 currentTime = uint40(block.timestamp);
         lending.timeAgreed = currentTime;
