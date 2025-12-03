@@ -337,5 +337,8 @@ task(
       //     });
       //   }
       // }
+      console.log("Updating diamond ABI...");
+      await hre.run("diamondABI");
+      console.log("ABI written to diamondABI/diamond.json");
     }
   );
