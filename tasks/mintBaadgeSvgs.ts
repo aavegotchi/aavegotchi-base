@@ -3,14 +3,14 @@ import { ContractReceipt, ContractTransaction } from "@ethersproject/contracts";
 import { Signer } from "@ethersproject/abstract-signer";
 import { getBaadgeItemTypes, ItemTypeOutput } from "../scripts/itemTypeHelpers";
 import {
+  baseRelayerAddress,
   getRelayerSigner,
-  itemManagerAlt,
-  maticDiamondAddress,
 } from "../scripts/helperFunctions";
 import { DAOFacet } from "../typechain/DAOFacet";
 import { BigNumberish } from "@ethersproject/bignumber";
 import { gasPrice } from "../scripts/helperFunctions";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { varsForNetwork } from "../helpers/constants";
 
 export interface MintBaadgeTaskArgs {
   itemManager: string;
@@ -29,7 +29,8 @@ task("mintBaadgeSvgs", "Adds itemTypes and SVGs")
     async (taskArgs: MintBaadgeTaskArgs, hre: HardhatRuntimeEnvironment) => {
       console.log("item manager:", taskArgs.itemManager);
 
-      if (taskArgs.itemManager !== itemManagerAlt) {
+      const c = await varsForNetwork(hre.ethers);
+      if (taskArgs.itemManager !== baseRelayerAddress) {
         throw new Error("Wrong item manager");
       }
 
@@ -54,7 +55,7 @@ task("mintBaadgeSvgs", "Adds itemTypes and SVGs")
 
       const daoFacet = (await hre.ethers.getContractAt(
         "DAOFacet",
-        maticDiamondAddress,
+        c.aavegotchiDiamond!,
         signer
       )) as DAOFacet;
 

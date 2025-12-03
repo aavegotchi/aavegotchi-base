@@ -16,6 +16,16 @@ import {
   szn4BadgeSvgs,
   szn5BadgeIds,
   szn5BadgeSvgs,
+  szn6BadgeIds,
+  szn6BadgeSvgs,
+  szn7BadgeIds,
+  szn7BadgeSvgs,
+  szn8BadgeIds,
+  szn8BadgeSvgs,
+  szn9BadgeIds,
+  szn9BadgeSvgs,
+  szn10BadgeIds,
+  szn10BadgeSvgs,
   tooorkeyBadgeIds,
   tooorkeyBadgeSvgs,
   uniclyBaadgeId,
@@ -42,6 +52,11 @@ export function badge(id: number) {
   readBadgesBatch("sZN3Baadges", szn3BadgeSvgs, szn3BadgeIds);
   readBadgesBatch("sZN4Baadges", szn4BadgeSvgs, szn4BadgeIds);
   readBadgesBatch("sZN5Baadges", szn5BadgeSvgs, szn5BadgeIds);
+  readBadgesBatch("sZN6Baadges", szn6BadgeSvgs, szn6BadgeIds);
+  readBadgesBatch("sZN7Baadges", szn7BadgeSvgs, szn7BadgeIds);
+  readBadgesBatch("sZN8Baadges", szn8BadgeSvgs, szn8BadgeIds);
+  readBadgesBatch("sZN9Baadges", szn9BadgeSvgs, szn9BadgeIds);
+  readBadgesBatch("sZN10Baadges", szn10BadgeSvgs, szn10BadgeIds);
   //import and add new badges here
 
   const svg = BaadgeSvgMap.get(id);

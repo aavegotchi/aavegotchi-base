@@ -163,6 +163,121 @@ export const szn5BadgeIds = [
   403,
 ];
 
+export const szn6BadgeSvgs = [
+  "Aavegotchi-RF-SZN6-Trophy-1ST-PLACE-RARITY",
+  "Aavegotchi-RF-SZN6-Trophy-1ST-PLACE-KINSHIP",
+  "Aavegotchi-RF-SZN6-Trophy-1ST-PLACE-XP",
+  "Aavegotchi-RF-SZN6-Trophy-2ND-PLACE-RARITY",
+  "Aavegotchi-RF-SZN6-Trophy-2ND-PLACE-KINSHIP",
+  "Aavegotchi-RF-SZN6-Trophy-2ND-PLACE-XP",
+  "Aavegotchi-RF-SZN6-Trophy-3RD-PLACE-RARITY",
+  "Aavegotchi-RF-SZN6-Trophy-3RD-PLACE-KINSHIP",
+  "Aavegotchi-RF-SZN6-Trophy-3RD-PLACE-XP",
+  "Aavegotchi-RF-SZN6-Baadge-TOP-RAANKED-PLAAYER",
+  "Aavegotchi-RF-SZN6-Baadge-TOP-10-RARITY",
+  "Aavegotchi-RF-SZN6-Baadge-TOP-10-KINSHIP",
+  "Aavegotchi-RF-SZN6-Baadge-TOP-10-XP",
+  "Aavegotchi-RF-SZN6-Baadge-TOP-100-RARITY",
+  "Aavegotchi-RF-SZN6-Baadge-TOP-100-KINSHIP",
+  "Aavegotchi-RF-SZN6-Baadge-TOP-100-XP",
+];
+export const szn6BadgeIds = [
+  427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441,
+  442,
+];
+
+export const szn7BadgeSvgs = [
+  "Aavegotchi-RF-SZN7-Trophy-1ST-PLACE-RARITY",
+  "Aavegotchi-RF-SZN7-Trophy-1ST-PLACE-KINSHIP",
+  "Aavegotchi-RF-SZN7-Trophy-1ST-PLACE-XP",
+  "Aavegotchi-RF-SZN7-Trophy-2ND-PLACE-RARITY",
+  "Aavegotchi-RF-SZN7-Trophy-2ND-PLACE-KINSHIP",
+  "Aavegotchi-RF-SZN7-Trophy-2ND-PLACE-XP",
+  "Aavegotchi-RF-SZN7-Trophy-3RD-PLACE-RARITY",
+  "Aavegotchi-RF-SZN7-Trophy-3RD-PLACE-KINSHIP",
+  "Aavegotchi-RF-SZN7-Trophy-3RD-PLACE-XP",
+  "Aavegotchi-RF-SZN7-Baadge-TOP-RAANKED-PLAAYER",
+  "Aavegotchi-RF-SZN7-Baadge-TOP-10-RARITY",
+  "Aavegotchi-RF-SZN7-Baadge-TOP-10-KINSHIP",
+  "Aavegotchi-RF-SZN7-Baadge-TOP-10-XP",
+  "Aavegotchi-RF-SZN7-Baadge-TOP-100-RARITY",
+  "Aavegotchi-RF-SZN7-Baadge-TOP-100-KINSHIP",
+  "Aavegotchi-RF-SZN7-Baadge-TOP-100-XP",
+];
+export const szn7BadgeIds = [
+  443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457,
+  458,
+];
+
+export const szn8BadgeSvgs = [
+  "Aavegotchi-RF-SZN8-Trophy-1ST-PLACE-RARITY",
+  "Aavegotchi-RF-SZN8-Trophy-1ST-PLACE-KINSHIP",
+  "Aavegotchi-RF-SZN8-Trophy-1ST-PLACE-XP",
+  "Aavegotchi-RF-SZN8-Trophy-2ND-PLACE-RARITY",
+  "Aavegotchi-RF-SZN8-Trophy-2ND-PLACE-KINSHIP",
+  "Aavegotchi-RF-SZN8-Trophy-2ND-PLACE-XP",
+  "Aavegotchi-RF-SZN8-Trophy-3RD-PLACE-RARITY",
+  "Aavegotchi-RF-SZN8-Trophy-3RD-PLACE-KINSHIP",
+  "Aavegotchi-RF-SZN8-Trophy-3RD-PLACE-XP",
+  "Aavegotchi-RF-SZN8-Baadge-TOP-RAANKED-PLAAYER",
+  "Aavegotchi-RF-SZN8-Baadge-TOP-10-RARITY",
+  "Aavegotchi-RF-SZN8-Baadge-TOP-10-KINSHIP",
+  "Aavegotchi-RF-SZN8-Baadge-TOP-10-XP",
+  "Aavegotchi-RF-SZN8-Baadge-TOP-100-RARITY",
+  "Aavegotchi-RF-SZN8-Baadge-TOP-100-KINSHIP",
+  "Aavegotchi-RF-SZN8-Baadge-TOP-100-XP",
+];
+export const szn8BadgeIds = [
+  459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473,
+  474,
+];
+
+export const szn9BadgeSvgs = [
+  "Aavegotchi-RF-SZN9-Trophy-1ST-PLACE-RARITY",
+  "Aavegotchi-RF-SZN9-Trophy-1ST-PLACE-KINSHIP",
+  "Aavegotchi-RF-SZN9-Trophy-1ST-PLACE-XP",
+  "Aavegotchi-RF-SZN9-Trophy-2ND-PLACE-RARITY",
+  "Aavegotchi-RF-SZN9-Trophy-2ND-PLACE-KINSHIP",
+  "Aavegotchi-RF-SZN9-Trophy-2ND-PLACE-XP",
+  "Aavegotchi-RF-SZN9-Trophy-3RD-PLACE-RARITY",
+  "Aavegotchi-RF-SZN9-Trophy-3RD-PLACE-KINSHIP",
+  "Aavegotchi-RF-SZN9-Trophy-3RD-PLACE-XP",
+  "Aavegotchi-RF-SZN9-Baadge-TOP-RAANKED-PLAAYER",
+  "Aavegotchi-RF-SZN9-Baadge-TOP-10-RARITY",
+  "Aavegotchi-RF-SZN9-Baadge-TOP-10-KINSHIP",
+  "Aavegotchi-RF-SZN9-Baadge-TOP-10-XP",
+  "Aavegotchi-RF-SZN9-Baadge-TOP-100-RARITY",
+  "Aavegotchi-RF-SZN9-Baadge-TOP-100-KINSHIP",
+  "Aavegotchi-RF-SZN9-Baadge-TOP-100-XP",
+];
+export const szn9BadgeIds = [
+  475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489,
+  490,
+];
+
+export const szn10BadgeSvgs = [
+  "Aavegotchi-RF-SZN10-Trophy-1ST-PLACE-RARITY",
+  "Aavegotchi-RF-SZN10-Trophy-1ST-PLACE-KINSHIP",
+  "Aavegotchi-RF-SZN10-Trophy-1ST-PLACE-XP",
+  "Aavegotchi-RF-SZN10-Trophy-2ND-PLACE-RARITY",
+  "Aavegotchi-RF-SZN10-Trophy-2ND-PLACE-KINSHIP",
+  "Aavegotchi-RF-SZN10-Trophy-2ND-PLACE-XP",
+  "Aavegotchi-RF-SZN10-Trophy-3RD-PLACE-RARITY",
+  "Aavegotchi-RF-SZN10-Trophy-3RD-PLACE-KINSHIP",
+  "Aavegotchi-RF-SZN10-Trophy-3RD-PLACE-XP",
+  "Aavegotchi-RF-SZN10-Baadge-TOP-RAANKED-PLAAYER",
+  "Aavegotchi-RF-SZN10-Baadge-TOP-10-RARITY",
+  "Aavegotchi-RF-SZN10-Baadge-TOP-10-KINSHIP",
+  "Aavegotchi-RF-SZN10-Baadge-TOP-10-XP",
+  "Aavegotchi-RF-SZN10-Baadge-TOP-100-RARITY",
+  "Aavegotchi-RF-SZN10-Baadge-TOP-100-KINSHIP",
+  "Aavegotchi-RF-SZN10-Baadge-TOP-100-XP",
+];
+export const szn10BadgeIds = [
+  491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505,
+  506,
+];
+
 export const allBadges: number[] = [
   ...szn1BadgeIds,
   ...coindeskConsensus,
@@ -174,4 +289,9 @@ export const allBadges: number[] = [
   ...tooorkeyBadgeIds,
   ...szn4BadgeIds,
   ...szn5BadgeIds,
+  ...szn6BadgeIds,
+  ...szn7BadgeIds,
+  ...szn8BadgeIds,
+  ...szn9BadgeIds,
+  ...szn10BadgeIds,
 ];
