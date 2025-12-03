@@ -82,7 +82,8 @@ export async function main() {
   //Airdrop
 
   const [rarityBreaker, kinshipBreaker, xpBreaker] = await getGotchisForASeason(
-    "10"
+    "10",
+    "matic"
   );
   const rarityRFSzn10 = (await rankIds(rarityArray, rarityBreaker)).map((x) =>
     Number(x)

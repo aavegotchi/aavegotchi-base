@@ -3,6 +3,7 @@ import { selectedGotchisQueryPerBlock } from "./raritySortHelpers";
 //import { dataArgs } from "../data/airdrops/rarityfarming/szn5/rnd1";
 import request from "graphql-request";
 import { maticGraphUrl } from "./query/queryAavegotchis";
+import { baseGraphUrl } from "./query/queryAavegotchis";
 
 import { rarityFarmingBlockNumbers } from "./rarityFarmingBlockNumbers";
 import { RarityFarmingData } from "../types";
@@ -24,23 +25,34 @@ export interface GotchiRoundData {
   }[];
 }
 
+export function graphUrl(network: "matic" | "base") {
+  return network === "matic" ? maticGraphUrl : baseGraphUrl;
+}
+
 async function getGotchisForARound(
   blockNumber: string,
   sznNumber: string,
-  round: string
+  round: string,
+  network: "matic" | "base"
 ) {
   const query = selectedGotchisQueryPerBlock(
     blockNumber,
     await getGotchisFromData(sznNumber, round)
   );
 
-  const queryResponse: GotchiRoundData = await request(maticGraphUrl, query);
+  const queryResponse: GotchiRoundData = await request(
+    graphUrl(network),
+    query
+  );
 
   return queryResponse;
 }
 
 //returns top1000 in the form brs,kinship,xp
-export async function getGotchisForASeason(sznNumber: string) {
+export async function getGotchisForASeason(
+  sznNumber: string,
+  network: "matic" | "base"
+) {
   const finalData: GotchiRoundData[] = [];
 
   //get index since data starts from szn5
@@ -53,7 +65,7 @@ export async function getGotchisForASeason(sznNumber: string) {
   for (let i = 0; i < 4; i++) {
     const blockNumber = Object.values(seasonData)[i];
     finalData.push(
-      await getGotchisForARound(blockNumber, sznNumber, `${i + 1}`)
+      await getGotchisForARound(blockNumber, sznNumber, `${i + 1}`, network)
     );
   }
 

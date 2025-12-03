@@ -62,7 +62,7 @@ describe("Airdrop SZN10 Baadges", async function () {
     itemTypes = await getItemTypesForSzn10Baadges();
 
     const [rarityBreaker, kinshipBreaker, xpBreaker] =
-      await getGotchisForASeason("10");
+      await getGotchisForASeason("10", "matic");
 
     rarityRFSzn10 = (await rankIds(rarityArray, rarityBreaker)).map((id) =>
       Number(id)
@@ -299,4 +299,3 @@ async function getItemTypesForSzn10Baadges() {
 
   return itemTypes;
 }
-

@@ -1,12 +1,11 @@
 import { request } from "graphql-request";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { GotchisOwned, LendedGotchis, UserGotchisOwned } from "../../types";
+import { graphUrl } from "../getAavegotchisForRF";
 
 export const maticGraphUrl: string = process.env.SUBGRAPH_CORE_MATIC as string;
 
 export const baseGraphUrl: string = process.env.SUBGRAPH_CORE_BASE as string;
-
-export const blockllamaUrl: string = "https://coins.llama.fi/block/polygon";
 
 interface Gotchi {
   id: string;
@@ -32,7 +31,8 @@ export function getUsersWithGotchisOfAddresses(
   addresses: string[],
   blockNumber: number,
   index: Number = 0,
-  useBlockNumber: boolean
+  useBlockNumber: boolean,
+  network: "matic" | "base"
 ): Promise<UsersWithGotchisRes> {
   let addressesString = addresses.map((e) => `"${e}"`).join(",");
   let query = useBlockNumber
@@ -107,7 +107,7 @@ export function getUsersWithGotchisOfAddresses(
       }
     }}`;
 
-  return request(maticGraphUrl, query);
+  return request(graphUrl(network), query);
 }
 
 function removeEmpty(userGotchisOwned: UserGotchisOwned[]): UserGotchisOwned[] {
@@ -466,7 +466,8 @@ export async function getPolygonAndMainnetGotchis(
   addresses: string[],
   blockTag: number,
   hre: HardhatRuntimeEnvironment,
-  useBlockNumber: boolean
+  useBlockNumber: boolean,
+  network: "matic" | "base"
 ) {
   //Queries
   //Aavegotchis in ATTENDEE's wallet
@@ -490,7 +491,8 @@ export async function getPolygonAndMainnetGotchis(
       addresses,
       blockTag,
       index,
-      useBlockNumber
+      useBlockNumber,
+      network
     );
 
     index += 1000;
