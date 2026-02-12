@@ -182,11 +182,10 @@ contract ERC721MarketplaceFacet is Modifiers {
             uint256 listingId = _listingIds[i];
             // ListingListItem storage listingItem = s.erc721ListingListItem[listingId];
             // require(listingItem.listingId != 0, "ERC721Marketplace: listingId does not exist");
-            require(s.erc721Listings[listingId].timeCreated != 0, "ERC721Marketplace: listingId does not exist");
             ERC721Listing storage listing = s.erc721Listings[listingId];
-            listing.cancelled = true;
-            emit LibERC721Marketplace.ERC721ListingCancelled(listingId, listing.category, block.number);
-            LibERC721Marketplace.removeERC721ListingItem(listingId, listing.seller);
+            require(listing.timeCreated != 0, "ERC721Marketplace: listingId does not exist");
+            // Reuse the shared cancel flow so Aavegotchis are correctly unlocked and escrows are restored.
+            LibERC721Marketplace.cancelERC721Listing(listingId, listing.seller);
         }
     }
 
