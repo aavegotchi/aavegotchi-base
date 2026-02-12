@@ -47,6 +47,14 @@ npm test
 
 Some tests use a local fork (Hardhat `hardhat` network). For fork-based tests you will need an RPC URL in `.env` (for example `BASE_RPC_URL`).
 
+## Test-Driven Development (Required)
+
+This repo follows a strict Test-Driven Development (TDD) workflow.
+
+Before implementing a new feature or fixing a bug, **always** add a test that fails on the current `master` and only passes once the feature or bug fix has been implemented.
+
+Pull requests that do not include an appropriate test will be rejected.
+
 ## Diamond-Specific Guidelines
 
 ### Storage Safety (Critical)
@@ -72,7 +80,6 @@ References:
 ## PR Expectations
 
 - Keep PRs focused and small when possible.
-- Include tests (or explain why tests aren’t feasible).
+- Follow TDD: add a failing test first, then implement the fix/feature until the test passes.
 - Don’t commit secrets (`.env`, private keys, API keys).
 - Prefer changes that keep local dev flows safe by default (forks/simulations; no accidental broadcasts).
-
