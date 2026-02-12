@@ -1,66 +1,90 @@
-## Foundry
+# Aavegotchi Base Contracts
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+Smart contracts for Aavegotchi on Base (and related deployments), built around the EIP-2535 Diamond pattern.
 
-Foundry consists of:
+This repo includes:
+- The Aavegotchi Diamond (facets + libraries)
+- Related diamonds (Wearables, Forge)
+- GHST/WGHST + periphery contracts
+- Hardhat tasks + scripts used for upgrades and operations
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## Repo Map
 
-## Documentation
+- `contracts/Aavegotchi/`: main Aavegotchi diamond (facets, libraries, init, `Diamond.sol`)
+- `contracts/shared/`: diamond kernel (`LibDiamond`, cut/loupe/ownership facets, shared interfaces/libs)
+- `contracts/GHST/`: GHST diamond
+- `contracts/WGHST/`: wrapped GHST
+- `tasks/`: Hardhat tasks (diamond cuts, ABI generation, upgrades, verification)
+- `scripts/`: operational scripts (deploys, migrations, airdrops, data utilities)
+- `helpers/constants.ts`: chain IDs + deployed addresses (Base/Polygon/etc)
+- `diamondABI/diamond.json`: aggregated ABI for the Aavegotchi diamond (generated via Hardhat task)
 
-https://book.getfoundry.sh/
+## Quickstart
 
-## Usage
+### Prereqs
+
+- Node.js (Hardhat)
+- Foundry (forge/anvil/cast)
+- Git submodules (forge-std)
+
+### Install
+
+```bash
+git submodule update --init --recursive
+npm ci
+```
+
+If you don't have a lockfile-friendly setup, use `npm install` instead of `npm ci`.
 
 ### Build
 
-```shell
-$ forge build
+```bash
+forge build --sizes
+npx hardhat compile
 ```
 
-### Test
+Notes:
+- This repo compiles with multiple Solidity compiler versions (see `hardhat.config.ts`).
+- `foundry.toml` enables FFI; be aware when running tests locally/CI.
 
-```shell
-$ forge test
+## Testing
+
+### Foundry
+
+```bash
+forge test
 ```
 
-### Format
+### Hardhat
 
-```shell
-$ forge fmt
+```bash
+npm test
 ```
 
-### Gas Snapshots
+Fork / integration tests:
+- Some tests run against a local fork (Hardhat `hardhat` network is configured with Base forking at a fixed block).
+- Set `BASE_RPC_URL` in `.env` to run fork-based tests safely on a local node.
+- Never point tests at a live network with funded keys.
 
-```shell
-$ forge snapshot
-```
+See also:
+- `test/README.md`
+- `SWAP_AND_BUY_INTEGRATION.md`
 
-### Anvil
+## Working With Diamonds
 
-```shell
-$ anvil
-```
+- You call the diamond address with facet ABIs; function selectors are routed to facets via `LibDiamond`.
+- Protocol state is a single `AppStorage` struct in storage slot 0. Treat changes as schema migrations (append-only).
 
-### Deploy
+Useful references:
+- `contracts/Aavegotchi/libraries/LibAppStorage.sol`
+- `contracts/shared/libraries/LibDiamond.sol`
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
+## ABI + Addresses
 
-### Cast
+- Deployed addresses by chain: `helpers/constants.ts`
+- Aggregated Aavegotchi diamond ABI: `diamondABI/diamond.json`
+  - Generate (after `npx hardhat compile`): `npx hardhat diamondABI`
 
-```shell
-$ cast <subcommand>
-```
+## License
 
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+MIT (see `LICENSE`)
