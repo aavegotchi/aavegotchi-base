@@ -11,6 +11,14 @@ These notes are for automated agents and contributors working in this repo.
 - Never print or commit secrets (for example `.env`, private keys, API keys).
 - If a task requires a funded key, hardware wallet, multisig, Defender relayer, or mainnet/testnet interaction: stop and ask for explicit confirmation + parameters.
 
+## Test-Driven Development (Required)
+
+This repo follows a strict Test-Driven Development (TDD) workflow.
+
+Before implementing a new feature or fixing a bug, **always** add a test that fails on the current `master` and only passes once the feature or bug fix has been implemented.
+
+Pull requests that do not include an appropriate test will be rejected.
+
 ## Quick Local Validation
 
 ```bash
@@ -69,4 +77,3 @@ Externally, users typically call the diamond address with facet ABIs. Selector r
 - Use a branch name with `codex/` prefix.
 - Keep changes scoped to one concern per PR when possible.
 - Include a short test section in the PR description (what you ran locally).
-
