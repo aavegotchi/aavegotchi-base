@@ -77,3 +77,41 @@ Externally, users typically call the diamond address with facet ABIs. Selector r
 - Use a branch name with `codex/` prefix.
 - Keep changes scoped to one concern per PR when possible.
 - Include a short test section in the PR description (what you ran locally).
+
+## Workflow Velocity Upgrades (2026-02-16)
+
+### Definition Of Done
+
+- Bug fixes and features must ship via PR.
+- PRs must include tests that cover the change.
+- PRs must include deployment evidence when applicable (URL or explicit `N/A` reason in PR body).
+
+### Start-Task Preflight
+
+Use the global preflight command before major work:
+
+```bash
+cstart <task-slug>
+```
+
+### Fast Check Gate
+
+```bash
+./scripts/fast-check.sh
+```
+
+Default checks:
+
+- `forge build --sizes`
+- `npx hardhat compile`
+- `npm test`
+
+### PR Automation
+
+```bash
+./scripts/open-pr.sh
+```
+
+### Post-Merge Recap
+
+`post-merge-recap` runs on pushes to `main`/`master` and uploads a markdown recap artifact.
