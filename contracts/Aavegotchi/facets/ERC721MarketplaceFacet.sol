@@ -254,7 +254,7 @@ contract ERC721MarketplaceFacet is Modifiers {
             whitelistId: _whitelistId
         });
 
-        emit ERC721ListingAdd(listingId, msgSender, _erc721TokenAddress, _erc721TokenId, _category, _priceInWei);
+        emit ERC721ListingAdd(listingId, msgSender, _erc721TokenAddress, _erc721TokenId, _category, block.timestamp);
 
         if (_affiliate != address(0)) {
             emit ERC721ListingSplit(listingId, _principalSplit, _affiliate);
