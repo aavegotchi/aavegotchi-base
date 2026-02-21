@@ -2,6 +2,12 @@
 
 Smart contracts for Aavegotchi on Base (and related deployments), built around the EIP-2535 Diamond pattern.
 
+## Related Agent Skills
+
+- [Aavegotchi Baazaar Skill](https://github.com/aavegotchi/aavegotchi-baazaar-skill)
+- [Aavegotchi GBM Skill](https://github.com/aavegotchi/aavegotchi-gbm-skill)
+- [All Aavegotchi Skills](https://github.com/aavegotchi/aavegotchi-agent-skills)
+
 This repo includes:
 - The Aavegotchi Diamond (facets + libraries)
 - Related diamonds (Wearables, Forge)
