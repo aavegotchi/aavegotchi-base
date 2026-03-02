@@ -103,8 +103,8 @@ library LibERC721Marketplace {
         require(listing.cancelled == false, "ERC721Marketplace: listing already cancelled");
         require(listing.seller == LibMeta.msgSender(), "ERC721Marketplace: Not seller of ERC721 listing");
 
-        //comment out until graph event is added
-        // s.erc721Listings[_listingId].priceInWei = _priceInWei;
+        // Persist the new price on-chain (off-chain indexers also consume the event below).
+        listing.priceInWei = _priceInWei;
 
         emit ERC721ListingPriceUpdate(_listingId, _priceInWei, block.timestamp);
     }
