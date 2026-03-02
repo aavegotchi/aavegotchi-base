@@ -453,7 +453,7 @@ contract Modifiers {
 
     modifier whenNotPaused() {
         ///we exempt diamond owner from the freeze
-        if (msg.sender != LibDiamond.contractOwner() || msg.sender != s.relayerPetter) {
+        if (msg.sender != LibDiamond.contractOwner() && msg.sender != s.relayerPetter) {
             require(!s.diamondPaused, "AppStorage: Diamond paused");
         }
         _;
