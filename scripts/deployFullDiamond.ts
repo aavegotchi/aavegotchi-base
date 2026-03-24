@@ -64,7 +64,10 @@ import {
   h1Collaterals,
 } from "../data/airdrops/collaterals/collateralTypes";
 import { collaterals as h2Collaterals } from "../data/airdrops/collaterals/collateralTypesHaunt2";
-import { networkAddresses } from "../helpers/constants";
+import {
+  networkAddresses,
+  vrfSystemAddressForNetwork,
+} from "../helpers/constants";
 
 // Import fs and path for file operations
 import * as os from "os";
@@ -613,6 +616,7 @@ export async function deployFullDiamond(useFreshDeploy: boolean = false) {
   let ghstContractAddress = "";
 
   const addresses = networkAddresses[chainId];
+  const vrfSystem = await vrfSystemAddressForNetwork(ethers);
 
   if (chainId === 31337) {
     const ERC20Factory = await ethers.getContractFactory("ERC20Token", signer);
@@ -635,7 +639,7 @@ export async function deployFullDiamond(useFreshDeploy: boolean = false) {
       pixelCraft,
       rarityFarming,
       ghstContractAddress,
-      addresses.vrfSystem,
+      vrfSystem,
       addresses.relayerPetter,
     ],
   ];
@@ -804,7 +808,7 @@ export async function deployFullDiamond(useFreshDeploy: boolean = false) {
           ownerAddress,
           aavegotchiDiamondAddress,
           wearableDiamondAddress,
-          addresses.vrfSystem!,
+          vrfSystem,
         ],
         deploymentConfig,
       });
