@@ -228,6 +228,33 @@ export interface VRFVars {
   nativePayment: boolean;
 }
 
+export interface ChainlinkDirectFundingVars {
+  wrapper: string;
+  callbackGasLimit: number;
+  requestConfirmations: number;
+}
+
+export const chainlinkDirectFundingVars: Record<
+  number,
+  ChainlinkDirectFundingVars
+> = {
+  31337: {
+    wrapper: "0xb0407dbe851f8318bd31404A49e658143C982F23",
+    callbackGasLimit: 500_000,
+    requestConfirmations: 3,
+  },
+  84532: {
+    wrapper: "0x7a1BaC17Ccc5b313516C5E16fb24f7659aA5ebed",
+    callbackGasLimit: 500_000,
+    requestConfirmations: 3,
+  },
+  8453: {
+    wrapper: "0xb0407dbe851f8318bd31404A49e658143C982F23",
+    callbackGasLimit: 500_000,
+    requestConfirmations: 3,
+  },
+};
+
 export async function varsForNetwork(ethers: HardhatEthersHelpers) {
   const network = await ethers.provider.getNetwork();
   console.log("network:", network.name);
@@ -240,6 +267,18 @@ export async function varsForNetwork(ethers: HardhatEthersHelpers) {
 
 export function varsByChainId(chainId: number) {
   return networkAddresses[chainId];
+}
+
+export async function chainlinkDirectFundingVarsForNetwork(
+  ethers: HardhatEthersHelpers
+) {
+  const network = await ethers.provider.getNetwork();
+
+  if (["hardhat", "localhost", "unknown"].includes(network.name)) {
+    return chainlinkDirectFundingVars[31337];
+  }
+
+  return chainlinkDirectFundingVars[network.chainId];
 }
 
 export enum ERC1155_BAAZAAR_CATEGORY_TO_ID {
