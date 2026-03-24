@@ -6,6 +6,7 @@ import {
   varsForNetwork,
 } from "../../../helpers/constants";
 import { diamondOwner } from "../../helperFunctions";
+import { assertNoPendingLegacyVrfRequests } from "./chainlinkVrfPreflight";
 import {
   ChainlinkVrfDirectFundingAdapter,
   ForgeVRFFacet,
@@ -98,6 +99,18 @@ export async function upgradeChainlinkVrfDirectFunding() {
   console.log("wrapper:", vrfConfig.wrapper);
   console.log("callbackGasLimit:", vrfConfig.callbackGasLimit);
   console.log("requestConfirmations:", vrfConfig.requestConfirmations);
+
+  const preflight = await assertNoPendingLegacyVrfRequests(ethers.provider, {
+    aavegotchiDiamond: c.aavegotchiDiamond,
+    forgeDiamond: c.forgeDiamond,
+  });
+  console.log("preflight latestBlock:", preflight.latestBlock);
+  console.log("preflight pendingPortalCount:", preflight.pendingPortalCount);
+  console.log("preflight pendingForgeCount:", preflight.pendingForgeCount);
+  console.log(
+    "preflight readyToClaimForgeCount:",
+    preflight.readyToClaimForgeCount
+  );
 
   const Adapter = await ethers.getContractFactory(
     "ChainlinkVrfDirectFundingAdapter",
