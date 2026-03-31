@@ -283,7 +283,7 @@ export async function hasDuplicateGotchiIds(_array: string[]) {
 }
 
 export function propType(title: string): "coreprop" | "sigprop" {
-  if (title.includes("AGIP")) {
+  if (/^\[?AGIP[\s\-]*\d+\]?/i.test(title.trim())) {
     return "coreprop";
   } else {
     return "sigprop";

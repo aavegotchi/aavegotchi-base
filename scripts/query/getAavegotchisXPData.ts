@@ -1,4 +1,5 @@
 import {
+  baseGraphUrl,
   // getEthSubgraphGotchis,
   getUsersWithGotchisOfAddresses,
   // getVaultGotchis,
@@ -39,6 +40,10 @@ export async function queryAllAavegotchis(
   addresses: string[],
   hre: HardhatRuntimeEnvironment
 ) {
+  if (!baseGraphUrl) {
+    throw new Error("SUBGRAPH_CORE_BASE is not set");
+  }
+
   let resolvedAddresses: string[] = await resolveENS(addresses, hre);
 
   let finalData: GotchiData[] = [];
@@ -60,7 +65,8 @@ export async function queryAllAavegotchis(
       addresses,
       blockTag,
       index,
-      true
+      true,
+      baseGraphUrl
     );
 
     index += 1000;

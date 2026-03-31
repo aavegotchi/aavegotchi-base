@@ -32,7 +32,8 @@ export function getUsersWithGotchisOfAddresses(
   addresses: string[],
   blockNumber: number,
   index: Number = 0,
-  useBlockNumber: boolean
+  useBlockNumber: boolean,
+  graphUrl: string = maticGraphUrl
 ): Promise<UsersWithGotchisRes> {
   let addressesString = addresses.map((e) => `"${e}"`).join(",");
   let query = useBlockNumber
@@ -107,7 +108,7 @@ export function getUsersWithGotchisOfAddresses(
       }
     }}`;
 
-  return request(maticGraphUrl, query);
+  return request(graphUrl, query);
 }
 
 function removeEmpty(userGotchisOwned: UserGotchisOwned[]): UserGotchisOwned[] {
