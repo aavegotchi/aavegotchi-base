@@ -138,7 +138,7 @@ function hasPassed(proposal: SnapshotProposal): boolean {
 }
 
 function isCoreprop(proposal: SnapshotProposal): boolean {
-  return proposal.title.includes("AGIP") || proposal.title.includes("[AGIP]");
+  return /^\[?AGIP[\s\-]*\d+\]?/i.test(proposal.title.trim());
 }
 
 function calculateSimilarity(text1: string, text2: string): number {
