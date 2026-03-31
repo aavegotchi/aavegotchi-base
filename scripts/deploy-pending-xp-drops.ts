@@ -3,31 +3,21 @@ import * as fs from "fs";
 import * as path from "path";
 import { Signer } from "ethers";
 import {
+  baseRelayerAddress,
   chainAddressesMap,
   getRelayerSigner,
-  xpRelayerAddress,
 } from "./helperFunctions";
 import { generateMerkleTree } from "./query/getAavegotchisXPData";
 import { MerkleDropFacet } from "../typechain";
 import { ContractTransaction } from "@ethersproject/contracts";
 import { LedgerSigner } from "@anders-t/ethers-ledger";
-
-interface XPDropTrackingEntry {
-  agip_number: number;
-  title: string;
-  status: "not_created" | "pending" | "deployed";
-  sigprop_script?: string;
-  coreprop_script?: string;
-  sigprop_id: string;
-  coreprop_id: string;
-  created_date?: string;
-  deployed_date?: string;
-  tx_hash?: string;
-}
-
-interface XPDropTracking {
-  [key: string]: XPDropTrackingEntry; // key format: "agip_XXX"
-}
+import {
+  DeploymentOptions,
+  XPDropTracking,
+  XPDropTrackingEntry,
+  filterPendingAGIPs,
+  parseDeploymentOptions,
+} from "./xp-drop-deploy-utils";
 
 class XPDropDeployer {
   private hre: HardhatRuntimeEnvironment;
@@ -61,7 +51,7 @@ class XPDropDeployer {
     const testing = ["hardhat", "localhost"].includes(this.hre.network.name);
 
     if (testing || this.isDryRun) {
-      const gameManager = xpRelayerAddress;
+      const gameManager = baseRelayerAddress;
       await this.hre.network.provider.request({
         method: "hardhat_impersonateAccount",
         params: [gameManager],
@@ -118,11 +108,10 @@ class XPDropDeployer {
   }
 
   async getPendingAGIPs(
-    tracking: XPDropTracking
+    tracking: XPDropTracking,
+    options: DeploymentOptions
   ): Promise<XPDropTrackingEntry[]> {
-    const pending = Object.values(tracking)
-      .filter((entry) => entry.status === "pending")
-      .sort((a, b) => a.agip_number - b.agip_number); // Sort from lowest to highest
+    const pending = filterPendingAGIPs(tracking, options);
 
     console.log(`🔍 Found ${pending.length} pending AGIPs:`);
     pending.forEach((entry) => {
@@ -252,11 +241,19 @@ class XPDropDeployer {
     console.log(`   📝 Updated tracking data`);
   }
 
-  async deployPendingXPDrops(): Promise<void> {
+  async deployPendingXPDrops(options: DeploymentOptions): Promise<void> {
     await this.initialize();
 
     const tracking = await this.loadTrackingData();
-    const pendingAGIPs = await this.getPendingAGIPs(tracking);
+    const pendingAGIPs = await this.getPendingAGIPs(tracking, options);
+
+    if (options.agipNumbers && options.agipNumbers.size > 0) {
+      console.log(
+        `🎯 Requested AGIP filter: ${Array.from(options.agipNumbers)
+          .sort((a, b) => a - b)
+          .join(", ")}`
+      );
+    }
 
     if (pendingAGIPs.length === 0) {
       console.log(`\n🎉 No pending XP drops to deploy!`);
@@ -326,8 +323,8 @@ class XPDropDeployer {
 // CLI interface
 async function main() {
   const hre = require("hardhat");
-  const isDryRun =
-    process.argv.includes("--dry-run") || process.env.DRY_RUN === "true";
+  const options = parseDeploymentOptions(process.argv);
+  const { isDryRun } = options;
 
   if (!isDryRun && hre.network.name === "base") {
     console.log(`⚠️  WARNING: About to deploy to BASE network!`);
@@ -353,7 +350,7 @@ async function main() {
   }
 
   const deployer = new XPDropDeployer(hre, isDryRun);
-  await deployer.deployPendingXPDrops();
+  await deployer.deployPendingXPDrops(options);
 }
 
 if (require.main === module) {

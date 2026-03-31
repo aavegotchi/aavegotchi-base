@@ -11,7 +11,10 @@
     "prettier": "prettier --write contracts/**/*.sol",
     "solhint": "solhint 'contracts/**/*.sol'",
     "check-props": "npx hardhat run scripts/analyze-snapshot-proposals.ts",
-    "deploy-props": "npx hardhat scripts/deploy-pending-xp-drops.ts"
+    "deploy-props": "npx hardhat run scripts/deploy-pending-xp-drops.ts --network base",
+    "deploy-props:dry-run": "DRY_RUN=true npx hardhat run scripts/deploy-pending-xp-drops.ts --network hardhat",
+    "deploy-props:154-158": "AGIP_IDS=154-158 npx hardhat run scripts/deploy-pending-xp-drops.ts --network base",
+    "deploy-props:154-158:dry-run": "AGIP_IDS=154-158 DRY_RUN=true npx hardhat run scripts/deploy-pending-xp-drops.ts --network hardhat"
   },
   "repository": {
     "type": "git",
