@@ -19,6 +19,7 @@ contract VrfFacet is Modifiers {
     event VrfRandomNumber(uint256 indexed tokenId, uint256 randomNumber, uint256 _vrfTimeSet);
     event OpenPortals(uint256[] _tokenIds);
     event PortalOpened(uint256 indexed tokenId);
+    event PortalRerolled(uint256 indexed tokenId, uint256 indexed requestId);
 
     /***********************************|
    |            Read Functions          |
@@ -73,6 +74,15 @@ contract VrfFacet is Modifiers {
         emit VrfRandomNumber(tokenId, _randomNumber, block.timestamp);
     }
 
+    function _rerollPendingPortal(uint256 _tokenId) internal returns (uint256 requestId_) {
+        require(s.aavegotchis[_tokenId].status == LibAavegotchi.STATUS_VRF_PENDING, "VrfFacet: VRF is not pending");
+
+        requestId_ = IVRFSystem(s.VRFSystem).requestRandomNumberWithTraceId(_tokenId);
+        s.vrfRequestIdToTokenId[requestId_] = _tokenId;
+
+        emit PortalRerolled(_tokenId, requestId_);
+    }
+
     function randomNumberCallback(uint256 requestId, uint256 randomNumber) external whenNotPaused {
         require(LibMeta.msgSender() == s.VRFSystem, "Only VRFSystem can fulfill");
         uint256 tokenId = s.vrfRequestIdToTokenId[requestId];
@@ -85,6 +95,10 @@ contract VrfFacet is Modifiers {
 
     function setVRFSystem(address _vrfSystem) external onlyDaoOrOwner {
         s.VRFSystem = _vrfSystem;
+    }
+
+    function rerollPendingPortal(uint256 _tokenId) external onlyDaoOrOwner returns (uint256 requestId_) {
+        requestId_ = _rerollPendingPortal(_tokenId);
     }
 
     //TESTING

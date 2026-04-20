@@ -14,6 +14,7 @@ import {LibVrf} from "../../libraries/LibVrf.sol";
 
 contract ForgeVRFFacet is Modifiers {
     event VrfResponse(address user, uint256 randomNumber, uint256 requestId, uint256 blockNumber);
+    event VrfRequestRerolled(address indexed user, uint256 indexed previousRequestId, uint256 indexed requestId);
     event GeodeWin(address user, uint256 itemId, uint256 geodeTokenId, uint256 requestId, uint256 blockNumber);
     event GeodeEmpty(address user, uint256 geodeTokenId, uint256 requestId, uint256 blockNumber);
     event GeodeRefunded(address user, uint256 geodeTokenId, uint256 requestId, uint256 blockNumber);
@@ -129,6 +130,31 @@ contract ForgeVRFFacet is Modifiers {
         emit VrfResponse(info.user, randomNumber, requestId, block.number);
     }
 
+    function _rerollPendingForgeRequest(uint256 requestId) internal returns (uint256 newRequestId) {
+        VrfRequestInfo storage info = s.vrfRequestIdToVrfRequestInfo[requestId];
+
+        require(info.user != address(0), "ForgeVRFFacet: request not found");
+        require(s.userVrfPending[info.user], "ForgeVRFFacet: VRF is not pending for user");
+        require(info.status == VrfStatus.PENDING, "ForgeVRFFacet: VRF request is not pending");
+
+        newRequestId = IVRFSystem(s.VRFSystem).requestRandomNumberWithTraceId(requestId);
+
+        VrfRequestInfo memory reqInfo = VrfRequestInfo({
+            user: info.user,
+            requestId: newRequestId,
+            status: VrfStatus.PENDING,
+            randomNumber: 0,
+            geodeTokenIds: info.geodeTokenIds,
+            amountPerToken: info.amountPerToken
+        });
+
+        s.vrfRequestIdToVrfRequestInfo[newRequestId] = reqInfo;
+        s.vrfUserToRequestIds[info.user].push(newRequestId);
+        info.status = VrfStatus.CLAIMED;
+
+        emit VrfRequestRerolled(info.user, requestId, newRequestId);
+    }
+
     function getRequestInfo(address user) external view returns (VrfRequestInfo memory) {
         //        require(s.vrfUserToRequestIds[user].length > 0, "ForgeVRFFacet: No VRF requests");
         uint256 requestId = s.vrfUserToRequestIds[user][s.vrfUserToRequestIds[user].length - 1];
@@ -143,6 +169,10 @@ contract ForgeVRFFacet is Modifiers {
 
     function setVRFSystem(address _vrfSystem) external onlyDaoOrOwner {
         s.VRFSystem = _vrfSystem;
+    }
+
+    function rerollPendingForgeRequest(uint256 requestId) external onlyDaoOrOwner returns (uint256 newRequestId) {
+        newRequestId = _rerollPendingForgeRequest(requestId);
     }
 
     /**

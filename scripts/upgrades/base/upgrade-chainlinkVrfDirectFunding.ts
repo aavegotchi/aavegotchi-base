@@ -1,17 +1,22 @@
 import { BigNumber } from "ethers";
-import { ethers, network } from "hardhat";
+import { ethers, network, run } from "hardhat";
 
 import {
   chainlinkDirectFundingVarsForNetwork,
   varsForNetwork,
 } from "../../../helpers/constants";
 import { diamondOwner } from "../../helperFunctions";
-import { assertNoPendingLegacyVrfRequests } from "./chainlinkVrfPreflight";
+import { getLegacyVrfPreflightSummary } from "./chainlinkVrfPreflight";
 import {
   ChainlinkVrfDirectFundingAdapter,
   ForgeVRFFacet,
   VrfFacet,
 } from "../../../typechain";
+import {
+  convertFacetAndSelectorsToString,
+  DeployUpgradeTaskArgs,
+  FacetsAndAddSelectors,
+} from "../../../tasks/deployUpgrade";
 
 const TESTING_NETWORKS = ["hardhat", "localhost"];
 
@@ -61,6 +66,59 @@ function getFundAmount(estimatedPrice: BigNumber) {
   );
 }
 
+async function upgradeVrfFacets(
+  aavegotchiDiamond: string,
+  forgeDiamond: string,
+  owner: string
+) {
+  const aavegotchiFacets: FacetsAndAddSelectors[] = [
+    {
+      facetName: "VrfFacet",
+      addSelectors: [
+        "function rerollPendingPortal(uint256 _tokenId) external returns (uint256 requestId_)",
+      ],
+      removeSelectors: [],
+    },
+  ];
+  const forgeFacets: FacetsAndAddSelectors[] = [
+    {
+      facetName: "ForgeVRFFacet",
+      addSelectors: [
+        "function rerollPendingForgeRequest(uint256 requestId) external returns (uint256 newRequestId)",
+      ],
+      removeSelectors: [],
+    },
+  ];
+
+  const aavegotchiArgs: DeployUpgradeTaskArgs = {
+    diamondOwner: owner,
+    diamondAddress: aavegotchiDiamond,
+    facetsAndAddSelectors: convertFacetAndSelectorsToString(aavegotchiFacets),
+    useLedger: false,
+    useRelayer: false,
+    useMultisig: false,
+    initAddress: ethers.constants.AddressZero,
+    initCalldata: "0x",
+  };
+
+  const forgeArgs: DeployUpgradeTaskArgs = {
+    diamondOwner: owner,
+    diamondAddress: forgeDiamond,
+    facetsAndAddSelectors: convertFacetAndSelectorsToString(forgeFacets),
+    useLedger: false,
+    useRelayer: false,
+    useMultisig: false,
+    initAddress: ethers.constants.AddressZero,
+    initCalldata: "0x",
+  };
+
+  console.log("Upgrading VrfFacet with rerollPendingPortal");
+  await run("deployUpgrade", aavegotchiArgs);
+
+  console.log("Upgrading ForgeVRFFacet with rerollPendingForgeRequest");
+  await run("deployUpgrade", forgeArgs);
+}
+
 export async function upgradeChainlinkVrfDirectFunding() {
   console.log("Deploying Chainlink direct-funding VRF adapter");
 
@@ -100,7 +158,7 @@ export async function upgradeChainlinkVrfDirectFunding() {
   console.log("callbackGasLimit:", vrfConfig.callbackGasLimit);
   console.log("requestConfirmations:", vrfConfig.requestConfirmations);
 
-  const preflight = await assertNoPendingLegacyVrfRequests(ethers.provider, {
+  const preflight = await getLegacyVrfPreflightSummary(ethers.provider, {
     aavegotchiDiamond: c.aavegotchiDiamond,
     forgeDiamond: c.forgeDiamond,
   });
@@ -111,6 +169,13 @@ export async function upgradeChainlinkVrfDirectFunding() {
     "preflight readyToClaimForgeCount:",
     preflight.readyToClaimForgeCount
   );
+  if (preflight.pendingPortalCount > 0 || preflight.pendingForgeCount > 0) {
+    console.log(
+      "Legacy PoP requests remain pending. Complete the cutover, then reroll the stranded requests with the new facet functions."
+    );
+  }
+
+  await upgradeVrfFacets(c.aavegotchiDiamond, c.forgeDiamond, aavegotchiOwner);
 
   const Adapter = await ethers.getContractFactory(
     "ChainlinkVrfDirectFundingAdapter",
@@ -191,6 +256,8 @@ export async function upgradeChainlinkVrfDirectFunding() {
   console.log("new aavegotchi vrfSystem:", currentAavegotchiVrfSystem);
   console.log("new forge vrfSystem:", currentForgeVrfSystem);
   console.log("adapter balance:", adapterBalance.toString());
+  console.log("pending portal tokenIds:", preflight.pendingPortalTokenIds);
+  console.log("pending forge requests:", preflight.pendingForge);
   console.log("Chainlink direct-funding VRF upgrade verified");
 }
 
