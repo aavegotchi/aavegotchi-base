@@ -14,7 +14,6 @@ import {LibVrf} from "../../libraries/LibVrf.sol";
 
 contract ForgeVRFFacet is Modifiers {
     event VrfResponse(address user, uint256 randomNumber, uint256 requestId, uint256 blockNumber);
-    event VrfRequestRerolled(address indexed user, uint256 indexed previousRequestId, uint256 indexed requestId);
     event GeodeWin(address user, uint256 itemId, uint256 geodeTokenId, uint256 requestId, uint256 blockNumber);
     event GeodeEmpty(address user, uint256 geodeTokenId, uint256 requestId, uint256 blockNumber);
     event GeodeRefunded(address user, uint256 geodeTokenId, uint256 requestId, uint256 blockNumber);
@@ -151,8 +150,6 @@ contract ForgeVRFFacet is Modifiers {
         s.vrfRequestIdToVrfRequestInfo[newRequestId] = reqInfo;
         s.vrfUserToRequestIds[info.user].push(newRequestId);
         info.status = VrfStatus.CLAIMED;
-
-        emit VrfRequestRerolled(info.user, requestId, newRequestId);
     }
 
     function getRequestInfo(address user) external view returns (VrfRequestInfo memory) {

@@ -14,9 +14,13 @@ describe("VRF reroll facets", function () {
     await harness.setVRFSystemHarness(mockVrfSystem.address);
     await harness.setPortalPending(783, 55);
 
-    await expect(harness.rerollPendingPortal(783))
-      .to.emit(harness, "PortalRerolled")
-      .withArgs(783, 1);
+    const tx = await harness.rerollPendingPortal(783);
+    const receipt = await tx.wait();
+    const openPortalsEvent = receipt.events?.find(
+      (event) => event.event === "OpenPortals"
+    );
+    expect(openPortalsEvent?.args?._tokenIds.map((id: any) => id.toNumber())).to
+      .deep.equal([783]);
 
     expect(await mockVrfSystem.lastTraceId()).to.equal(783);
     expect(await harness.portalStatus(783)).to.equal(1);
@@ -58,9 +62,7 @@ describe("VRF reroll facets", function () {
       [1, 2]
     );
 
-    await expect(harness.rerollPendingForgeRequest(88))
-      .to.emit(harness, "VrfRequestRerolled")
-      .withArgs(user.address, 88, 1);
+    await harness.rerollPendingForgeRequest(88);
 
     expect(await mockVrfSystem.lastTraceId()).to.equal(88);
     expect(await harness.isUserVrfPending(user.address)).to.equal(true);

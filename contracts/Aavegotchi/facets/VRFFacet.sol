@@ -19,7 +19,6 @@ contract VrfFacet is Modifiers {
     event VrfRandomNumber(uint256 indexed tokenId, uint256 randomNumber, uint256 _vrfTimeSet);
     event OpenPortals(uint256[] _tokenIds);
     event PortalOpened(uint256 indexed tokenId);
-    event PortalRerolled(uint256 indexed tokenId, uint256 indexed requestId);
 
     /***********************************|
    |            Read Functions          |
@@ -79,8 +78,9 @@ contract VrfFacet is Modifiers {
 
         requestId_ = IVRFSystem(s.VRFSystem).requestRandomNumberWithTraceId(_tokenId);
         s.vrfRequestIdToTokenId[requestId_] = _tokenId;
-
-        emit PortalRerolled(_tokenId, requestId_);
+        uint256[] memory tokenIds = new uint256[](1);
+        tokenIds[0] = _tokenId;
+        emit OpenPortals(tokenIds);
     }
 
     function randomNumberCallback(uint256 requestId, uint256 randomNumber) external whenNotPaused {
