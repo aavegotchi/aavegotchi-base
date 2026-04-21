@@ -5,7 +5,7 @@ import {
   chainlinkDirectFundingVarsForNetwork,
   varsForNetwork,
 } from "../../../helpers/constants";
-import { diamondOwner } from "../../helperFunctions";
+import { diamondOwner, getLedgerSigner } from "../../helperFunctions";
 import { getLegacyVrfPreflightSummary } from "./chainlinkVrfPreflight";
 import {
   ChainlinkVrfDirectFundingAdapter,
@@ -35,11 +35,11 @@ async function getOwnerSigner(owner: string) {
     return ethers.getSigner(owner);
   }
 
-  const [signer] = await ethers.getSigners();
+  const signer = await getLedgerSigner(ethers);
   const signerAddress = await signer.getAddress();
   if (signerAddress.toLowerCase() !== owner.toLowerCase()) {
     throw new Error(
-      `Signer ${signerAddress} is not the diamond owner ${owner}. Configure SECRET with the owner key before running this upgrade.`
+      `Ledger signer ${signerAddress} is not the diamond owner ${owner}. Use the correct Ledger account before running this upgrade.`
     );
   }
 
@@ -94,7 +94,7 @@ async function upgradeVrfFacets(
     diamondOwner: owner,
     diamondAddress: aavegotchiDiamond,
     facetsAndAddSelectors: convertFacetAndSelectorsToString(aavegotchiFacets),
-    useLedger: false,
+    useLedger: true,
     useRelayer: false,
     useMultisig: false,
     initAddress: ethers.constants.AddressZero,
@@ -105,7 +105,7 @@ async function upgradeVrfFacets(
     diamondOwner: owner,
     diamondAddress: forgeDiamond,
     facetsAndAddSelectors: convertFacetAndSelectorsToString(forgeFacets),
-    useLedger: false,
+    useLedger: true,
     useRelayer: false,
     useMultisig: false,
     initAddress: ethers.constants.AddressZero,
