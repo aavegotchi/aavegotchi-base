@@ -49,9 +49,10 @@ async function getOwnerSigner(owner: string) {
   return signer;
 }
 
-function parseAdapterRequest(receipt: ContractReceipt, adapterAddress: string) {
+function parseAdapterRequests(receipt: ContractReceipt, adapterAddress: string) {
   const adapterIface =
     ChainlinkVrfDirectFundingAdapter__factory.createInterface();
+  const requests = [];
   for (const log of receipt.logs) {
     if (log.address.toLowerCase() !== adapterAddress.toLowerCase()) {
       continue;
@@ -60,17 +61,21 @@ function parseAdapterRequest(receipt: ContractReceipt, adapterAddress: string) {
     try {
       const parsed = adapterIface.parseLog(log);
       if (parsed.name === "RandomNumberRequested") {
-        return {
+        requests.push({
           callbackContract: parsed.args.callbackContract.toString(),
           requestId: parsed.args.requestId.toString(),
           traceId: parsed.args.traceId.toString(),
           paid: parsed.args.paid.toString(),
-        };
+        });
       }
     } catch (err) {}
   }
 
-  throw new Error("Could not find RandomNumberRequested event in receipt");
+  if (requests.length === 0) {
+    throw new Error("Could not find RandomNumberRequested event in receipt");
+  }
+
+  return requests;
 }
 
 async function findDeployBlock(
@@ -278,24 +283,49 @@ export async function rerollStrandedVrfRequests() {
     return;
   }
 
-  for (const tokenId of filtered.pendingPortalTokenIds) {
-    const tx = await aavegotchiVrfFacet.rerollPendingPortal(tokenId);
-    const receipt = await tx.wait();
-    const request = parseAdapterRequest(receipt, adapter.address);
-
-    console.log(
-      `Rerolled portal ${tokenId} -> adapter request ${request.requestId} (traceId ${request.traceId}) tx ${tx.hash}`
+  if (filtered.pendingPortalTokenIds.length > 0) {
+    const tx = await aavegotchiVrfFacet.rerollPendingPortals(
+      filtered.pendingPortalTokenIds
     );
+    const receipt = await tx.wait();
+    const requests = parseAdapterRequests(receipt, adapter.address);
+    const requestsByTraceId = new Map(
+      requests.map((request) => [request.traceId, request])
+    );
+
+    for (const tokenId of filtered.pendingPortalTokenIds) {
+      const request = requestsByTraceId.get(tokenId);
+      if (!request) {
+        throw new Error(`Missing adapter request for rerolled portal ${tokenId}`);
+      }
+
+      console.log(
+        `Rerolled portal ${tokenId} -> adapter request ${request.requestId} (traceId ${request.traceId}) tx ${tx.hash}`
+      );
+    }
   }
 
-  for (const pending of filtered.pendingForge) {
-    const tx = await forgeVrfFacet.rerollPendingForgeRequest(pending.requestId);
+  if (filtered.pendingForge.length > 0) {
+    const requestIds = filtered.pendingForge.map((pending) => pending.requestId);
+    const tx = await forgeVrfFacet.rerollPendingForgeRequests(requestIds);
     const receipt = await tx.wait();
-    const request = parseAdapterRequest(receipt, adapter.address);
-
-    console.log(
-      `Rerolled forge request ${pending.requestId} for ${pending.user} -> adapter request ${request.requestId} (traceId ${request.traceId}) tx ${tx.hash}`
+    const requests = parseAdapterRequests(receipt, adapter.address);
+    const requestsByTraceId = new Map(
+      requests.map((request) => [request.traceId, request])
     );
+
+    for (const pending of filtered.pendingForge) {
+      const request = requestsByTraceId.get(pending.requestId);
+      if (!request) {
+        throw new Error(
+          `Missing adapter request for rerolled forge request ${pending.requestId}`
+        );
+      }
+
+      console.log(
+        `Rerolled forge request ${pending.requestId} for ${pending.user} -> adapter request ${request.requestId} (traceId ${request.traceId}) tx ${tx.hash}`
+      );
+    }
   }
 }
 

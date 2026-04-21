@@ -75,7 +75,7 @@ async function upgradeVrfFacets(
     {
       facetName: "VrfFacet",
       addSelectors: [
-        "function rerollPendingPortal(uint256 _tokenId) external returns (uint256 requestId_)",
+        "function rerollPendingPortals(uint256[] calldata _tokenIds) external returns (uint256[] memory requestIds_)",
       ],
       removeSelectors: [],
     },
@@ -84,7 +84,7 @@ async function upgradeVrfFacets(
     {
       facetName: "ForgeVRFFacet",
       addSelectors: [
-        "function rerollPendingForgeRequest(uint256 requestId) external returns (uint256 newRequestId)",
+        "function rerollPendingForgeRequests(uint256[] calldata requestIds) external returns (uint256[] memory newRequestIds)",
       ],
       removeSelectors: [],
     },
@@ -112,10 +112,10 @@ async function upgradeVrfFacets(
     initCalldata: "0x",
   };
 
-  console.log("Upgrading VrfFacet with rerollPendingPortal");
+  console.log("Upgrading VrfFacet with rerollPendingPortals");
   await run("deployUpgrade", aavegotchiArgs);
 
-  console.log("Upgrading ForgeVRFFacet with rerollPendingForgeRequest");
+  console.log("Upgrading ForgeVRFFacet with rerollPendingForgeRequests");
   await run("deployUpgrade", forgeArgs);
 }
 

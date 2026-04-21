@@ -78,9 +78,6 @@ contract VrfFacet is Modifiers {
 
         requestId_ = IVRFSystem(s.VRFSystem).requestRandomNumberWithTraceId(_tokenId);
         s.vrfRequestIdToTokenId[requestId_] = _tokenId;
-        uint256[] memory tokenIds = new uint256[](1);
-        tokenIds[0] = _tokenId;
-        emit OpenPortals(tokenIds);
     }
 
     function randomNumberCallback(uint256 requestId, uint256 randomNumber) external whenNotPaused {
@@ -97,8 +94,12 @@ contract VrfFacet is Modifiers {
         s.VRFSystem = _vrfSystem;
     }
 
-    function rerollPendingPortal(uint256 _tokenId) external onlyDaoOrOwner returns (uint256 requestId_) {
-        requestId_ = _rerollPendingPortal(_tokenId);
+    function rerollPendingPortals(uint256[] calldata _tokenIds) external onlyDaoOrOwner returns (uint256[] memory requestIds_) {
+        requestIds_ = new uint256[](_tokenIds.length);
+        for (uint256 i; i < _tokenIds.length; i++) {
+            requestIds_[i] = _rerollPendingPortal(_tokenIds[i]);
+        }
+        emit OpenPortals(_tokenIds);
     }
 
     //TESTING

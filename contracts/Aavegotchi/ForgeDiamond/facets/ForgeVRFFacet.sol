@@ -168,8 +168,11 @@ contract ForgeVRFFacet is Modifiers {
         s.VRFSystem = _vrfSystem;
     }
 
-    function rerollPendingForgeRequest(uint256 requestId) external onlyDaoOrOwner returns (uint256 newRequestId) {
-        newRequestId = _rerollPendingForgeRequest(requestId);
+    function rerollPendingForgeRequests(uint256[] calldata requestIds) external onlyDaoOrOwner returns (uint256[] memory newRequestIds) {
+        newRequestIds = new uint256[](requestIds.length);
+        for (uint256 i; i < requestIds.length; i++) {
+            newRequestIds[i] = _rerollPendingForgeRequest(requestIds[i]);
+        }
     }
 
     /**
