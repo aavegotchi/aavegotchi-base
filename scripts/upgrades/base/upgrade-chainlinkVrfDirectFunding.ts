@@ -19,6 +19,7 @@ import {
 } from "../../../tasks/deployUpgrade";
 
 const TESTING_NETWORKS = ["hardhat", "localhost"];
+const INITIAL_ADAPTER_FUND_REQUEST_COUNT = 10;
 
 async function getOwnerSigner(owner: string) {
   const testing = TESTING_NETWORKS.includes(network.name);
@@ -47,23 +48,7 @@ async function getOwnerSigner(owner: string) {
 }
 
 function getFundAmount(estimatedPrice: BigNumber) {
-  const configuredAmount = process.env.CHAINLINK_VRF_FUND_AMOUNT_WEI;
-  if (configuredAmount) {
-    return BigNumber.from(configuredAmount);
-  }
-
-  const configuredRequestCount = process.env.CHAINLINK_VRF_FUND_REQUEST_COUNT;
-  if (configuredRequestCount) {
-    return estimatedPrice.mul(Number(configuredRequestCount));
-  }
-
-  if (TESTING_NETWORKS.includes(network.name)) {
-    return estimatedPrice.mul(25);
-  }
-
-  throw new Error(
-    "Set CHAINLINK_VRF_FUND_AMOUNT_WEI or CHAINLINK_VRF_FUND_REQUEST_COUNT before running on a live network."
-  );
+  return estimatedPrice.mul(INITIAL_ADAPTER_FUND_REQUEST_COUNT);
 }
 
 async function upgradeVrfFacets(
