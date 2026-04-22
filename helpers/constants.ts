@@ -153,7 +153,6 @@ export const networkAddresses: Record<number, NetworkAddresses> = {
   },
   31337: {
     ghst: "0x443650Be09A02Be6fa79Ba19169A853A33581660",
-    vrfSystem: "0x8aFDcAA4573A36061aC087F9Ba872A7C7F482CFC",
     // vrfVars: vrfVars[84532],
     safeProxyFactory: "0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2",
     aavegotchiDiamond: "0x03A74B3e2DD81F5E8FFA1Fb96bb81B35cF3ed5d2",
@@ -166,7 +165,6 @@ export const networkAddresses: Record<number, NetworkAddresses> = {
 
   84532: {
     ghst: "0xe97f36a00058aa7dfc4e85d23532c3f70453a7ae",
-    vrfSystem: "0x8aFDcAA4573A36061aC087F9Ba872A7C7F482CFC",
     // vrfVars: vrfVars[84532],
     safeProxyFactory: "0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2",
     aavegotchiDiamond: "0x03A74B3e2DD81F5E8FFA1Fb96bb81B35cF3ed5d2",
@@ -191,7 +189,6 @@ export const networkAddresses: Record<number, NetworkAddresses> = {
 
   8453: {
     ghst: "0xcd2f22236dd9dfe2356d7c543161d4d260fd9bcb",
-    vrfSystem: "0x9eC728Fce50c77e0BeF7d34F1ab28a46409b7aF1",
     safeProxyFactory: "0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2",
     //@to-do: update aavegotchiDaoAddress for bsae mainnet
     aavegotchiDaoAddress: "0x01F010a5e001fe9d6940758EA5e8c777885E351e",
@@ -228,6 +225,45 @@ export interface VRFVars {
   nativePayment: boolean;
 }
 
+export interface ChainlinkDirectFundingVars {
+  wrapper: string;
+  callbackGasLimit: number;
+  requestConfirmations: number;
+}
+
+export const chainlinkDirectFundingVars: Record<
+  number,
+  ChainlinkDirectFundingVars
+> = {
+  31337: {
+    wrapper: "0xb0407dbe851f8318bd31404A49e658143C982F23",
+    callbackGasLimit: 500_000,
+    requestConfirmations: 3,
+  },
+  84532: {
+    wrapper: "0x7a1BaC17Ccc5b313516C5E16fb24f7659aA5ebed",
+    callbackGasLimit: 500_000,
+    requestConfirmations: 3,
+  },
+  8453: {
+    wrapper: "0xb0407dbe851f8318bd31404A49e658143C982F23",
+    callbackGasLimit: 500_000,
+    requestConfirmations: 3,
+  },
+};
+
+function chainlinkVrfAdapterEnvForChain(chainId: number) {
+  if (chainId === 8453 && process.env.CHAINLINK_VRF_ADAPTER_BASE) {
+    return process.env.CHAINLINK_VRF_ADAPTER_BASE;
+  }
+
+  if (chainId === 84532 && process.env.CHAINLINK_VRF_ADAPTER_BASE_SEPOLIA) {
+    return process.env.CHAINLINK_VRF_ADAPTER_BASE_SEPOLIA;
+  }
+
+  return process.env.CHAINLINK_VRF_ADAPTER;
+}
+
 export async function varsForNetwork(ethers: HardhatEthersHelpers) {
   const network = await ethers.provider.getNetwork();
   console.log("network:", network.name);
@@ -240,6 +276,34 @@ export async function varsForNetwork(ethers: HardhatEthersHelpers) {
 
 export function varsByChainId(chainId: number) {
   return networkAddresses[chainId];
+}
+
+export async function chainlinkDirectFundingVarsForNetwork(
+  ethers: HardhatEthersHelpers
+) {
+  const network = await ethers.provider.getNetwork();
+
+  if (["hardhat", "localhost", "unknown"].includes(network.name)) {
+    return chainlinkDirectFundingVars[31337];
+  }
+
+  return chainlinkDirectFundingVars[network.chainId];
+}
+
+export async function vrfSystemAddressForNetwork(ethers: HardhatEthersHelpers) {
+  const network = await ethers.provider.getNetwork();
+  const chainId = ["hardhat", "localhost", "unknown"].includes(network.name)
+    ? 8453
+    : network.chainId;
+
+  const vrfSystem = chainlinkVrfAdapterEnvForChain(chainId);
+  if (!vrfSystem) {
+    throw new Error(
+      `Missing Chainlink VRF adapter address for chain ${chainId}. Set CHAINLINK_VRF_ADAPTER, CHAINLINK_VRF_ADAPTER_BASE, or CHAINLINK_VRF_ADAPTER_BASE_SEPOLIA.`
+    );
+  }
+
+  return vrfSystem;
 }
 
 export enum ERC1155_BAAZAAR_CATEGORY_TO_ID {

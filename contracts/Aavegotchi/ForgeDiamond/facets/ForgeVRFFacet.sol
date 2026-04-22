@@ -129,6 +129,29 @@ contract ForgeVRFFacet is Modifiers {
         emit VrfResponse(info.user, randomNumber, requestId, block.number);
     }
 
+    function _rerollPendingForgeRequest(uint256 requestId) internal returns (uint256 newRequestId) {
+        VrfRequestInfo storage info = s.vrfRequestIdToVrfRequestInfo[requestId];
+
+        require(info.user != address(0), "ForgeVRFFacet: request not found");
+        require(s.userVrfPending[info.user], "ForgeVRFFacet: VRF is not pending for user");
+        require(info.status == VrfStatus.PENDING, "ForgeVRFFacet: VRF request is not pending");
+
+        newRequestId = IVRFSystem(s.VRFSystem).requestRandomNumberWithTraceId(requestId);
+
+        VrfRequestInfo memory reqInfo = VrfRequestInfo({
+            user: info.user,
+            requestId: newRequestId,
+            status: VrfStatus.PENDING,
+            randomNumber: 0,
+            geodeTokenIds: info.geodeTokenIds,
+            amountPerToken: info.amountPerToken
+        });
+
+        s.vrfRequestIdToVrfRequestInfo[newRequestId] = reqInfo;
+        s.vrfUserToRequestIds[info.user].push(newRequestId);
+        info.status = VrfStatus.CLAIMED;
+    }
+
     function getRequestInfo(address user) external view returns (VrfRequestInfo memory) {
         //        require(s.vrfUserToRequestIds[user].length > 0, "ForgeVRFFacet: No VRF requests");
         uint256 requestId = s.vrfUserToRequestIds[user][s.vrfUserToRequestIds[user].length - 1];
@@ -143,6 +166,13 @@ contract ForgeVRFFacet is Modifiers {
 
     function setVRFSystem(address _vrfSystem) external onlyDaoOrOwner {
         s.VRFSystem = _vrfSystem;
+    }
+
+    function rerollPendingForgeRequests(uint256[] calldata requestIds) external onlyDaoOrOwner returns (uint256[] memory newRequestIds) {
+        newRequestIds = new uint256[](requestIds.length);
+        for (uint256 i; i < requestIds.length; i++) {
+            newRequestIds[i] = _rerollPendingForgeRequest(requestIds[i]);
+        }
     }
 
     /**

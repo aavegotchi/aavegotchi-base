@@ -8,10 +8,14 @@ import {
 import { diamondOwner, getLedgerSigner } from "../../helperFunctions";
 import { ForgeWriteFacet__factory } from "../../../typechain";
 import { ForgeWriteFacetInterface } from "../../../typechain/ForgeWriteFacet";
-import { varsForNetwork } from "../../../helpers/constants";
+import {
+  varsForNetwork,
+  vrfSystemAddressForNetwork,
+} from "../../../helpers/constants";
 
 export async function upgradeForgeWriteFacet() {
   const c = await varsForNetwork(ethers);
+  const vrfSystem = await vrfSystemAddressForNetwork(ethers);
 
   const facets: FacetsAndAddSelectors[] = [
     {
@@ -57,7 +61,7 @@ export async function upgradeForgeWriteFacet() {
     c.forgeDiamond!,
     signer
   );
-  const tx = await forgeVrfFacet.setVRFSystem(c.vrfSystem!);
+  const tx = await forgeVrfFacet.setVRFSystem(vrfSystem);
   console.log("tx", tx.hash);
   await tx.wait();
   console.log("finished");
