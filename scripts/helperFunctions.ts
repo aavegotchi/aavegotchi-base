@@ -1,4 +1,5 @@
 import { Contract } from "@ethersproject/contracts";
+import { ethers as ethersPkg } from "ethers";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DiamondLoupeFacet, OwnershipFacet } from "../typechain";
 import * as fs from "fs";
@@ -20,11 +21,106 @@ import {
 } from "../svgs/wearables-sides";
 
 export const gasPrice = 570000000000;
+const RPC_RETRY_ATTEMPTS = 6;
+const RPC_RETRY_BASE_DELAY_MS = 750;
+const RPC_RETRY_MAX_DELAY_MS = 10_000;
 
 export function delay(milliseconds: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, milliseconds);
   });
+}
+
+function errorContainsRetryableSignal(error: any): boolean {
+  if (!error) return false;
+
+  const directCode = typeof error.code === "string" ? error.code : "";
+  if (
+    [
+      "SERVER_ERROR",
+      "NETWORK_ERROR",
+      "TIMEOUT",
+      "UND_ERR_HEADERS_TIMEOUT",
+      "ECONNRESET",
+      "ETIMEDOUT",
+      "EPIPE",
+      "ECONNREFUSED",
+      "UND_ERR_CONNECT_TIMEOUT",
+    ].includes(directCode)
+  ) {
+    return true;
+  }
+
+  const message = String(
+    error.reason || error.message || error.event || ""
+  ).toLowerCase();
+  if (
+    message.includes("missing response") ||
+    message.includes("headers timeout") ||
+    message.includes("could not detect network") ||
+    message.includes("timeout") ||
+    message.includes("econnreset") ||
+    message.includes("socket hang up")
+  ) {
+    return true;
+  }
+
+  if (error.status && [429, 502, 503, 504].includes(Number(error.status))) {
+    return true;
+  }
+
+  return (
+    errorContainsRetryableSignal(error.error) ||
+    errorContainsRetryableSignal(error.serverError)
+  );
+}
+
+async function withRpcRetry<T>(
+  fn: () => Promise<T>,
+  label: string
+): Promise<T> {
+  let lastError: any;
+
+  for (let attempt = 1; attempt <= RPC_RETRY_ATTEMPTS; attempt++) {
+    try {
+      return await fn();
+    } catch (error: any) {
+      lastError = error;
+      if (
+        attempt === RPC_RETRY_ATTEMPTS ||
+        !errorContainsRetryableSignal(error)
+      ) {
+        throw error;
+      }
+
+      const backoff = Math.min(
+        RPC_RETRY_BASE_DELAY_MS * 2 ** (attempt - 1),
+        RPC_RETRY_MAX_DELAY_MS
+      );
+      console.log(
+        `[rpc retry] ${label} failed (attempt ${attempt}/${RPC_RETRY_ATTEMPTS}): ${error.message || error}. Retrying in ${backoff}ms`
+      );
+      await delay(backoff);
+    }
+  }
+
+  throw lastError;
+}
+
+export class RetryingStaticJsonRpcProvider extends ethersPkg.providers.StaticJsonRpcProvider {
+  async send(method: string, params: Array<any>): Promise<any> {
+    return withRpcRetry(
+      () => super.send(method, params),
+      `${this.network?.name || "rpc"}:${method}`
+    );
+  }
+}
+
+export function getRetryingStaticProvider(
+  url: string,
+  network: { chainId: number; name: string }
+) {
+  return new RetryingStaticJsonRpcProvider(url, network);
 }
 
 export async function impersonate(
@@ -359,9 +455,41 @@ export async function getRelayerSigner(hre: HardhatRuntimeEnvironment) {
   }
 }
 
-export async function getLedgerSigner(ethers: any) {
-  console.log("Getting ledger signer");
-  return new LedgerSigner(ethers.provider, "m/44'/60'/1'/0/0");
+export async function getLedgerSigner(ethers: any, networkName?: string) {
+  const derivationPath =
+    process.env.LEDGER_DERIVATION_PATH || "m/44'/60'/1'/0/0";
+  const inferredNetworkName = networkName || "";
+
+  console.log("Getting ledger signer", derivationPath);
+
+  if (inferredNetworkName === "base") {
+    if (!process.env.BASE_RPC_URL) {
+      throw new Error("BASE_RPC_URL is required for Ledger on Base");
+    }
+    const provider = getRetryingStaticProvider(process.env.BASE_RPC_URL, {
+      chainId: 8453,
+      name: "base",
+    });
+    return new LedgerSigner(provider, derivationPath);
+  }
+
+  if (
+    inferredNetworkName === "baseSepolia" ||
+    inferredNetworkName === "base-sepolia"
+  ) {
+    if (!process.env.BASE_SEPOLIA_RPC_URL) {
+      throw new Error(
+        "BASE_SEPOLIA_RPC_URL is required for Ledger on Base Sepolia"
+      );
+    }
+    const provider = getRetryingStaticProvider(
+      process.env.BASE_SEPOLIA_RPC_URL,
+      { chainId: 84532, name: "baseSepolia" }
+    );
+    return new LedgerSigner(provider, derivationPath);
+  }
+
+  return new LedgerSigner(ethers.provider, derivationPath);
 }
 
 export function logXPRecipients(

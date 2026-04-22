@@ -1,4 +1,5 @@
 import { task } from "hardhat/config";
+import { ethers as ethersPkg } from "ethers";
 import {
   Contract,
   ContractFactory,
@@ -16,6 +17,7 @@ import {
   delay,
   verifyContract,
   getRelayerSigner,
+  getRetryingStaticProvider,
 } from "../scripts/helperFunctions";
 
 import { HardhatRuntimeEnvironment } from "hardhat/types";
@@ -168,7 +170,34 @@ task(
         hre.network.name === "base"
       ) {
         if (useLedger) {
-          signer = new LedgerSigner(hre.ethers.provider, "m/44'/60'/1'/0/0");
+          const derivationPath =
+            process.env.LEDGER_DERIVATION_PATH || "m/44'/60'/1'/0/0";
+          let provider = hre.ethers.provider;
+
+          if (hre.network.name === "base") {
+            if (!process.env.BASE_RPC_URL) {
+              throw new Error("BASE_RPC_URL is required for Ledger on Base");
+            }
+            provider = getRetryingStaticProvider(process.env.BASE_RPC_URL, {
+              chainId: 8453,
+              name: "base",
+            });
+          } else if (
+            hre.network.name === "base-sepolia" ||
+            hre.network.name === "baseSepolia"
+          ) {
+            if (!process.env.BASE_SEPOLIA_RPC_URL) {
+              throw new Error(
+                "BASE_SEPOLIA_RPC_URL is required for Ledger on Base Sepolia"
+              );
+            }
+            provider = getRetryingStaticProvider(
+              process.env.BASE_SEPOLIA_RPC_URL,
+              { chainId: 84532, name: "baseSepolia" }
+            );
+          }
+
+          signer = new LedgerSigner(provider, derivationPath);
         } else if (useRelayer) {
           signer = await getRelayerSigner(hre);
         } else signer = (await hre.ethers.getSigners())[0];
@@ -186,7 +215,8 @@ task(
         console.log("facet:", facet);
         if (facet.facetName.length > 0) {
           const factory = (await hre.ethers.getContractFactory(
-            facet.facetName
+            facet.facetName,
+            signer
           )) as ContractFactory;
           const deployedFacet: Contract = await factory.deploy();
           await deployedFacet.deployed();

@@ -1,27 +1,19 @@
 import { ContractReceipt } from "@ethersproject/contracts";
 import { ethers, network } from "hardhat";
 
-import {
-  varsForNetwork,
-  vrfSystemAddressForNetwork,
-} from "../../../helpers/constants";
-import { diamondOwner, getLedgerSigner } from "../../helperFunctions";
-import { getLegacyVrfPreflightSummary } from "./chainlinkVrfPreflight";
+import { varsByChainId } from "../../../helpers/constants";
+import { getLedgerSigner } from "../../helperFunctions";
 import {
   ChainlinkVrfDirectFundingAdapter__factory,
   ForgeVRFFacet,
   VrfFacet,
 } from "../../../typechain";
-import { type LegacyVrfPreflightSummary } from "./chainlinkVrfPreflight";
+import { HARDCODED_BASE_STRANDED_VRF_REQUESTS } from "./strandedVrfRequests";
 
 const TESTING_NETWORKS = ["hardhat", "localhost"];
-
-export interface AdapterRequestMarker {
-  callbackContract: string;
-  requestId: string;
-  traceId: string;
-  paid: string;
-}
+const BASE_DIAMOND_OWNER = "0x01F010a5e001fe9d6940758EA5e8c777885E351e";
+const REROLL_PORTALS_GAS_LIMIT = 1_000_000;
+const REROLL_FORGE_GAS_LIMIT = 5_000_000;
 
 async function getOwnerSigner(owner: string) {
   const testing = TESTING_NETWORKS.includes(network.name);
@@ -38,7 +30,7 @@ async function getOwnerSigner(owner: string) {
     return ethers.getSigner(owner);
   }
 
-  const signer = await getLedgerSigner(ethers);
+  const signer = await getLedgerSigner(ethers, network.name);
   const signerAddress = await signer.getAddress();
   if (signerAddress.toLowerCase() !== owner.toLowerCase()) {
     throw new Error(
@@ -78,118 +70,6 @@ function parseAdapterRequests(receipt: ContractReceipt, adapterAddress: string) 
   return requests;
 }
 
-async function findDeployBlock(
-  provider: typeof ethers.provider,
-  address: string,
-  latest: number
-) {
-  let lo = 0;
-  let hi = latest;
-  while (lo < hi) {
-    const mid = Math.floor((lo + hi) / 2);
-    const code = await provider.getCode(address, mid);
-    if (code && code !== "0x") {
-      hi = mid;
-    } else {
-      lo = mid + 1;
-    }
-  }
-  return lo;
-}
-
-async function getLogsByChunks(
-  fromBlock: number,
-  toBlock: number,
-  address: string,
-  topic: string,
-  step = 1_000_000
-) {
-  const logs = [];
-  for (let start = fromBlock; start <= toBlock; start += step) {
-    const end = Math.min(start + step - 1, toBlock);
-    const chunk = await ethers.provider.getLogs({
-      address,
-      topics: [topic],
-      fromBlock: start,
-      toBlock: end,
-    });
-    logs.push(...chunk);
-  }
-  return logs;
-}
-
-async function getAdapterRequestMarkers(
-  adapterAddress: string
-): Promise<AdapterRequestMarker[]> {
-  const latest = await ethers.provider.getBlockNumber();
-  const deployBlock = await findDeployBlock(
-    ethers.provider,
-    adapterAddress,
-    latest
-  );
-  const adapterIface =
-    ChainlinkVrfDirectFundingAdapter__factory.createInterface();
-  const requestTopic = adapterIface.getEventTopic("RandomNumberRequested");
-  const logs = await getLogsByChunks(
-    deployBlock,
-    latest,
-    adapterAddress,
-    requestTopic
-  );
-
-  return logs.map((log) => {
-    const parsed = adapterIface.parseLog(log);
-    return {
-      callbackContract: parsed.args.callbackContract.toString(),
-      requestId: parsed.args.requestId.toString(),
-      traceId: parsed.args.traceId.toString(),
-      paid: parsed.args.paid.toString(),
-    };
-  });
-}
-
-export function filterAlreadyRerolledRequests(
-  summary: LegacyVrfPreflightSummary,
-  aavegotchiDiamond: string,
-  forgeDiamond: string,
-  adapterRequests: AdapterRequestMarker[]
-) {
-  const portalRequests = adapterRequests.filter(
-    (request) =>
-      request.callbackContract.toLowerCase() === aavegotchiDiamond.toLowerCase()
-  );
-  const forgeRequests = adapterRequests.filter(
-    (request) =>
-      request.callbackContract.toLowerCase() === forgeDiamond.toLowerCase()
-  );
-
-  const rerolledPortalTokenIds = new Set(
-    portalRequests.map((request) => request.traceId)
-  );
-  const rerolledForgeRequestIds = new Set(
-    forgeRequests.flatMap((request) =>
-      request.traceId !== "0"
-        ? [request.traceId, request.requestId]
-        : [request.requestId]
-    )
-  );
-
-  const pendingPortalTokenIds = summary.pendingPortalTokenIds.filter(
-    (tokenId) => !rerolledPortalTokenIds.has(tokenId)
-  );
-  const pendingForge = summary.pendingForge.filter(
-    (pending) => !rerolledForgeRequestIds.has(pending.requestId)
-  );
-
-  return {
-    ...summary,
-    pendingPortalCount: pendingPortalTokenIds.length,
-    pendingPortalTokenIds,
-    pendingForgeCount: pendingForge.length,
-    pendingForge,
-  };
-}
-
 export async function rerollStrandedVrfRequests() {
   if (TESTING_NETWORKS.includes(network.name)) {
     await network.provider.request({
@@ -198,20 +78,12 @@ export async function rerollStrandedVrfRequests() {
     });
   }
 
-  const c = await varsForNetwork(ethers);
+  const c = varsByChainId(8453);
   if (!c.aavegotchiDiamond || !c.forgeDiamond) {
     throw new Error("Missing diamond addresses for this network");
   }
 
-  const aavegotchiOwner = await diamondOwner(c.aavegotchiDiamond, ethers);
-  const forgeOwner = await diamondOwner(c.forgeDiamond, ethers);
-  if (aavegotchiOwner.toLowerCase() !== forgeOwner.toLowerCase()) {
-    throw new Error(
-      `Diamond owners differ: aavegotchi=${aavegotchiOwner} forge=${forgeOwner}`
-    );
-  }
-
-  const ownerSigner = await getOwnerSigner(aavegotchiOwner);
+  const ownerSigner = await getOwnerSigner(BASE_DIAMOND_OWNER);
   const aavegotchiVrfFacet = (await ethers.getContractAt(
     "VrfFacet",
     c.aavegotchiDiamond,
@@ -222,54 +94,13 @@ export async function rerollStrandedVrfRequests() {
     c.forgeDiamond,
     ownerSigner
   )) as ForgeVRFFacet;
-
-  const currentAavegotchiVrfSystem = await aavegotchiVrfFacet.vrfSystem();
-  const currentForgeVrfSystem = await forgeVrfFacet.vrfSystem();
-  if (
-    currentAavegotchiVrfSystem.toLowerCase() !==
-    currentForgeVrfSystem.toLowerCase()
-  ) {
-    throw new Error("Diamonds point to different VRF systems");
+  const configuredAdapter = process.env.CHAINLINK_VRF_ADAPTER_BASE;
+  if (!configuredAdapter) {
+    throw new Error("CHAINLINK_VRF_ADAPTER_BASE is required");
   }
 
-  let configuredAdapter: string | undefined;
-  try {
-    configuredAdapter = await vrfSystemAddressForNetwork(ethers);
-  } catch (err) {}
-
-  if (
-    configuredAdapter &&
-    configuredAdapter.toLowerCase() !== currentAavegotchiVrfSystem.toLowerCase()
-  ) {
-    throw new Error(
-      `Configured adapter ${configuredAdapter} does not match on-chain VRFSystem ${currentAavegotchiVrfSystem}`
-    );
-  }
-
-  const adapter = await ethers.getContractAt(
-    "ChainlinkVrfDirectFundingAdapter",
-    currentAavegotchiVrfSystem,
-    ownerSigner
-  );
-  const approvedAavegotchi = await adapter.approvedConsumers(
-    c.aavegotchiDiamond
-  );
-  const approvedForge = await adapter.approvedConsumers(c.forgeDiamond);
-  if (!approvedAavegotchi || !approvedForge) {
-    throw new Error("Current VRF system is not configured for both diamonds");
-  }
-
-  const summary = await getLegacyVrfPreflightSummary(ethers.provider, {
-    aavegotchiDiamond: c.aavegotchiDiamond,
-    forgeDiamond: c.forgeDiamond,
-  });
-  const adapterRequests = await getAdapterRequestMarkers(adapter.address);
-  const filtered = filterAlreadyRerolledRequests(
-    summary,
-    c.aavegotchiDiamond,
-    c.forgeDiamond,
-    adapterRequests
-  );
+  const summary = HARDCODED_BASE_STRANDED_VRF_REQUESTS;
+  const filtered = summary;
 
   console.log("latestBlock:", filtered.latestBlock);
   console.log("pendingPortalCount:", filtered.pendingPortalTokenIds.length);
@@ -285,10 +116,11 @@ export async function rerollStrandedVrfRequests() {
 
   if (filtered.pendingPortalTokenIds.length > 0) {
     const tx = await aavegotchiVrfFacet.rerollPendingPortals(
-      filtered.pendingPortalTokenIds
+      filtered.pendingPortalTokenIds,
+      { gasLimit: REROLL_PORTALS_GAS_LIMIT }
     );
     const receipt = await tx.wait();
-    const requests = parseAdapterRequests(receipt, adapter.address);
+    const requests = parseAdapterRequests(receipt, configuredAdapter);
     const requestsByTraceId = new Map(
       requests.map((request) => [request.traceId, request])
     );
@@ -307,9 +139,11 @@ export async function rerollStrandedVrfRequests() {
 
   if (filtered.pendingForge.length > 0) {
     const requestIds = filtered.pendingForge.map((pending) => pending.requestId);
-    const tx = await forgeVrfFacet.rerollPendingForgeRequests(requestIds);
+    const tx = await forgeVrfFacet.rerollPendingForgeRequests(requestIds, {
+      gasLimit: REROLL_FORGE_GAS_LIMIT,
+    });
     const receipt = await tx.wait();
-    const requests = parseAdapterRequests(receipt, adapter.address);
+    const requests = parseAdapterRequests(receipt, configuredAdapter);
     const requestsByTraceId = new Map(
       requests.map((request) => [request.traceId, request])
     );

@@ -2,11 +2,11 @@ import { BigNumber } from "ethers";
 import { ethers, network, run } from "hardhat";
 
 import {
-  chainlinkDirectFundingVarsForNetwork,
-  varsForNetwork,
+  chainlinkDirectFundingVars,
+  varsByChainId,
 } from "../../../helpers/constants";
-import { diamondOwner, getLedgerSigner } from "../../helperFunctions";
-import { getLegacyVrfPreflightSummary } from "./chainlinkVrfPreflight";
+import { getLedgerSigner } from "../../helperFunctions";
+import { HARDCODED_BASE_STRANDED_VRF_REQUESTS } from "./strandedVrfRequests";
 import {
   ChainlinkVrfDirectFundingAdapter,
   ForgeVRFFacet,
@@ -20,6 +20,12 @@ import {
 
 const TESTING_NETWORKS = ["hardhat", "localhost"];
 const INITIAL_ADAPTER_FUND_REQUEST_COUNT = 10;
+const BASE_DIAMOND_OWNER = "0x01F010a5e001fe9d6940758EA5e8c777885E351e";
+type UpgradePhase =
+  | "all"
+  | "aavegotchi-facet"
+  | "forge-facet"
+  | "cutover";
 
 async function getOwnerSigner(owner: string) {
   const testing = TESTING_NETWORKS.includes(network.name);
@@ -36,7 +42,7 @@ async function getOwnerSigner(owner: string) {
     return ethers.getSigner(owner);
   }
 
-  const signer = await getLedgerSigner(ethers);
+  const signer = await getLedgerSigner(ethers, network.name);
   const signerAddress = await signer.getAddress();
   if (signerAddress.toLowerCase() !== owner.toLowerCase()) {
     throw new Error(
@@ -51,9 +57,8 @@ function getFundAmount(estimatedPrice: BigNumber) {
   return estimatedPrice.mul(INITIAL_ADAPTER_FUND_REQUEST_COUNT);
 }
 
-async function upgradeVrfFacets(
+async function upgradeAavegotchiVrfFacet(
   aavegotchiDiamond: string,
-  forgeDiamond: string,
   owner: string
 ) {
   const aavegotchiFacets: FacetsAndAddSelectors[] = [
@@ -65,16 +70,6 @@ async function upgradeVrfFacets(
       removeSelectors: [],
     },
   ];
-  const forgeFacets: FacetsAndAddSelectors[] = [
-    {
-      facetName: "ForgeVRFFacet",
-      addSelectors: [
-        "function rerollPendingForgeRequests(uint256[] calldata requestIds) external returns (uint256[] memory newRequestIds)",
-      ],
-      removeSelectors: [],
-    },
-  ];
-
   const aavegotchiArgs: DeployUpgradeTaskArgs = {
     diamondOwner: owner,
     diamondAddress: aavegotchiDiamond,
@@ -85,6 +80,21 @@ async function upgradeVrfFacets(
     initAddress: ethers.constants.AddressZero,
     initCalldata: "0x",
   };
+
+  console.log("Upgrading VrfFacet with rerollPendingPortals");
+  await run("deployUpgrade", aavegotchiArgs);
+}
+
+async function upgradeForgeVrfFacet(forgeDiamond: string, owner: string) {
+  const forgeFacets: FacetsAndAddSelectors[] = [
+    {
+      facetName: "ForgeVRFFacet",
+      addSelectors: [
+        "function rerollPendingForgeRequests(uint256[] calldata requestIds) external returns (uint256[] memory newRequestIds)",
+      ],
+      removeSelectors: [],
+    },
+  ];
 
   const forgeArgs: DeployUpgradeTaskArgs = {
     diamondOwner: owner,
@@ -97,15 +107,15 @@ async function upgradeVrfFacets(
     initCalldata: "0x",
   };
 
-  console.log("Upgrading VrfFacet with rerollPendingPortals");
-  await run("deployUpgrade", aavegotchiArgs);
-
   console.log("Upgrading ForgeVRFFacet with rerollPendingForgeRequests");
   await run("deployUpgrade", forgeArgs);
 }
 
 export async function upgradeChainlinkVrfDirectFunding() {
   console.log("Deploying Chainlink direct-funding VRF adapter");
+  const phase = (process.env.CHAINLINK_VRF_PHASE ||
+    "all") as UpgradePhase;
+  console.log("phase:", phase);
 
   if (TESTING_NETWORKS.includes(network.name)) {
     await network.provider.request({
@@ -114,8 +124,8 @@ export async function upgradeChainlinkVrfDirectFunding() {
     });
   }
 
-  const c = await varsForNetwork(ethers);
-  const vrfConfig = await chainlinkDirectFundingVarsForNetwork(ethers);
+  const c = varsByChainId(8453);
+  const vrfConfig = chainlinkDirectFundingVars[8453];
   if (!vrfConfig) {
     throw new Error("Missing Chainlink direct-funding config for this network");
   }
@@ -124,29 +134,14 @@ export async function upgradeChainlinkVrfDirectFunding() {
   }
 
   const approvedConsumers = [c.aavegotchiDiamond, c.forgeDiamond];
-  const aavegotchiOwner = await diamondOwner(c.aavegotchiDiamond, ethers);
-  const forgeOwner = await diamondOwner(c.forgeDiamond, ethers);
-
-  if (aavegotchiOwner.toLowerCase() !== forgeOwner.toLowerCase()) {
-    throw new Error(
-      `Diamond owners differ: aavegotchi=${aavegotchiOwner} forge=${forgeOwner}`
-    );
-  }
-
-  const ownerSigner = await getOwnerSigner(aavegotchiOwner);
-  const ownerAddress = await ownerSigner.getAddress();
-
-  console.log("owner:", ownerAddress);
+  console.log("owner:", BASE_DIAMOND_OWNER);
   console.log("aavegotchiDiamond:", c.aavegotchiDiamond);
   console.log("forgeDiamond:", c.forgeDiamond);
   console.log("wrapper:", vrfConfig.wrapper);
   console.log("callbackGasLimit:", vrfConfig.callbackGasLimit);
   console.log("requestConfirmations:", vrfConfig.requestConfirmations);
 
-  const preflight = await getLegacyVrfPreflightSummary(ethers.provider, {
-    aavegotchiDiamond: c.aavegotchiDiamond,
-    forgeDiamond: c.forgeDiamond,
-  });
+  const preflight = HARDCODED_BASE_STRANDED_VRF_REQUESTS;
   console.log("preflight latestBlock:", preflight.latestBlock);
   console.log("preflight pendingPortalCount:", preflight.pendingPortalCount);
   console.log("preflight pendingForgeCount:", preflight.pendingForgeCount);
@@ -156,11 +151,32 @@ export async function upgradeChainlinkVrfDirectFunding() {
   );
   if (preflight.pendingPortalCount > 0 || preflight.pendingForgeCount > 0) {
     console.log(
-      "Legacy PoP requests remain pending. Complete the cutover, then reroll the stranded requests with the new facet functions."
+      "Using hardcoded stranded PoP requests. Complete the cutover, then reroll the stranded requests with the new facet functions."
     );
   }
 
-  await upgradeVrfFacets(c.aavegotchiDiamond, c.forgeDiamond, aavegotchiOwner);
+  if (phase === "aavegotchi-facet") {
+    await upgradeAavegotchiVrfFacet(c.aavegotchiDiamond, BASE_DIAMOND_OWNER);
+    console.log("Completed phase aavegotchi-facet");
+    return;
+  }
+
+  if (phase === "forge-facet") {
+    await upgradeForgeVrfFacet(c.forgeDiamond, BASE_DIAMOND_OWNER);
+    console.log("Completed phase forge-facet");
+    return;
+  }
+
+  if (phase === "all") {
+    await upgradeAavegotchiVrfFacet(c.aavegotchiDiamond, BASE_DIAMOND_OWNER);
+    await upgradeForgeVrfFacet(c.forgeDiamond, BASE_DIAMOND_OWNER);
+  }
+
+  if (phase !== "all" && phase !== "cutover") {
+    throw new Error(`Unsupported phase ${phase}`);
+  }
+
+  const ownerSigner = await getOwnerSigner(BASE_DIAMOND_OWNER);
 
   const Adapter = await ethers.getContractFactory(
     "ChainlinkVrfDirectFundingAdapter",
@@ -221,7 +237,7 @@ export async function upgradeChainlinkVrfDirectFunding() {
     c.aavegotchiDiamond
   );
   const approvedForge = await adapter.approvedConsumers(c.forgeDiamond);
-  const adapterBalance = await ethers.provider.getBalance(adapter.address);
+  const adapterBalance = await ownerSigner.provider!.getBalance(adapter.address);
 
   if (
     currentAavegotchiVrfSystem.toLowerCase() !== adapter.address.toLowerCase()
