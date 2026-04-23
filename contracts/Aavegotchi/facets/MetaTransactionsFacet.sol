@@ -2,6 +2,7 @@
 pragma solidity 0.8.1;
 
 import {LibDiamond} from "../../shared/libraries/LibDiamond.sol";
+import {LibMeta} from "../../shared/libraries/LibMeta.sol";
 import {AppStorage} from "../libraries/LibAppStorage.sol";
 
 contract MetaTransactionsFacet {
@@ -22,7 +23,8 @@ contract MetaTransactionsFacet {
     }
 
     function getDomainSeparator() private view returns (bytes32) {
-        return s.domainSeparator;
+        // Compute dynamically so signatures cannot be replayed if the chainId changes.
+        return LibMeta.domainSeparator("AavegotchiDiamond", "V1");
     }
 
     /**
